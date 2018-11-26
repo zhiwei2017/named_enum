@@ -122,7 +122,7 @@ class NamedEnumMeta(EnumMeta):
             ("%ss",
              "Collective function to return the values of the attribute %s from"
              " all the enumerations in the Enum class.",
-             mcs._fields),
+             mcs._field_values),
             ("from_%s",
              "Returns the corresponding enumeration according to the given "
              "value of the attribute %s.",
@@ -139,7 +139,7 @@ class NamedEnumMeta(EnumMeta):
         return cls
 
     @classmethod
-    def _fields(mcs, cls, field_name):
+    def _field_values(mcs, cls, field_name):
         """
         Returns a tuple containing just the value of the given field_name of all
         the elements from the cls.
@@ -169,6 +169,49 @@ class NamedEnumMeta(EnumMeta):
         """
         return "<named enum %r>" % cls.__name__
 
+    def tuples(cls):
+        """
+        Returns a tuple formed by fields for all the elements inside the class.
+
+        :return: tuple of n-elements-tuples
+        """
+        return tuple(cls._value2member_map_.keys())
+
+    def _fields(cls):
+        """
+        Returns the defined field names for each enumeration item. Since the
+        customized tuple class contains the field names, just render it in
+        enumeration level.
+
+        :return: list of field names
+        """
+        return cls._tuple_cls._fields
+
+    def describe(cls):
+        """
+        Prints in the console a table showing all the fields for all the
+        definitions inside the class
+
+        :return: None
+        """
+        max_lengths = []
+        headers = []
+        row_format = ["{:>%d}"] * len(cls._fields())
+        for attr_name in cls._fields():
+            attr_func = "%ss" % attr_name
+            attr_list = list(map(str, getattr(cls, attr_func)())) + [attr_name]
+            max_lengths.append(max(list(map(len, attr_list))))
+            headers.append(attr_name.capitalize())
+        row_format = " | ".join(row_format) % tuple(max_lengths)
+        header_line = row_format.format(*headers)
+        output = "Class: %s\n" % cls.__name__
+        output += header_line + "\n"
+        output += "-" * (len(header_line)) + "\n"
+        for item in cls:
+            enum_val = item._value_
+            output += row_format.format(*enum_val) + "\n"
+        print(output)
+
 
 class NamedEnum(Enum, metaclass=NamedEnumMeta):
     """
@@ -179,10 +222,10 @@ class NamedEnum(Enum, metaclass=NamedEnumMeta):
     function __getattr__ to achieve it.
 
     >>> class TripleEnum(NamedEnum):
-            _field_names_ = ("first", "second", "third")
+    ...     _field_names_ = ("first", "second", "third")
     >>> class Triangle(TripleEnum):
-            EQUILATERAL = (6, 6, 6)
-            RIGHT = (3, 4, 5)
+    ...     EQUILATERAL = (6, 6, 6)
+    ...     RIGHT = (3, 4, 5)
     >>> Triangle._fields()
     ('first', 'second', 'third')
     >>> Triangle.tuples()
@@ -213,7 +256,7 @@ class NamedEnum(Enum, metaclass=NamedEnumMeta):
     ----------------------
         6 |      6 |     6
         3 |      4 |     5
-
+    <BLANKLINE>
     >>> Triangle.RIGHT.value
     NamedTuple(first=3, second=4, third=5)
     >>> Triangle.RIGHT.name
@@ -241,29 +284,9 @@ class NamedEnum(Enum, metaclass=NamedEnumMeta):
         :param item: str: name of the field or attribute
         :return: different types
         """
-        if item in self._fields():
+        if item in self.__class__._fields():
             return getattr(self._value_, item)
         return super().__getattr__(item)
-
-    @classmethod
-    def tuples(cls):
-        """
-        Returns a tuple formed by fields for all the elements inside the class.
-
-        :return: tuple of n-elements-tuples
-        """
-        return tuple(cls._value2member_map_.keys())
-
-    @classmethod
-    def _fields(cls):
-        """
-        Returns the defined field names for each enumeration item. Since the
-        customized tuple class contains the field names, just render it in
-        enumeration level.
-
-        :return: list of field names
-        """
-        return cls._tuple_cls._fields
 
     def __str__(self):
         """
@@ -271,33 +294,8 @@ class NamedEnum(Enum, metaclass=NamedEnumMeta):
 
         :return:
         """
-        return "%s.%s: %r" % (self.__class__.__name__, self._name_, self._value_)
-
-    @classmethod
-    def describe(cls):
-        """
-        Prints in the console a table showing all the fields for all the
-        definitions inside the class
-
-        :return: None
-        """
-        max_lengths = []
-        headers = []
-        row_format = ["{:>%d}"] * len(cls._fields())
-        for attr_name in cls._fields():
-            attr_func = "%ss" % attr_name
-            attr_list = list(map(str, getattr(cls, attr_func)())) + [attr_name]
-            max_lengths.append(max(list(map(len, attr_list))))
-            headers.append(attr_name.capitalize())
-        row_format = " | ".join(row_format) % tuple(max_lengths)
-        header_line = row_format.format(*headers)
-        output = "Class: %s\n" % cls.__name__
-        output += header_line + "\n"
-        output += "-" * (len(header_line)) + "\n"
-        for item in cls:
-            enum_val = item._value_
-            output += row_format.format(*enum_val) + "\n"
-        print(output)
+        return "%s.%s: %r" % (
+            self.__class__.__name__, self._name_, self._value_)
 
 
 class PairEnum(NamedEnum):
@@ -306,8 +304,8 @@ class PairEnum(NamedEnum):
     C++'s pair container.
 
     >>> class Couple(PairEnum):
-            SMITHS = ("John", "Jane")
-            BIEBERS = ("Justin", "Hailey")
+    ...     SMITHS = ("John", "Jane")
+    ...     BIEBERS = ("Justin", "Hailey")
     >>> Couple._fields()
     ('first', 'second')
     >>> Couple.tuples()
@@ -317,11 +315,11 @@ class PairEnum(NamedEnum):
     >>> Couple.seconds()
     ('Jane', 'Hailey')
     >>> Couple.from_first("John")
-    <Couple.SMITHS: NamedTuple(first="John", second="Jane")>
+    <Couple.SMITHS: NamedTuple(first='John', second='Jane')>
     >>> Couple.from_second("Jane")
     <Couple.SMITHS: NamedTuple(first='John', second='Jane')>
     >>> Couple.BIEBERS
-    <Couple.BIEBERS: NamedTuple(first="Justin", second="Hailey")>
+    <Couple.BIEBERS: NamedTuple(first='Justin', second='Hailey')>
     >>> Couple.BIEBERS.first
     'Justin'
     >>> Couple.BIEBERS.second
@@ -332,7 +330,7 @@ class PairEnum(NamedEnum):
     ---------------
       John |   Jane
     Justin | Hailey
-
+    <BLANKLINE>
     >>> Couple.BIEBERS.value
     NamedTuple(first='Justin', second='Hailey')
     >>> Couple.BIEBERS.name
@@ -346,7 +344,11 @@ from named_enum import NamedEnum
 
 
 class {typename}(NamedEnum):
-
+    '''
+    {typename} is a named enumeration, which provides the normal functions 
+    "tuples", "describe" and special functions like <field_name>s, 
+    from_<field_name> for each field name defined in variable '_field_names_'.
+    '''
     _field_names_ = {field_names!r}
 
 """
@@ -366,8 +368,8 @@ def namedenum(typename, field_names, *, verbose=False, module=None):
 
     >>> TripleEnum = namedenum("TripleEnum", ("first", "second", "third"))
     >>> class Triangle(TripleEnum):
-            EQUILATERAL = (6, 6, 6)
-            RIGHT = (3, 4, 5)
+    ...     EQUILATERAL = (6, 6, 6)
+    ...     RIGHT = (3, 4, 5)
     >>> Triangle._fields()
     ('first', 'second', 'third')
     >>> Triangle.tuples()
@@ -398,7 +400,7 @@ def namedenum(typename, field_names, *, verbose=False, module=None):
     ----------------------
         6 |      6 |     6
         3 |      4 |     5
-
+    <BLANKLINE>
     >>> Triangle.RIGHT.value
     NamedTuple(first=3, second=4, third=5)
     >>> Triangle.RIGHT.name
