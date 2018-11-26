@@ -1,0 +1,1665 @@
+# Copyright 2009-2018 Zhiwei Zhang. All Rights Reserved.
+
+# Test __new__ function from meta class::
+
+    >>> import types
+    >>> from named_enum import PairEnum
+    >>> class Triple(PairEnum):
+    ...     SIMPSONS = ("Homer", "Bart", "Marge")
+    ...     DUCKS = ("Huey", "Dewey", "Louie")
+    Traceback (most recent call last):
+    ...
+    TypeError: __new__() takes 3 positional arguments but 4 were given
+    >>> class Single(PairEnum):
+    ...     SIMPSONS = "Homer"
+    ...     DUCKS = "Huey"
+    Traceback (most recent call last):
+    ...
+    TypeError: __new__() missing 1 required positional argument: 'second'
+    >>> class FPair(PairEnum):
+    ...     SIMPSONS = ("Homer", "Marge")
+    ...     DUCKS = ("Huey", "Dewey")
+    ...     MCDUCK_NEPHEWS = ("Huey", "Dewey")
+    >>> class Pair(PairEnum):
+    ...     TOM_AND_JERRY = ("Tom", "Jerry")
+    ...     MIKE_AND_MOLLY = ("Mike", "Molly")
+    ...     MICHEAL_AND_MOLLY = ("Micheal", "Molly")
+
+# Test class method _fields::
+
+    >>> PairEnum._fields()
+    ('first', 'second')
+    >>> Pair._fields()
+    ('first', 'second')
+    >>> FPair._fields()
+    ('first', 'second')
+
+    >>> Pair.TOM_AND_JERRY._fields()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute '_fields'
+    >>> Pair.MIKE_AND_MOLLY._fields()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute '_fields'
+    >>> Pair.MICHEAL_AND_MOLLY._fields()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute '_fields'
+
+    >>> FPair.SIMPSONS._fields()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute '_fields'
+    >>> FPair.DUCKS._fields()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute '_fields'
+    >>> FPair.MCDUCK_NEPHEWS._fields()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute '_fields'
+
+# Test class method names with parameter as_tuple=True::
+
+    >>> PairEnum.names()
+    ()
+    >>> Pair.names()
+    ('TOM_AND_JERRY', 'MIKE_AND_MOLLY', 'MICHEAL_AND_MOLLY')
+    >>> FPair.names()
+    ('SIMPSONS', 'DUCKS', 'MCDUCK_NEPHEWS')
+
+    >>> Pair.TOM_AND_JERRY.names()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'names'
+    >>> Pair.MIKE_AND_MOLLY.names()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'names'
+    >>> Pair.MICHEAL_AND_MOLLY.names()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'names'
+    >>> FPair.SIMPSONS.names()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'names'
+    >>> FPair.DUCKS.names()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'names'
+    >>> FPair.MCDUCK_NEPHEWS.names()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'names'
+
+# Test class method names with parameter as_tuple=False::
+
+    >>> isinstance(PairEnum.names(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.names(as_tuple=False))
+    ()
+    >>> isinstance(Pair.names(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.names(as_tuple=False))
+    ('TOM_AND_JERRY', 'MIKE_AND_MOLLY', 'MICHEAL_AND_MOLLY')
+    >>> isinstance(FPair.names(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.names(as_tuple=False))
+    ('SIMPSONS', 'DUCKS', 'MCDUCK_NEPHEWS')
+
+    >>> Pair.TOM_AND_JERRY.names(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'names'
+    >>> Pair.MIKE_AND_MOLLY.names(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'names'
+    >>> Pair.MICHEAL_AND_MOLLY.names(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'names'
+    >>> FPair.SIMPSONS.names(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'names'
+    >>> FPair.DUCKS.names(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'names'
+    >>> FPair.MCDUCK_NEPHEWS.names(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'names'
+
+# Test class method values with parameter as_tuple=True::
+
+    >>> PairEnum.values()
+    ()
+    >>> Pair.values()
+    (NamedTuple(first='Tom', second='Jerry'), NamedTuple(first='Mike', second='Molly'), NamedTuple(first='Micheal', second='Molly'))
+    >>> FPair.values()
+    (NamedTuple(first='Homer', second='Marge'), NamedTuple(first='Huey', second='Dewey'), NamedTuple(first='Huey', second='Dewey'))
+
+    >>> Pair.TOM_AND_JERRY.values()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'values'
+    >>> Pair.MIKE_AND_MOLLY.values()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'values'
+    >>> Pair.MICHEAL_AND_MOLLY.values()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'values'
+    >>> FPair.SIMPSONS.values()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'values'
+    >>> FPair.DUCKS.values()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'values'
+    >>> FPair.MCDUCK_NEPHEWS.values()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'values'
+
+# Test class method values with parameter as_tuple=False::
+
+    >>> isinstance(PairEnum.values(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.values(as_tuple=False))
+    ()
+    >>> isinstance(Pair.values(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.values(as_tuple=False))
+    (NamedTuple(first='Tom', second='Jerry'), NamedTuple(first='Mike', second='Molly'), NamedTuple(first='Micheal', second='Molly'))
+    >>> isinstance(FPair.values(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.values(as_tuple=False))
+    (NamedTuple(first='Homer', second='Marge'), NamedTuple(first='Huey', second='Dewey'), NamedTuple(first='Huey', second='Dewey'))
+
+    >>> Pair.TOM_AND_JERRY.values(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'values'
+    >>> Pair.MIKE_AND_MOLLY.values(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'values'
+    >>> Pair.MICHEAL_AND_MOLLY.values(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'values'
+    >>> FPair.SIMPSONS.values(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'values'
+    >>> FPair.DUCKS.values(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'values'
+    >>> FPair.MCDUCK_NEPHEWS.values(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'values'
+
+# Test class method describe::
+
+    >>> PairEnum.describe()
+    Class: PairEnum
+    Name | First | Second
+    ---------------------
+    <BLANKLINE>
+    >>> Pair.describe()
+    Class: Pair
+                 Name |   First | Second
+    ------------------------------------
+        TOM_AND_JERRY |     Tom |  Jerry
+       MIKE_AND_MOLLY |    Mike |  Molly
+    MICHEAL_AND_MOLLY | Micheal |  Molly
+    <BLANKLINE>
+    >>> FPair.describe()
+    Class: FPair
+              Name | First | Second
+    -------------------------------
+          SIMPSONS | Homer |  Marge
+             DUCKS |  Huey |  Dewey
+    MCDUCK_NEPHEWS |  Huey |  Dewey
+    <BLANKLINE>
+
+    >>> Pair.TOM_AND_JERRY.describe()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'describe'
+    >>> Pair.MIKE_AND_MOLLY.describe()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'describe'
+    >>> Pair.MICHEAL_AND_MOLLY.describe()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'describe'
+
+    >>> FPair.SIMPSONS.describe()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'describe'
+    >>> FPair.DUCKS.describe()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'describe'
+    >>> FPair.MCDUCK_NEPHEWS.describe()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'describe'
+
+# Test class method gen with parameter name_value_pair=True::
+
+    >>> isinstance(PairEnum.gen(), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.gen())
+    ()
+    >>> isinstance(Pair.gen(), types.GeneratorType)
+    True
+    >>> tuple(Pair.gen())
+    (('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('MIKE_AND_MOLLY', NamedTuple(first='Mike', second='Molly')), ('MICHEAL_AND_MOLLY', NamedTuple(first='Micheal', second='Molly')))
+    >>> isinstance(FPair.gen(), types.GeneratorType)
+    True
+    >>> tuple(FPair.gen())
+    (('SIMPSONS', NamedTuple(first='Homer', second='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey')), ('MCDUCK_NEPHEWS', NamedTuple(first='Huey', second='Dewey')))
+    >>> Pair.TOM_AND_JERRY.gen()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'gen'
+    >>> Pair.MIKE_AND_MOLLY.gen()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'gen'
+    >>> Pair.MICHEAL_AND_MOLLY.gen()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'gen'
+    >>> FPair.SIMPSONS.gen()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'gen'
+    >>> FPair.DUCKS.gen()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'gen'
+    >>> FPair.MCDUCK_NEPHEWS.gen()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'gen'
+
+# Test class method gen with parameter name_value_pair=False::
+
+    >>> isinstance(PairEnum.gen(name_value_pair=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.gen(name_value_pair=False))
+    ()
+    >>> isinstance(Pair.gen(name_value_pair=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.gen(name_value_pair=False))
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>, <Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>, <Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>)
+    >>> isinstance(FPair.gen(name_value_pair=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.gen(name_value_pair=False))
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+    >>> Pair.TOM_AND_JERRY.gen(name_value_pair=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'gen'
+    >>> Pair.MIKE_AND_MOLLY.gen(name_value_pair=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'gen'
+    >>> Pair.MICHEAL_AND_MOLLY.gen(name_value_pair=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'gen'
+    >>> FPair.SIMPSONS.gen(name_value_pair=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'gen'
+    >>> FPair.DUCKS.gen(name_value_pair=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'gen'
+    >>> FPair.MCDUCK_NEPHEWS.gen(name_value_pair=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'gen'
+
+# Test class method as_dict::
+
+    >>> PairEnum.as_dict()
+    {}
+    >>> Pair.as_dict()
+    {'TOM_AND_JERRY': NamedTuple(first='Tom', second='Jerry'), 'MIKE_AND_MOLLY': NamedTuple(first='Mike', second='Molly'), 'MICHEAL_AND_MOLLY': NamedTuple(first='Micheal', second='Molly')}
+    >>> FPair.as_dict()
+    {'SIMPSONS': NamedTuple(first='Homer', second='Marge'), 'DUCKS': NamedTuple(first='Huey', second='Dewey'), 'MCDUCK_NEPHEWS': NamedTuple(first='Huey', second='Dewey')}
+
+    >>> Pair.TOM_AND_JERRY.as_dict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_dict'
+    >>> Pair.MIKE_AND_MOLLY.as_dict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_dict'
+    >>> Pair.MICHEAL_AND_MOLLY.as_dict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_dict'
+
+    >>> FPair.SIMPSONS.as_dict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_dict'
+    >>> FPair.DUCKS.as_dict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_dict'
+    >>> FPair.MCDUCK_NEPHEWS.as_dict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_dict'
+
+# Test class method as_list::
+
+    >>> PairEnum.as_list()
+    []
+    >>> Pair.as_list()
+    [('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('MIKE_AND_MOLLY', NamedTuple(first='Mike', second='Molly')), ('MICHEAL_AND_MOLLY', NamedTuple(first='Micheal', second='Molly'))]
+    >>> FPair.as_list()
+    [('SIMPSONS', NamedTuple(first='Homer', second='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey')), ('MCDUCK_NEPHEWS', NamedTuple(first='Huey', second='Dewey'))]
+
+    >>> Pair.TOM_AND_JERRY.as_list()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_list'
+    >>> Pair.MIKE_AND_MOLLY.as_list()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_list'
+    >>> Pair.MICHEAL_AND_MOLLY.as_list()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_list'
+
+    >>> FPair.SIMPSONS.as_list()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_list'
+    >>> FPair.DUCKS.as_list()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_list'
+    >>> FPair.MCDUCK_NEPHEWS.as_list()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_list'
+
+# Test class method as_tuple::
+
+    >>> PairEnum.as_tuple()
+    ()
+    >>> Pair.as_tuple()
+    (('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('MIKE_AND_MOLLY', NamedTuple(first='Mike', second='Molly')), ('MICHEAL_AND_MOLLY', NamedTuple(first='Micheal', second='Molly')))
+    >>> FPair.as_tuple()
+    (('SIMPSONS', NamedTuple(first='Homer', second='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey')), ('MCDUCK_NEPHEWS', NamedTuple(first='Huey', second='Dewey')))
+
+    >>> Pair.TOM_AND_JERRY.as_tuple()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_tuple'
+    >>> Pair.MIKE_AND_MOLLY.as_tuple()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_tuple'
+    >>> Pair.MICHEAL_AND_MOLLY.as_tuple()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_tuple'
+
+    >>> FPair.SIMPSONS.as_tuple()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_tuple'
+    >>> FPair.DUCKS.as_tuple()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_tuple'
+    >>> FPair.MCDUCK_NEPHEWS.as_tuple()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_tuple'
+
+# Test class method as_set::
+
+    >>> from collections import namedtuple
+    >>> NamedTuple = namedtuple("NamedTuple", PairEnum._fields())
+    >>> PairEnum.as_set()
+    set()
+    >>> Pair.as_set() == {('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('MIKE_AND_MOLLY', NamedTuple(first='Mike', second='Molly')), ('MICHEAL_AND_MOLLY', NamedTuple(first='Micheal', second='Molly'))}
+    True
+    >>> FPair.as_set() == {('SIMPSONS', NamedTuple(first='Homer', second='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey')), ('MCDUCK_NEPHEWS', NamedTuple(first='Huey', second='Dewey'))}
+    True
+
+    >>> Pair.TOM_AND_JERRY.as_set()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_set'
+    >>> Pair.MIKE_AND_MOLLY.as_set()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_set'
+    >>> Pair.MICHEAL_AND_MOLLY.as_set()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_set'
+
+    >>> FPair.SIMPSONS.as_set()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_set'
+    >>> FPair.DUCKS.as_set()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_set'
+    >>> FPair.MCDUCK_NEPHEWS.as_set()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_set'
+
+# Test class method as_ordereddict::
+
+    >>> PairEnum.as_ordereddict()
+    OrderedDict()
+    >>> Pair.as_ordereddict()
+    OrderedDict([('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('MIKE_AND_MOLLY', NamedTuple(first='Mike', second='Molly')), ('MICHEAL_AND_MOLLY', NamedTuple(first='Micheal', second='Molly'))])
+    >>> FPair.as_ordereddict()
+    OrderedDict([('SIMPSONS', NamedTuple(first='Homer', second='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey')), ('MCDUCK_NEPHEWS', NamedTuple(first='Huey', second='Dewey'))])
+
+    >>> Pair.TOM_AND_JERRY.as_ordereddict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_ordereddict'
+    >>> Pair.MIKE_AND_MOLLY.as_ordereddict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_ordereddict'
+    >>> Pair.MICHEAL_AND_MOLLY.as_ordereddict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'as_ordereddict'
+
+    >>> FPair.SIMPSONS.as_ordereddict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_ordereddict'
+    >>> FPair.DUCKS.as_ordereddict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_ordereddict'
+    >>> FPair.MCDUCK_NEPHEWS.as_ordereddict()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'as_ordereddict'
+
+# Test class method firsts with parameter as_tuple=True::
+
+    >>> PairEnum.firsts()
+    ()
+    >>> Pair.firsts()
+    ('Tom', 'Mike', 'Micheal')
+    >>> FPair.firsts()
+    ('Homer', 'Huey', 'Huey')
+
+    >>> Pair.TOM_AND_JERRY.firsts()
+    ('Tom', 'Mike', 'Micheal')
+    >>> Pair.MIKE_AND_MOLLY.firsts()
+    ('Tom', 'Mike', 'Micheal')
+    >>> Pair.MICHEAL_AND_MOLLY.firsts()
+    ('Tom', 'Mike', 'Micheal')
+
+    >>> FPair.SIMPSONS.firsts()
+    ('Homer', 'Huey', 'Huey')
+    >>> FPair.DUCKS.firsts()
+    ('Homer', 'Huey', 'Huey')
+    >>> FPair.MCDUCK_NEPHEWS.firsts()
+    ('Homer', 'Huey', 'Huey')
+
+# Test class method firsts with parameter as_tuple=False::
+
+    >>> isinstance(PairEnum.firsts(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.firsts(as_tuple=False))
+    ()
+    >>> isinstance(Pair.firsts(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.firsts(as_tuple=False))
+    ('Tom', 'Mike', 'Micheal')
+    >>> isinstance(FPair.firsts(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.firsts(as_tuple=False))
+    ('Homer', 'Huey', 'Huey')
+
+    >>> isinstance(Pair.TOM_AND_JERRY.firsts(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.firsts(as_tuple=False))
+    ('Tom', 'Mike', 'Micheal')
+    >>> isinstance(Pair.MIKE_AND_MOLLY.firsts(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.firsts(as_tuple=False))
+    ('Tom', 'Mike', 'Micheal')
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.firsts(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.firsts(as_tuple=False))
+    ('Tom', 'Mike', 'Micheal')
+
+    >>> isinstance(FPair.SIMPSONS.firsts(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.SIMPSONS.firsts(as_tuple=False))
+    ('Homer', 'Huey', 'Huey')
+    >>> isinstance(FPair.DUCKS.firsts(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.DUCKS.firsts(as_tuple=False))
+    ('Homer', 'Huey', 'Huey')
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.firsts(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.MCDUCK_NEPHEWS.firsts(as_tuple=False))
+    ('Homer', 'Huey', 'Huey')
+
+# Test class method seconds with parameter as_tuple=True::
+
+    >>> PairEnum.seconds()
+    ()
+    >>> Pair.seconds()
+    ('Jerry', 'Molly', 'Molly')
+    >>> FPair.seconds()
+    ('Marge', 'Dewey', 'Dewey')
+
+    >>> Pair.TOM_AND_JERRY.seconds()
+    ('Jerry', 'Molly', 'Molly')
+    >>> Pair.MIKE_AND_MOLLY.seconds()
+    ('Jerry', 'Molly', 'Molly')
+    >>> Pair.MICHEAL_AND_MOLLY.seconds()
+    ('Jerry', 'Molly', 'Molly')
+
+    >>> FPair.SIMPSONS.seconds()
+    ('Marge', 'Dewey', 'Dewey')
+    >>> FPair.DUCKS.seconds()
+    ('Marge', 'Dewey', 'Dewey')
+    >>> FPair.MCDUCK_NEPHEWS.seconds()
+    ('Marge', 'Dewey', 'Dewey')
+
+# Test class method seconds with parameter as_tuple=False::
+
+    >>> isinstance(PairEnum.seconds(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.seconds(as_tuple=False))
+    ()
+    >>> isinstance(Pair.seconds(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.seconds(as_tuple=False))
+    ('Jerry', 'Molly', 'Molly')
+    >>> isinstance(FPair.seconds(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.seconds(as_tuple=False))
+    ('Marge', 'Dewey', 'Dewey')
+
+    >>> isinstance(Pair.TOM_AND_JERRY.seconds(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.seconds(as_tuple=False))
+    ('Jerry', 'Molly', 'Molly')
+    >>> isinstance(Pair.MIKE_AND_MOLLY.seconds(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.seconds(as_tuple=False))
+    ('Jerry', 'Molly', 'Molly')
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.seconds(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.seconds(as_tuple=False))
+    ('Jerry', 'Molly', 'Molly')
+
+    >>> isinstance(FPair.SIMPSONS.seconds(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.SIMPSONS.seconds(as_tuple=False))
+    ('Marge', 'Dewey', 'Dewey')
+    >>> isinstance(FPair.DUCKS.seconds(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.DUCKS.seconds(as_tuple=False))
+    ('Marge', 'Dewey', 'Dewey')
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.seconds(as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.MCDUCK_NEPHEWS.seconds(as_tuple=False))
+    ('Marge', 'Dewey', 'Dewey')
+
+# Test not existent class method thirds with parameter as_tuple=True::
+
+    >>> PairEnum.thirds()
+    Traceback (most recent call last):
+    ...
+    AttributeError: thirds
+    >>> Pair.thirds()
+    Traceback (most recent call last):
+    ...
+    AttributeError: thirds
+    >>> FPair.thirds()
+    Traceback (most recent call last):
+    ...
+    AttributeError: thirds
+
+    >>> Pair.TOM_AND_JERRY.thirds()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'thirds'
+    >>> Pair.MIKE_AND_MOLLY.thirds()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'thirds'
+    >>> Pair.MICHEAL_AND_MOLLY.thirds()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'thirds'
+
+    >>> FPair.SIMPSONS.thirds()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'thirds'
+    >>> FPair.DUCKS.thirds()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'thirds'
+    >>> FPair.MCDUCK_NEPHEWS.thirds()
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'thirds'
+
+# Test not existent class method thirds with parameter as_tuple=False::
+
+    >>> PairEnum.thirds(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: thirds
+    >>> Pair.thirds(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: thirds
+    >>> FPair.thirds(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: thirds
+
+    >>> Pair.TOM_AND_JERRY.thirds(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'thirds'
+    >>> Pair.MIKE_AND_MOLLY.thirds(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'thirds'
+    >>> Pair.MICHEAL_AND_MOLLY.thirds(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'thirds'
+
+    >>> FPair.SIMPSONS.thirds(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'thirds'
+    >>> FPair.DUCKS.thirds(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'thirds'
+    >>> FPair.MCDUCK_NEPHEWS.thirds(as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'thirds'
+
+# Test class method from_first with parameter as_tuple=True::
+
+    >>> PairEnum.from_first("Tom")
+    ()
+    >>> PairEnum.from_first("Mike")
+    ()
+    >>> PairEnum.from_first("Micheal")
+    ()
+    >>> PairEnum.from_first("Homer")
+    ()
+    >>> PairEnum.from_first("Huey")
+    ()
+
+    >>> Pair.from_first("Tom")
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> Pair.from_first("Mike")
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>,)
+    >>> Pair.from_first("Micheal")
+    (<Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>,)
+    >>> FPair.from_first("Homer")
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> FPair.from_first("Huey")
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+
+    >>> Pair.from_first("Tommy")
+    ()
+    >>> Pair.from_first("Micky")
+    ()
+    >>> Pair.from_first("Micheals")
+    ()
+    >>> FPair.from_first("Homels")
+    ()
+    >>> FPair.from_first("Hueys")
+    ()
+
+    >>> Pair.TOM_AND_JERRY.from_first("Tom")
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> Pair.MIKE_AND_MOLLY.from_first("Tom")
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> Pair.MICHEAL_AND_MOLLY.from_first("Tom")
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+
+    >>> Pair.TOM_AND_JERRY.from_first("Mike")
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>,)
+    >>> Pair.MIKE_AND_MOLLY.from_first("Mike")
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>,)
+    >>> Pair.MICHEAL_AND_MOLLY.from_first("Mike")
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>,)
+
+    >>> Pair.TOM_AND_JERRY.from_first("Micheal")
+    (<Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>,)
+    >>> Pair.MIKE_AND_MOLLY.from_first("Micheal")
+    (<Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>,)
+    >>> Pair.MICHEAL_AND_MOLLY.from_first("Micheal")
+    (<Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>,)
+
+    >>> FPair.SIMPSONS.from_first("Homer")
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> FPair.DUCKS.from_first("Homer")
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> FPair.MCDUCK_NEPHEWS.from_first("Homer")
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+
+    >>> FPair.SIMPSONS.from_first("Huey")
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+    >>> FPair.DUCKS.from_first("Huey")
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+    >>> FPair.MCDUCK_NEPHEWS.from_first("Huey")
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+
+    >>> Pair.TOM_AND_JERRY.from_first("Tommy")
+    ()
+    >>> Pair.MIKE_AND_MOLLY.from_first("Tommy")
+    ()
+    >>> Pair.MICHEAL_AND_MOLLY.from_first("Tommy")
+    ()
+
+    >>> Pair.TOM_AND_JERRY.from_first("Micky")
+    ()
+    >>> Pair.MIKE_AND_MOLLY.from_first("Micky")
+    ()
+    >>> Pair.MICHEAL_AND_MOLLY.from_first("Micky")
+    ()
+
+    >>> Pair.TOM_AND_JERRY.from_first("Micheals")
+    ()
+    >>> Pair.MIKE_AND_MOLLY.from_first("Micheals")
+    ()
+    >>> Pair.MICHEAL_AND_MOLLY.from_first("Micheals")
+    ()
+
+    >>> FPair.SIMPSONS.from_first("Homels")
+    ()
+    >>> FPair.DUCKS.from_first("Homels")
+    ()
+    >>> FPair.MCDUCK_NEPHEWS.from_first("Homels")
+    ()
+
+    >>> FPair.SIMPSONS.from_first("Hueys")
+    ()
+    >>> FPair.DUCKS.from_first("Hueys")
+    ()
+    >>> FPair.MCDUCK_NEPHEWS.from_first("Hueys")
+    ()
+
+# Test class method from_first with parameter as_tuple=False::
+
+    >>> isinstance(PairEnum.from_first("Tom", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.from_first("Tom", as_tuple=False))
+    ()
+    >>> isinstance(PairEnum.from_first("Mike", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.from_first("Mike", as_tuple=False))
+    ()
+    >>> isinstance(PairEnum.from_first("Micheal", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.from_first("Micheal", as_tuple=False))
+    ()
+    >>> isinstance(PairEnum.from_first("Homer", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.from_first("Homer", as_tuple=False))
+    ()
+    >>> isinstance(PairEnum.from_first("Huey", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.from_first("Huey", as_tuple=False))
+    ()
+
+    >>> isinstance(Pair.from_first("Tom", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.from_first("Tom", as_tuple=False))
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> isinstance(Pair.from_first("Mike", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.from_first("Mike", as_tuple=False))
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>,)
+    >>> isinstance(Pair.from_first("Micheal", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.from_first("Micheal", as_tuple=False))
+    (<Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>,)
+    >>> isinstance(FPair.from_first("Homer", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.from_first("Homer", as_tuple=False))
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> isinstance(FPair.from_first("Huey", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.from_first("Huey", as_tuple=False))
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+
+    >>> isinstance(Pair.from_first("Tommy", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.from_first("Tommy", as_tuple=False))
+    ()
+    >>> isinstance(Pair.from_first("Micky", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.from_first("Micky", as_tuple=False))
+    ()
+    >>> isinstance(Pair.from_first("Micheals", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.from_first("Micheals", as_tuple=False))
+    ()
+    >>> isinstance(FPair.from_first("Homels", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.from_first("Homels", as_tuple=False))
+    ()
+    >>> isinstance(FPair.from_first("Hueys", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.from_first("Hueys", as_tuple=False))
+    ()
+
+    >>> isinstance(Pair.TOM_AND_JERRY.from_first("Tom", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.from_first("Tom", as_tuple=False))
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> isinstance(Pair.MIKE_AND_MOLLY.from_first("Tom", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.from_first("Tom", as_tuple=False))
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.from_first("Tom", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.from_first("Tom", as_tuple=False))
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+
+    >>> isinstance(Pair.TOM_AND_JERRY.from_first("Mike", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.from_first("Mike", as_tuple=False))
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>,)
+    >>> isinstance(Pair.MIKE_AND_MOLLY.from_first("Mike", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.from_first("Mike", as_tuple=False))
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>,)
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.from_first("Mike", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.from_first("Mike", as_tuple=False))
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>,)
+
+    >>> isinstance(Pair.TOM_AND_JERRY.from_first("Micheal", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.from_first("Micheal", as_tuple=False))
+    (<Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>,)
+    >>> isinstance(Pair.MIKE_AND_MOLLY.from_first("Micheal", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.from_first("Micheal", as_tuple=False))
+    (<Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>,)
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.from_first("Micheal", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.from_first("Micheal", as_tuple=False))
+    (<Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>,)
+
+    >>> isinstance(FPair.SIMPSONS.from_first("Homer", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.SIMPSONS.from_first("Homer", as_tuple=False))
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> isinstance(FPair.DUCKS.from_first("Homer", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.DUCKS.from_first("Homer", as_tuple=False))
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.from_first("Homer", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.MCDUCK_NEPHEWS.from_first("Homer", as_tuple=False))
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+
+    >>> isinstance(FPair.SIMPSONS.from_first("Huey", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.SIMPSONS.from_first("Huey", as_tuple=False))
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+    >>> isinstance(FPair.DUCKS.from_first("Huey", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.DUCKS.from_first("Huey", as_tuple=False))
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.from_first("Huey", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.MCDUCK_NEPHEWS.from_first("Huey", as_tuple=False))
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+
+    >>> isinstance(Pair.TOM_AND_JERRY.from_first("Tommy", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.from_first("Tommy", as_tuple=False))
+    ()
+    >>> isinstance(Pair.MIKE_AND_MOLLY.from_first("Tommy", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.from_first("Tommy", as_tuple=False))
+    ()
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.from_first("Tommy", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.from_first("Tommy", as_tuple=False))
+    ()
+
+    >>> isinstance(Pair.TOM_AND_JERRY.from_first("Micky", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.from_first("Micky", as_tuple=False))
+    ()
+    >>> isinstance(Pair.MIKE_AND_MOLLY.from_first("Micky", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.from_first("Micky", as_tuple=False))
+    ()
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.from_first("Micky", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.from_first("Micky", as_tuple=False))
+    ()
+
+    >>> isinstance(Pair.TOM_AND_JERRY.from_first("Micheals", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.from_first("Micheals", as_tuple=False))
+    ()
+    >>> isinstance(Pair.MIKE_AND_MOLLY.from_first("Micheals", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.from_first("Micheals", as_tuple=False))
+    ()
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.from_first("Micheals", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.from_first("Micheals", as_tuple=False))
+    ()
+
+    >>> isinstance(FPair.SIMPSONS.from_first("Homels", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.SIMPSONS.from_first("Homels", as_tuple=False))
+    ()
+    >>> isinstance(FPair.DUCKS.from_first("Homels", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.DUCKS.from_first("Homels", as_tuple=False))
+    ()
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.from_first("Homels", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.MCDUCK_NEPHEWS.from_first("Homels", as_tuple=False))
+    ()
+
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.from_first("Hueys", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.SIMPSONS.from_first("Hueys", as_tuple=False))
+    ()
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.from_first("Hueys", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.DUCKS.from_first("Hueys", as_tuple=False))
+    ()
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.from_first("Hueys", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.MCDUCK_NEPHEWS.from_first("Hueys", as_tuple=False))
+    ()
+
+# Test class method from_second with parameter as_tuple=True::
+
+    >>> PairEnum.from_second("Jerry")
+    ()
+    >>> PairEnum.from_second("Molly")
+    ()
+    >>> PairEnum.from_second("Marge")
+    ()
+    >>> PairEnum.from_second("Dewey")
+    ()
+
+    >>> Pair.from_second("Jerry")
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> Pair.from_second("Molly")
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>, <Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>)
+    >>> FPair.from_second("Marge")
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> FPair.from_second("Dewey")
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+
+    >>> Pair.from_second("Jeremy")
+    ()
+    >>> Pair.from_second("Mary")
+    ()
+    >>> FPair.from_second("Magie")
+    ()
+    >>> FPair.from_second("David")
+    ()
+
+    >>> Pair.TOM_AND_JERRY.from_second("Jerry")
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> Pair.MIKE_AND_MOLLY.from_second("Jerry")
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> Pair.MICHEAL_AND_MOLLY.from_second("Jerry")
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+
+    >>> Pair.TOM_AND_JERRY.from_second("Molly")
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>, <Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>)
+    >>> Pair.MIKE_AND_MOLLY.from_second("Molly")
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>, <Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>)
+    >>> Pair.MICHEAL_AND_MOLLY.from_second("Molly")
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>, <Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>)
+
+    >>> FPair.SIMPSONS.from_second("Marge")
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> FPair.DUCKS.from_second("Marge")
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> FPair.MCDUCK_NEPHEWS.from_second("Marge")
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+
+    >>> FPair.SIMPSONS.from_second("Dewey")
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+    >>> FPair.DUCKS.from_second("Dewey")
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+    >>> FPair.MCDUCK_NEPHEWS.from_second("Dewey")
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+
+    >>> Pair.TOM_AND_JERRY.from_second("Jeremy")
+    ()
+    >>> Pair.MIKE_AND_MOLLY.from_second("Jeremy")
+    ()
+    >>> Pair.MICHEAL_AND_MOLLY.from_second("Jeremy")
+    ()
+
+    >>> Pair.TOM_AND_JERRY.from_second("Mary")
+    ()
+    >>> Pair.MIKE_AND_MOLLY.from_second("Mary")
+    ()
+    >>> Pair.MICHEAL_AND_MOLLY.from_second("Mary")
+    ()
+
+    >>> FPair.SIMPSONS.from_second("Magie")
+    ()
+    >>> FPair.DUCKS.from_second("Magie")
+    ()
+    >>> FPair.MCDUCK_NEPHEWS.from_second("Magie")
+    ()
+
+    >>> FPair.SIMPSONS.from_second("David")
+    ()
+    >>> FPair.DUCKS.from_second("David")
+    ()
+    >>> FPair.MCDUCK_NEPHEWS.from_second("David")
+    ()
+
+# Test class method from_second with parameter as_tuple=False::
+
+    >>> isinstance(PairEnum.from_second("Jerry", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.from_second("Jerry", as_tuple=False))
+    ()
+    >>> isinstance(PairEnum.from_second("Molly", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.from_second("Molly", as_tuple=False))
+    ()
+    >>> isinstance(PairEnum.from_second("Marge", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.from_second("Marge", as_tuple=False))
+    ()
+    >>> isinstance(PairEnum.from_second("Dewey", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(PairEnum.from_second("Dewey", as_tuple=False))
+    ()
+
+    >>> isinstance(Pair.from_second("Jerry", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.from_second("Jerry", as_tuple=False))
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> isinstance(Pair.from_second("Molly", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.from_second("Molly", as_tuple=False))
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>, <Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>)
+    >>> isinstance(FPair.from_second("Marge", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.from_second("Marge", as_tuple=False))
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> isinstance(FPair.from_second("Dewey", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.from_second("Dewey", as_tuple=False))
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+
+    >>> isinstance(Pair.from_second("Jeremy", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.from_second("Jeremy", as_tuple=False))
+    ()
+    >>> isinstance(Pair.from_second("Mary", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.from_second("Mary", as_tuple=False))
+    ()
+    >>> isinstance(FPair.from_second("Magie", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.from_second("Magie", as_tuple=False))
+    ()
+    >>> isinstance(FPair.from_second("David", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.from_second("David", as_tuple=False))
+    ()
+
+    >>> isinstance(Pair.TOM_AND_JERRY.from_second("Jerry", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.from_second("Jerry", as_tuple=False))
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> isinstance(Pair.MIKE_AND_MOLLY.from_second("Jerry", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.from_second("Jerry", as_tuple=False))
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.from_second("Jerry", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.from_second("Jerry", as_tuple=False))
+    (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>,)
+
+    >>> isinstance(Pair.TOM_AND_JERRY.from_second("Molly", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.from_second("Molly", as_tuple=False))
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>, <Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>)
+    >>> isinstance(Pair.MIKE_AND_MOLLY.from_second("Molly", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.from_second("Molly", as_tuple=False))
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>, <Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>)
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.from_second("Molly", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.from_second("Molly", as_tuple=False))
+    (<Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>, <Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>)
+
+    >>> isinstance(FPair.SIMPSONS.from_second("Marge", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.SIMPSONS.from_second("Marge", as_tuple=False))
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> isinstance(FPair.DUCKS.from_second("Marge", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.DUCKS.from_second("Marge", as_tuple=False))
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.from_second("Marge", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.MCDUCK_NEPHEWS.from_second("Marge", as_tuple=False))
+    (<FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>,)
+
+    >>> isinstance(FPair.SIMPSONS.from_second("Dewey", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.SIMPSONS.from_second("Dewey", as_tuple=False))
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+    >>> isinstance(FPair.DUCKS.from_second("Dewey", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.DUCKS.from_second("Dewey", as_tuple=False))
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.from_second("Dewey", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.MCDUCK_NEPHEWS.from_second("Dewey", as_tuple=False))
+    (<FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>, <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>)
+
+    >>> isinstance(Pair.TOM_AND_JERRY.from_second("Jeremy", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.from_second("Jeremy", as_tuple=False))
+    ()
+    >>> isinstance(Pair.MIKE_AND_MOLLY.from_second("Jeremy", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.from_second("Jeremy", as_tuple=False))
+    ()
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.from_second("Jeremy", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.from_second("Jeremy", as_tuple=False))
+    ()
+
+    >>> isinstance(Pair.TOM_AND_JERRY.from_second("Mary", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.TOM_AND_JERRY.from_second("Mary", as_tuple=False))
+    ()
+    >>> isinstance(Pair.MIKE_AND_MOLLY.from_second("Mary", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MIKE_AND_MOLLY.from_second("Mary", as_tuple=False))
+    ()
+    >>> isinstance(Pair.MICHEAL_AND_MOLLY.from_second("Mary", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(Pair.MICHEAL_AND_MOLLY.from_second("Mary", as_tuple=False))
+    ()
+
+    >>> isinstance(FPair.SIMPSONS.from_second("Magie", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.SIMPSONS.from_second("Magie", as_tuple=False))
+    ()
+    >>> isinstance(FPair.DUCKS.from_second("Magie", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.DUCKS.from_second("Magie", as_tuple=False))
+    ()
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.from_second("Magie", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.MCDUCK_NEPHEWS.from_second("Magie", as_tuple=False))
+    ()
+
+    >>> isinstance(FPair.SIMPSONS.from_second("David", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.SIMPSONS.from_second("David", as_tuple=False))
+    ()
+    >>> isinstance(FPair.DUCKS.from_second("David", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.DUCKS.from_second("David", as_tuple=False))
+    ()
+    >>> isinstance(FPair.MCDUCK_NEPHEWS.from_second("David", as_tuple=False), types.GeneratorType)
+    True
+    >>> tuple(FPair.MCDUCK_NEPHEWS.from_second("David", as_tuple=False))
+    ()
+
+# Test class method from_third with parameter as_tuple=True::
+
+    >>> PairEnum.from_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: from_third
+    >>> Pair.from_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: from_third
+    >>> FPair.from_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: from_third
+
+    >>> Pair.TOM_AND_JERRY.from_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'from_third'
+    >>> Pair.MIKE_AND_MOLLY.from_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'from_third'
+    >>> Pair.MICHEAL_AND_MOLLY.from_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'from_third'
+
+    >>> FPair.SIMPSONS.from_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'from_third'
+    >>> FPair.DUCKS.from_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'from_third'
+    >>> FPair.MCDUCK_NEPHEWS.from_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'from_third'
+
+# Test class method from_third with parameter as_tuple=False::
+
+    >>> PairEnum.from_third("Hailey", as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: from_third
+    >>> Pair.from_third("Hailey", as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: from_third
+    >>> FPair.from_third("Hailey", as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: from_third
+
+    >>> Pair.TOM_AND_JERRY.from_third("Hailey", as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'from_third'
+    >>> Pair.MIKE_AND_MOLLY.from_third("Hailey", as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'from_third'
+    >>> Pair.MICHEAL_AND_MOLLY.from_third("Hailey", as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'from_third'
+
+    >>> FPair.SIMPSONS.from_third("Hailey", as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'from_third'
+    >>> FPair.DUCKS.from_third("Hailey", as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'from_third'
+    >>> FPair.MCDUCK_NEPHEWS.from_third("Hailey", as_tuple=False)
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'from_third'
+
+# Test class method has_first::
+
+    >>> PairEnum.has_first("Tom")
+    False
+    >>> PairEnum.has_first("Homer")
+    False
+    >>> Pair.has_first("Tom")
+    True
+    >>> Pair.has_first("Mike")
+    True
+    >>> Pair.has_first("Micheal")
+    True
+    >>> FPair.has_first("Homer")
+    True
+    >>> FPair.has_first("Huey")
+    True
+
+    >>> Pair.has_first("Tommy")
+    False
+    >>> Pair.has_first("Micky")
+    False
+    >>> Pair.has_first("Micheals")
+    False
+    >>> FPair.has_first("Homels")
+    False
+    >>> FPair.has_first("Hueys")
+    False
+
+    >>> Pair.TOM_AND_JERRY.has_first("Tom")
+    True
+    >>> Pair.MIKE_AND_MOLLY.has_first("Tom")
+    True
+    >>> Pair.MICHEAL_AND_MOLLY.has_first("Tom")
+    True
+    >>> Pair.TOM_AND_JERRY.has_first("Mike")
+    True
+    >>> Pair.MIKE_AND_MOLLY.has_first("Mike")
+    True
+    >>> Pair.MICHEAL_AND_MOLLY.has_first("Mike")
+    True
+    >>> Pair.TOM_AND_JERRY.has_first("Micheal")
+    True
+    >>> Pair.MIKE_AND_MOLLY.has_first("Micheal")
+    True
+    >>> Pair.MICHEAL_AND_MOLLY.has_first("Micheal")
+    True
+
+    >>> Pair.TOM_AND_JERRY.has_first("Tommy")
+    False
+    >>> Pair.MIKE_AND_MOLLY.has_first("Tommy")
+    False
+    >>> Pair.MICHEAL_AND_MOLLY.has_first("Tommy")
+    False
+    >>> Pair.TOM_AND_JERRY.has_first("Micky")
+    False
+    >>> Pair.MIKE_AND_MOLLY.has_first("Micky")
+    False
+    >>> Pair.MICHEAL_AND_MOLLY.has_first("Micky")
+    False
+    >>> Pair.TOM_AND_JERRY.has_first("Micheals")
+    False
+    >>> Pair.MIKE_AND_MOLLY.has_first("Micheals")
+    False
+    >>> Pair.MICHEAL_AND_MOLLY.has_first("Micheals")
+    False
+
+    >>> FPair.SIMPSONS.has_first("Homer")
+    True
+    >>> FPair.DUCKS.has_first("Homer")
+    True
+    >>> FPair.MCDUCK_NEPHEWS.has_first("Homer")
+    True
+    >>> FPair.SIMPSONS.has_first("Huey")
+    True
+    >>> FPair.DUCKS.has_first("Huey")
+    True
+    >>> FPair.MCDUCK_NEPHEWS.has_first("Huey")
+    True
+
+    >>> FPair.SIMPSONS.has_first("Homels")
+    False
+    >>> FPair.DUCKS.has_first("Homels")
+    False
+    >>> FPair.MCDUCK_NEPHEWS.has_first("Homels")
+    False
+    >>> FPair.SIMPSONS.has_first("Hueys")
+    False
+    >>> FPair.DUCKS.has_first("Hueys")
+    False
+    >>> FPair.MCDUCK_NEPHEWS.has_first("Hueys")
+    False
+
+# Test class method has_second::
+
+    >>> PairEnum.has_second("Jerry")
+    False
+    >>> PairEnum.has_second("Marge")
+    False
+    >>> Pair.has_second("Jerry")
+    True
+    >>> Pair.has_second("Molly")
+    True
+    >>> FPair.has_second("Marge")
+    True
+    >>> FPair.has_second("Dewey")
+    True
+
+    >>> Pair.has_second("Jeremy")
+    False
+    >>> Pair.has_second("Mary")
+    False
+    >>> FPair.has_second("Magie")
+    False
+    >>> FPair.has_second("David")
+    False
+
+    >>> Pair.TOM_AND_JERRY.has_second("Jerry")
+    True
+    >>> Pair.MIKE_AND_MOLLY.has_second("Jerry")
+    True
+    >>> Pair.MICHEAL_AND_MOLLY.has_second("Jerry")
+    True
+    >>> Pair.TOM_AND_JERRY.has_second("Molly")
+    True
+    >>> Pair.MIKE_AND_MOLLY.has_second("Molly")
+    True
+    >>> Pair.MICHEAL_AND_MOLLY.has_second("Molly")
+    True
+
+    >>> Pair.TOM_AND_JERRY.has_second("Jeremy")
+    False
+    >>> Pair.MIKE_AND_MOLLY.has_second("Jeremy")
+    False
+    >>> Pair.MICHEAL_AND_MOLLY.has_second("Jeremy")
+    False
+    >>> Pair.TOM_AND_JERRY.has_second("Mary")
+    False
+    >>> Pair.MIKE_AND_MOLLY.has_second("Mary")
+    False
+    >>> Pair.MICHEAL_AND_MOLLY.has_second("Mary")
+    False
+
+    >>> FPair.SIMPSONS.has_second("Marge")
+    True
+    >>> FPair.DUCKS.has_second("Marge")
+    True
+    >>> FPair.MCDUCK_NEPHEWS.has_second("Marge")
+    True
+    >>> FPair.SIMPSONS.has_second("Dewey")
+    True
+    >>> FPair.DUCKS.has_second("Dewey")
+    True
+    >>> FPair.MCDUCK_NEPHEWS.has_second("Dewey")
+    True
+
+    >>> FPair.SIMPSONS.has_second("Magie")
+    False
+    >>> FPair.DUCKS.has_second("Magie")
+    False
+    >>> FPair.MCDUCK_NEPHEWS.has_second("Magie")
+    False
+    >>> FPair.SIMPSONS.has_second("David")
+    False
+    >>> FPair.DUCKS.has_second("David")
+    False
+    >>> FPair.MCDUCK_NEPHEWS.has_second("David")
+    False
+
+# Test class method has_third::
+
+    >>> PairEnum.has_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: has_third
+    >>> Pair.has_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: has_third
+    >>> FPair.has_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: has_third
+    >>> Pair.TOM_AND_JERRY.has_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'has_third'
+    >>> Pair.MIKE_AND_MOLLY.has_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'has_third'
+    >>> Pair.MICHEAL_AND_MOLLY.has_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'has_third'
+    >>> FPair.SIMPSONS.has_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'has_third'
+    >>> FPair.DUCKS.has_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'has_third'
+    >>> FPair.MCDUCK_NEPHEWS.has_third("Hailey")
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'has_third'
+
+# Test normal Enum features::
+
+    >>> Pair.TOM_AND_JERRY
+    <Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>
+    >>> Pair.MIKE_AND_MOLLY
+    <Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')>
+    >>> Pair.MICHEAL_AND_MOLLY
+    <Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')>
+
+    >>> Pair.TOM_AND_JERRY.name
+    'TOM_AND_JERRY'
+    >>> Pair.TOM_AND_JERRY.value
+    NamedTuple(first='Tom', second='Jerry')
+    >>> Pair.MIKE_AND_MOLLY.name
+    'MIKE_AND_MOLLY'
+    >>> Pair.MIKE_AND_MOLLY.value
+    NamedTuple(first='Mike', second='Molly')
+    >>> Pair.MICHEAL_AND_MOLLY.name
+    'MICHEAL_AND_MOLLY'
+    >>> Pair.MICHEAL_AND_MOLLY.value
+    NamedTuple(first='Micheal', second='Molly')
+
+    >>> FPair.SIMPSONS
+    <FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')>
+    >>> FPair.DUCKS
+    <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>
+    >>> FPair.MCDUCK_NEPHEWS
+    <FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')>
+
+    >>> FPair.SIMPSONS.name
+    'SIMPSONS'
+    >>> FPair.SIMPSONS.value
+    NamedTuple(first='Homer', second='Marge')
+    >>> FPair.DUCKS.name
+    'DUCKS'
+    >>> FPair.DUCKS.value
+    NamedTuple(first='Huey', second='Dewey')
+    >>> FPair.MCDUCK_NEPHEWS.name
+    'DUCKS'
+    >>> FPair.MCDUCK_NEPHEWS.value
+    NamedTuple(first='Huey', second='Dewey')
+
+# Test extra feutures and __str__ function::
+
+    >>> print(Pair.TOM_AND_JERRY)
+    Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')
+    >>> Pair.TOM_AND_JERRY.first
+    'Tom'
+    >>> Pair.TOM_AND_JERRY.second
+    'Jerry'
+    >>> Pair.TOM_AND_JERRY.third
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'third'
+
+    >>> print(Pair.MIKE_AND_MOLLY)
+    Pair.MIKE_AND_MOLLY: NamedTuple(first='Mike', second='Molly')
+    >>> Pair.MIKE_AND_MOLLY.first
+    'Mike'
+    >>> Pair.MIKE_AND_MOLLY.second
+    'Molly'
+    >>> Pair.MIKE_AND_MOLLY.third
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'third'
+
+    >>> print(Pair.MICHEAL_AND_MOLLY)
+    Pair.MICHEAL_AND_MOLLY: NamedTuple(first='Micheal', second='Molly')
+    >>> Pair.MICHEAL_AND_MOLLY.first
+    'Micheal'
+    >>> Pair.MICHEAL_AND_MOLLY.second
+    'Molly'
+    >>> Pair.MICHEAL_AND_MOLLY.third
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'Pair' object has no attribute 'third'
+
+    >>> print(FPair.SIMPSONS)
+    FPair.SIMPSONS: NamedTuple(first='Homer', second='Marge')
+    >>> FPair.SIMPSONS.first
+    'Homer'
+    >>> FPair.SIMPSONS.second
+    'Marge'
+    >>> FPair.SIMPSONS.third
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'third'
+
+    >>> print(FPair.DUCKS)
+    FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')
+    >>> FPair.DUCKS.first
+    'Huey'
+    >>> FPair.DUCKS.second
+    'Dewey'
+    >>> FPair.DUCKS.third
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'third'
+
+    >>> print(FPair.MCDUCK_NEPHEWS)
+    FPair.DUCKS: NamedTuple(first='Huey', second='Dewey')
+    >>> FPair.MCDUCK_NEPHEWS.first
+    'Huey'
+    >>> FPair.MCDUCK_NEPHEWS.second
+    'Dewey'
+    >>> FPair.MCDUCK_NEPHEWS.third
+    Traceback (most recent call last):
+    ...
+    AttributeError: 'FPair' object has no attribute 'third'
