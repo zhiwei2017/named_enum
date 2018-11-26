@@ -2,3 +2,8 @@
 !.gitignore
 __pycache__
 *.pyc
+*.egg-info
+build
+_static
+_templates
+dist
