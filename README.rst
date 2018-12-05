@@ -7,6 +7,11 @@ class is the type of named tuple.
 
 This package is inspired by `Cristian <https://github.com/cagonza6/>`_.
 
+Status
+------
+.. image:: https://readthedocs.org/projects/named-enum/badge/?version=latest
+    :target: https://named-enum.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 Installation
 ------------

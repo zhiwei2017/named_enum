@@ -377,15 +377,18 @@ class NamedEnum(Enum, metaclass=NamedEnumMeta):
     """
     Through the value of variable '_field_names_' to control its subclass for
     different use cases:
+
     1.  value of '_field_names_' is None or empty value. In this case, its
     subclass works like an extended Enum class with extra function:
-    'names', 'values', 'as_dict', 'as_list', 'as_set',
-    'as_tuple', 'as_OrderedDict', 'describe'.
+    'names', 'values', 'as_dict', 'as_list', 'as_set', 'as_tuple',
+    'as_ordereddict', 'describe'.
+
     2.  value of '_field_names_' is neither None or empty. In this case, its
     subclass keeps the extra functions in 1. mentioned, gives each element
     in the enumeration item's value a name and provides functions for each
     attribute/field name, like '<field_name>s', 'from_<field_name>',
     'has_<field_name>'.
+
     Instead of the setting the attributes to the enumeration instance, it uses
     the function __getattr__ to achieve it.
 

@@ -7,3 +7,4 @@ build
 _static
 _templates
 dist
+!.readthedocs.yml
