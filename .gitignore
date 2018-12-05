@@ -8,3 +8,4 @@ _static
 _templates
 dist
 !.readthedocs.yml
+!.travis.yml

@@ -1,3 +1,4 @@
+=========
 NamedEnum
 =========
 
@@ -13,10 +14,13 @@ Status
     :target: https://named-enum.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://travis-ci.com/KnightConan/named_enum.svg?branch=master
+    :target: https://travis-ci.com/KnightConan/named_enum
+
 Installation
 ------------
 
-``pip install named_enum``
+``pip install named-enum``
 
 
 Quick Start

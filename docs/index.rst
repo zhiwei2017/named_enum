@@ -25,6 +25,15 @@ This package is inspired by `Cristian <https://github.com/cagonza6/>`_.
 
 If you like this package, please give me a star in `github <https://github.com/KnightConan/named_enum>`_.
 
+Status
+------
+.. image:: https://readthedocs.org/projects/named-enum/badge/?version=latest
+    :target: https://named-enum.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
+.. image:: https://travis-ci.com/KnightConan/named_enum.svg?branch=master
+    :target: https://travis-ci.com/KnightConan/named_enum
+
 Index
 -----
 .. toctree::

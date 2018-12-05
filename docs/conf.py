@@ -17,7 +17,7 @@ import sys
 import sphinx_rtd_theme
 
 
-ProjectPath = os.path.abspath('../../named_enum')
+ProjectPath = os.path.abspath('../named_enum')
 sys.path.insert(0, ProjectPath)
 
 

@@ -2,4 +2,4 @@
 Installation
 ============
 
-``pip install named_enum``
+``pip install named-enum``
