@@ -12,24 +12,17 @@ Enumeration Creation
 
         >>> from named_enum import NamedEnum
 
-        >>> class ExtendedEnum(NamedEnum):
-        ...     """
-        ...     normal Enum class with extra functions
-        ...     """
-        ...     pass
-
         >>> class TripleEnum(NamedEnum):
         ...     """
         ...     using a sequence of strings to define the field names
         ...     """
         ...     _field_names_ = ("first", "second", "third")
 
-        >>> class LabelEnum(NamedEnum):
+        >>> class TripleEnum(NamedEnum):
         ...     """
-        ...     using a comma/space separated string to define the field names
+        ...     using a sequence of strings to define the field names
         ...     """
-        ...     _field_names_ = "key, label"
-
+        ...     _field_names_ = "first, second, third")
 
     + using function ``namedenum``
 
@@ -37,37 +30,35 @@ Enumeration Creation
 
         >>> from named_enum import namedenum
 
-        >>> # normal Enum class with extra functions
-        >>> ExtendedEnum = namedenum("ExtendedEnum")
-
         >>> # using a sequence of strings to define the field names
         >>> TripleEnum = namedenum("TripleEnum", ("first", "second", "third"))
 
         >>> # using a comma/space separated string to define the field names
-        >>> LabelEnum = namedenum("LabelEnum", "key, label")
+        >>> TripleEnum = namedenum("LabelEnum", "key, label")
 
 2. create enumerations using the customized enumeration class in step **1**.
 
     .. code-block:: python
 
-        >>> class TVCouple(ExtendedEnum):
-        ...     GALLAGHERS = ("FRANK", "MONICA")
-        ...     MIKE_AND_MOLLY = ("Mike", "Molly")
-
         >>> class AnimationFamily(TripleEnum):
         ...     SIMPSONS = ("Homer", "Bart", "Marge")
         ...     DUCKS = ("Huey", "Dewey", "Louie")
 
-        >>> class NBALegendary(LabelEnum):
-        ...     JOHNSON = ("Johnson", "Magic Johnson")
-        ...     Jordan = ("Jordan", "Air Jordan")
-
-Or you can directly use the class ``PairEnum``, which has two fields: ``first``
-and ``second``.
+Or you can directly use the classes ``ExtendedEnum``, ``LabeledEnum``,
+``PairEnum`` to declare your enumeration.
 
     .. code-block:: python
 
-        >>> from named_enum import PairEnum
+        >>> from named_enum import ExtendedEnum, LabeledEnum, PairEnum
+
+        >>> class TVCouple(ExtendedEnum):
+        ...     GALLAGHERS = ("FRANK", "MONICA")
+        ...     MIKE_AND_MOLLY = ("Mike", "Molly")
+
+        >>> class NBALegendary(LabeledEnum):
+        ...     JOHNSON = ("Johnson", "Magic Johnson")
+        ...     Jordan = ("Jordan", "Air Jordan")
+
         >>> class Pair(PairEnum):
         ...     TOM_AND_JERRY = ("Tom", "Jerry")
         ...     BULLS = ("Micheal", "Pippen")
@@ -79,15 +70,19 @@ Usages
 
     .. code-block:: python
 
-        >>> TVCouple.names()
-        ('GALLAGHERS', 'MIKE_AND_MOLLY')
-
+        # TripleEnum
         >>> AnimationFamily.names()
         ('SIMPSONS', 'DUCKS')
 
+        # ExtendedEnum
+        >>> TVCouple.names()
+        ('GALLAGHERS', 'MIKE_AND_MOLLY')
+
+        # LabeledEnum
         >>> NBALegendary.names()
         ('JOHNSON', 'Jordan')
 
+        # PairEnum
         >>> Pair.names()
         ('TOM_AND_JERRY', 'BULLS')
 
@@ -96,15 +91,20 @@ Usages
     .. code-block:: python
 
         >>> from types import GeneratorType
-        >>> isinstance(TVCouple.names(as_tuple=False), GeneratorType)
-        True
 
+        # TripleEnum
         >>> isinstance(AnimationFamily.names(as_tuple=False), GeneratorType)
         True
 
+        # ExtendedEnum
+        >>> isinstance(TVCouple.names(as_tuple=False), GeneratorType)
+        True
+
+        # LabeledEnum
         >>> isinstance(NBALegendary.names(as_tuple=False), GeneratorType)
         True
 
+        # PairEnum
         >>> isinstance(Pair.names(as_tuple=False), GeneratorType)
         True
 
@@ -113,15 +113,19 @@ Usages
 
     .. code-block:: python
 
-        >>> TVCouple.values()
-        (('FRANK', 'MONICA'), ('Mike', 'Molly'))
-
+        # TripleEnum
         >>> AnimationFamily.values()
         (NamedTuple(first='Homer', second='Bart', third='Marge'), NamedTuple(first='Huey', second='Dewey', third='Louie'))
 
+        # ExtendedEnum
+        >>> TVCouple.values()
+        (('FRANK', 'MONICA'), ('Mike', 'Molly'))
+
+        # LabeledEnum
         >>> NBALegendary.values()
         (NamedTuple(key='Johnson', label='Magic Johnson'), NamedTuple(key='Jordan', label='Air Jordan'))
 
+        # PairEnum
         >>> Pair.values()
         (NamedTuple(first='Tom', second='Jerry'), NamedTuple(first='Micheal', second='Pippen'))
 
@@ -130,15 +134,20 @@ Usages
     .. code-block:: python
 
         >>> import types
-        >>> isinstance(TVCouple.values(as_tuple=False), GeneratorType)
-        True
 
+        # TripleEnum
         >>> isinstance(AnimationFamily.values(as_tuple=False), GeneratorType)
         True
 
+        # ExtendedEnum
+        >>> isinstance(TVCouple.values(as_tuple=False), GeneratorType)
+        True
+
+        # LabeledEnum
         >>> isinstance(NBALegendary.values(as_tuple=False), GeneratorType)
         True
 
+        # PairEnum
         >>> isinstance(Pair.values(as_tuple=False), GeneratorType)
         True
 
@@ -147,14 +156,7 @@ Usages
 
     .. code-block:: python
 
-        >>> TVCouple.describe()
-        Class: TVCouple
-                  Name |               Value
-        ------------------------------------
-            GALLAGHERS | ('FRANK', 'MONICA')
-        MIKE_AND_MOLLY |   ('Mike', 'Molly')
-        <BLANKLINE>
-
+        # TripleEnum
         >>> AnimationFamily.describe()
         Class: AnimationFamily
             Name | First | Second | Third
@@ -163,7 +165,16 @@ Usages
            DUCKS |  Huey |  Dewey | Louie
         <BLANKLINE>
 
+        # ExtendedEnum
+        >>> TVCouple.describe()
+        Class: TVCouple
+                  Name |               Value
+        ------------------------------------
+            GALLAGHERS | ('FRANK', 'MONICA')
+        MIKE_AND_MOLLY |   ('Mike', 'Molly')
+        <BLANKLINE>
 
+        # LabeledEnum
         >>> NBALegendary.describe()
         Class: NBALegendary
            Name |     Key |         Label
@@ -172,6 +183,7 @@ Usages
          Jordan |  Jordan |    Air Jordan
         <BLANKLINE>
 
+        # PairEnum
         >>> Pair.describe()
         Class: Pair
                  Name |   First | Second
@@ -185,15 +197,19 @@ Usages
 
     .. code-block:: python
 
-        >>> tuple(TVCouple.gen())
-        (('GALLAGHERS', ('FRANK', 'MONICA')), ('MIKE_AND_MOLLY', ('Mike', 'Molly')))
-
+        # TripleEnum
         >>> tuple(AnimationFamily.gen())
         (('SIMPSONS', NamedTuple(first='Homer', second='Bart', third='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey', third='Louie')))
 
+        # ExtendedEnum
+        >>> tuple(TVCouple.gen())
+        (('GALLAGHERS', ('FRANK', 'MONICA')), ('MIKE_AND_MOLLY', ('Mike', 'Molly')))
+
+        # LabeledEnum
         >>> tuple(NBALegendary.gen())
         (('JOHNSON', NamedTuple(key='Johnson', label='Magic Johnson')), ('Jordan', NamedTuple(key='Jordan', label='Air Jordan')))
 
+        # PairEnum
         >>> tuple(Pair.gen())
         (('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('BULLS', NamedTuple(first='Micheal', second='Pippen')))
 
@@ -201,15 +217,19 @@ Usages
 
     .. code-block:: python
 
-        >>> tuple(TVCouple.gen(name_value_pair=False))
-        (<TVCouple.GALLAGHERS: ('FRANK', 'MONICA')>, <TVCouple.MIKE_AND_MOLLY: ('Mike', 'Molly')>)
-
+        # TripleEnum
         >>> tuple(AnimationFamily.gen(name_value_pair=False))
         (<AnimationFamily.SIMPSONS: NamedTuple(first='Homer', second='Bart', third='Marge')>, <AnimationFamily.DUCKS: NamedTuple(first='Huey', second='Dewey', third='Louie')>)
 
+        # ExtendedEnum
+        >>> tuple(TVCouple.gen(name_value_pair=False))
+        (<TVCouple.GALLAGHERS: ('FRANK', 'MONICA')>, <TVCouple.MIKE_AND_MOLLY: ('Mike', 'Molly')>)
+
+        # LabeledEnum
         >>> tuple(NBALegendary.gen(name_value_pair=False))
         (<NBALegendary.JOHNSON: NamedTuple(key='Johnson', label='Magic Johnson')>, <NBALegendary.Jordan: NamedTuple(key='Jordan', label='Air Jordan')>)
 
+        # PairEnum
         >>> tuple(Pair.gen(name_value_pair=False))
         (<Pair.TOM_AND_JERRY: NamedTuple(first='Tom', second='Jerry')>, <Pair.BULLS: NamedTuple(first='Micheal', second='Pippen')>)
 
@@ -218,15 +238,19 @@ Usages
 
     .. code-block:: python
 
-        >>> TVCouple.as_dict()
-        {'GALLAGHERS': ('FRANK', 'MONICA'), 'MIKE_AND_MOLLY': ('Mike', 'Molly')}
-
+        # TripleEnum
         >>> AnimationFamily.as_dict()
         {'SIMPSONS': NamedTuple(first='Homer', second='Bart', third='Marge'), 'DUCKS': NamedTuple(first='Huey', second='Dewey', third='Louie')}
 
+        # ExtendedEnum
+        >>> TVCouple.as_dict()
+        {'GALLAGHERS': ('FRANK', 'MONICA'), 'MIKE_AND_MOLLY': ('Mike', 'Molly')}
+
+        # LabeledEnum
         >>> NBALegendary.as_dict()
         {'JOHNSON': NamedTuple(key='Johnson', label='Magic Johnson'), 'Jordan': NamedTuple(key='Jordan', label='Air Jordan')}
 
+        # PairEnum
         >>> Pair.as_dict()
         {'TOM_AND_JERRY': NamedTuple(first='Tom', second='Jerry'), 'BULLS': NamedTuple(first='Micheal', second='Pippen')}
 
@@ -235,15 +259,19 @@ Usages
 
     .. code-block:: python
 
-        >>> TVCouple.as_set()
-        {('GALLAGHERS', ('FRANK', 'MONICA')), ('MIKE_AND_MOLLY', ('Mike', 'Molly'))}
-
+        # TripleEnum
         >>> AnimationFamily.as_set()
         {('SIMPSONS', NamedTuple(first='Homer', second='Bart', third='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey', third='Louie'))}
 
+        # ExtendedEnum
+        >>> TVCouple.as_set()
+        {('GALLAGHERS', ('FRANK', 'MONICA')), ('MIKE_AND_MOLLY', ('Mike', 'Molly'))}
+
+        # LabeledEnum
         >>> NBALegendary.as_set()
         {('JOHNSON', NamedTuple(key='Johnson', label='Magic Johnson')), ('Jordan', NamedTuple(key='Jordan', label='Air Jordan'))}
 
+        # PairEnum
         >>> Pair.as_set()
         {('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('BULLS', NamedTuple(first='Micheal', second='Pippen'))}
 
@@ -252,15 +280,19 @@ Usages
 
     .. code-block:: python
 
-        >>> TVCouple.as_tuple()
-        (('GALLAGHERS', ('FRANK', 'MONICA')), ('MIKE_AND_MOLLY', ('Mike', 'Molly')))
-
+        # TripleEnum
         >>> AnimationFamily.as_tuple()
         (('SIMPSONS', NamedTuple(first='Homer', second='Bart', third='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey', third='Louie')))
 
+        # ExtendedEnum
+        >>> TVCouple.as_tuple()
+        (('GALLAGHERS', ('FRANK', 'MONICA')), ('MIKE_AND_MOLLY', ('Mike', 'Molly')))
+
+        # LabeledEnum
         >>> NBALegendary.as_tuple()
         (('JOHNSON', NamedTuple(key='Johnson', label='Magic Johnson')), ('Jordan', NamedTuple(key='Jordan', label='Air Jordan')))
 
+        # PairEnum
         >>> Pair.as_tuple()
         (('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('BULLS', NamedTuple(first='Micheal', second='Pippen')))
 
@@ -269,15 +301,19 @@ Usages
 
     .. code-block:: python
 
-        >>> TVCouple.as_list()
-        [('GALLAGHERS', ('FRANK', 'MONICA')), ('MIKE_AND_MOLLY', ('Mike', 'Molly'))]
-
+        # TripleEnum
         >>> AnimationFamily.as_list()
         [('SIMPSONS', NamedTuple(first='Homer', second='Bart', third='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey', third='Louie'))]
 
+        # ExtendedEnum
+        >>> TVCouple.as_list()
+        [('GALLAGHERS', ('FRANK', 'MONICA')), ('MIKE_AND_MOLLY', ('Mike', 'Molly'))]
+
+        # LabeledEnum
         >>> NBALegendary.as_list()
         [('JOHNSON', NamedTuple(key='Johnson', label='Magic Johnson')), ('Jordan', NamedTuple(key='Jordan', label='Air Jordan'))]
 
+        # PairEnum
         >>> Pair.as_list()
         [('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('BULLS', NamedTuple(first='Micheal', second='Pippen'))]
 
@@ -286,15 +322,19 @@ Usages
 
     .. code-block:: python
 
-        >>> TVCouple.as_ordereddict()
-        OrderedDict([('GALLAGHERS', ('FRANK', 'MONICA')), ('MIKE_AND_MOLLY', ('Mike', 'Molly'))])
-
+        # TripleEnum
         >>> AnimationFamily.as_ordereddict()
         OrderedDict([('SIMPSONS', NamedTuple(first='Homer', second='Bart', third='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey', third='Louie'))])
 
+        # ExtendedEnum
+        >>> TVCouple.as_ordereddict()
+        OrderedDict([('GALLAGHERS', ('FRANK', 'MONICA')), ('MIKE_AND_MOLLY', ('Mike', 'Molly'))])
+
+        # LabeledEnum
         >>> NBALegendary.as_ordereddict()
         OrderedDict([('JOHNSON', NamedTuple(key='Johnson', label='Magic Johnson')), ('Jordan', NamedTuple(key='Jordan', label='Air Jordan'))])
 
+        # PairEnum
         >>> Pair.as_ordereddict()
         OrderedDict([('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('BULLS', NamedTuple(first='Micheal', second='Pippen'))])
 
@@ -306,6 +346,7 @@ If you define the enumeration class with ``field_names``, then for each field na
 
         .. code-block:: python
 
+            # TripleEnum
             >>> AnimationFamily.firsts()
             ('Homer', 'Huey')
             >>> AnimationFamily.seconds()
@@ -313,6 +354,7 @@ If you define the enumeration class with ``field_names``, then for each field na
             >>> AnimationFamily.thirds()
             ('Marge', 'Louie')
 
+            # LabeledEnum
             >>> NBALegendary.keys()
             ('Johnson', 'Jordan')
             >>> NBALegendary.labels()
@@ -322,6 +364,7 @@ If you define the enumeration class with ``field_names``, then for each field na
 
         .. code-block:: python
 
+            # TripleEnum
             >>> isinstance(AnimationFamily.firsts(as_tuple=False), GeneratorType)
             True
             >>> isinstance(AnimationFamily.seconds(as_tuple=False), GeneratorType)
@@ -329,6 +372,7 @@ If you define the enumeration class with ``field_names``, then for each field na
             >>> isinstance(AnimationFamily.thirds(as_tuple=False), GeneratorType)
             True
 
+            # LabeledEnum
             >>> isinstance(NBALegendary.keys(as_tuple=False), GeneratorType)
             True
             >>> isinstance(NBALegendary.labels(as_tuple=False), GeneratorType)
@@ -339,6 +383,7 @@ If you define the enumeration class with ``field_names``, then for each field na
 
         .. code-block:: python
 
+            # TripleEnum
             >>> AnimationFamily.from_first('Homer')
             (<AnimationFamily.SIMPSONS: NamedTuple(first='Homer', second='Bart', third='Marge')>,)
             >>> AnimationFamily.from_first('Huey')
@@ -354,7 +399,7 @@ If you define the enumeration class with ``field_names``, then for each field na
             >>> AnimationFamily.from_third('Louie')
             (<AnimationFamily.DUCKS: NamedTuple(first='Huey', second='Dewey', third='Louie')>,)
 
-
+            # LabeledEnum
             >>> NBALegendary.from_key('Johnson')
             (<NBALegendary.JOHNSON: NamedTuple(key='Johnson', label='Magic Johnson')>,)
             >>> NBALegendary.from_key('Jordan')
@@ -369,6 +414,7 @@ If you define the enumeration class with ``field_names``, then for each field na
 
         .. code-block:: python
 
+            # TripleEnum
             >>> isinstance(AnimationFamily.from_first('Homer', as_tuple=False), GeneratorType)
             True
             >>> isinstance(AnimationFamily.from_first('Huey', as_tuple=False), GeneratorType)
@@ -384,7 +430,7 @@ If you define the enumeration class with ``field_names``, then for each field na
             >>> isinstance(AnimationFamily.from_third('Louie', as_tuple=False), GeneratorType)
             True
 
-
+            # LabeledEnum
             >>> isinstance(NBALegendary.from_key('Johnson', as_tuple=False), GeneratorType)
             True
             >>> isinstance(NBALegendary.from_key('Jordan', as_tuple=False), GeneratorType)
@@ -400,6 +446,7 @@ If you define the enumeration class with ``field_names``, then for each field na
 
         .. code-block:: python
 
+            # TripleEnum
             >>> AnimationFamily.has_first('Homer')
             True
             >>> AnimationFamily.has_first('Holmes')
@@ -427,7 +474,7 @@ If you define the enumeration class with ``field_names``, then for each field na
             >>> AnimationFamily.has_third('Louis')
             False
 
-
+            # LabeledEnum
             >>> NBALegendary.has_key('Johnson')
             True
             >>> NBALegendary.has_key('John')
