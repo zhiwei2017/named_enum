@@ -3,16 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to named_enum's documentation!
+named_enum's documentation!
 ======================================
-
-About
------
-**Author**: `Zhiwei Zhang <https://github.com/KnightConan>`_
-
-**Email**: zhiwei2017@gmail.com
-
-**Github**: `named_enum <https://github.com/KnightConan/named_enum>`_
 
 Introduction
 ------------
@@ -23,7 +15,7 @@ class is the type of named tuple.
 
 This package is inspired by `Cristian <https://github.com/cagonza6/>`_.
 
-If you like this package, please give me a star in `github <https://github.com/KnightConan/named_enum>`_.
+If you like this package, please give it a star in `github <https://github.com/KnightConan/named_enum>`_.
 
 Status
 ------
@@ -34,10 +26,19 @@ Status
 .. image:: https://travis-ci.com/KnightConan/named_enum.svg?branch=master
     :target: https://travis-ci.com/KnightConan/named_enum
 
-Index
+
+About
 -----
+**Author**: `Zhiwei Zhang <https://github.com/KnightConan>`_
+
+**Email**: zhiwei2017@gmail.com
+
+**Github**: `named_enum <https://github.com/KnightConan/named_enum>`_
+
+
 .. toctree::
    :maxdepth: 2
+   :hidden:
 
    setup
    quick_start
