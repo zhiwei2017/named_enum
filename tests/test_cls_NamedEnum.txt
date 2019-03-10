@@ -567,9 +567,7 @@
     set()
     >>> Pair.as_set() == {('TOM_AND_JERRY', ('Tom', 'Jerry')), ('MIKE_AND_MOLLY', ('Mike', 'Molly')), ('MIKE_AND_PIPPEN', ('Mike', 'Pippen')), ('MM_AND_M', ('Mike', 'Molly'))}
     True
-    >>> from collections import namedtuple
-    >>> NamedTuple = namedtuple("NamedTuple", TripleEnum._fields())
-    >>> Triple.as_set() == {('SIMPSONS', NamedTuple(first='Homer', second='Bart', third='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey', third='Louie')), ('MCDUCK_NEPHEWS', NamedTuple(first='Huey', second='Dewey', third='Louie')), ('THE_SIMPSONS', NamedTuple(first='Homer', second='Marge', third='Lisa'))}
+    >>> Triple.as_set() == {('SIMPSONS', Triple._tuple_cls(first='Homer', second='Bart', third='Marge')), ('DUCKS', Triple._tuple_cls(first='Huey', second='Dewey', third='Louie')), ('MCDUCK_NEPHEWS', Triple._tuple_cls(first='Huey', second='Dewey', third='Louie')), ('THE_SIMPSONS', Triple._tuple_cls(first='Homer', second='Marge', third='Lisa'))}
     True
 
     >>> Pair.TOM_AND_JERRY.as_set()
