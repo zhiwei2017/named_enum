@@ -97,18 +97,18 @@ class TestNamedEnum:
         assert Triangle.gen.call_count == 1
         Triangle.gen.assert_called_with(name_value_pair=False)
 
-    @pytest.mark.parametrize('func_name, func_param, error_type, error_msg',
-                             [('forths', (True, ), AttributeError, 'forths'),
-                              ('forths', (False, ), AttributeError, 'forths'),
-                              ('from_forth', (6, True), AttributeError, 'from_forth'),
-                              ('from_forth', (6, False), AttributeError, 'from_forth'),
-                              ('has_forth', (6, True), AttributeError, 'has_forth'),
-                              ('has_forth', (6, False), AttributeError, 'has_forth'),
+    @pytest.mark.parametrize('func_name, func_param, error_type',
+                             [('forths', (True, ), AttributeError),
+                              ('forths', (False, ), AttributeError),
+                              ('from_forth', (6, True), AttributeError),
+                              ('from_forth', (6, False), AttributeError),
+                              ('has_forth', (6, True), AttributeError),
+                              ('has_forth', (6, False), AttributeError),
                               ])
-    def test__func_fail(self, func_name, func_param, error_type, error_msg):
+    def test__func_fail(self, func_name, func_param, error_type):
         with pytest.raises(error_type) as excinfo:
             getattr(Triangle, func_name)(*func_param)
-        assert error_msg == str(excinfo.value)
+        assert func_name == str(excinfo.value)
 
     @pytest.mark.parametrize("data_type, expected",
                              [(dict, {'EQUILATERAL': Triangle._tuple_cls(first=6, second=6, third=6), 'RIGHT': Triangle._tuple_cls(first=3, second=4, third=5)}),

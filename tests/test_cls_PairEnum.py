@@ -80,18 +80,18 @@ class TestPairEnum:
         assert Pair.gen.call_count == 1
         Pair.gen.assert_called_with(name_value_pair=False)
 
-    @pytest.mark.parametrize('func_name, func_param, error_type, error_msg',
-                             [('forths', (True, ), AttributeError, 'forths'),
-                              ('forths', (False, ), AttributeError, 'forths'),
-                              ('from_forth', ("Tom", True), AttributeError, 'from_forth'),
-                              ('from_forth', ("Tom", False), AttributeError, 'from_forth'),
-                              ('has_forth', ("Tom", True), AttributeError, 'has_forth'),
-                              ('has_forth', ("Tom", False), AttributeError, 'has_forth'),
+    @pytest.mark.parametrize('func_name, func_param, error_type',
+                             [('forths', (True, ), AttributeError),
+                              ('forths', (False, ), AttributeError),
+                              ('from_forth', ("Tom", True), AttributeError),
+                              ('from_forth', ("Tom", False), AttributeError),
+                              ('has_forth', ("Tom", True), AttributeError),
+                              ('has_forth', ("Tom", False), AttributeError),
                               ])
-    def test__func_fail(self, func_name, func_param, error_type, error_msg):
+    def test__func_fail(self, func_name, func_param, error_type):
         with pytest.raises(error_type) as excinfo:
             getattr(Pair, func_name)(*func_param)
-        assert error_msg == str(excinfo.value)
+        assert func_name == str(excinfo.value)
 
     @pytest.mark.parametrize("data_type, expected",
                              [(dict, {'TOM_AND_JERRY': Pair._tuple_cls(first="Tom", second="Jerry"), 'MIKE_AND_MOLLY': Pair._tuple_cls(first="Mike", second="Molly")}),

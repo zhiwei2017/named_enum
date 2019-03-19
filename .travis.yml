@@ -1,3 +1,6 @@
+# speed up the building in travis CI
+sudo: false
+
 language: python
 
 # Version used for jobs that don't override it (e.g. the one-off jobs):
@@ -10,4 +13,9 @@ install:
   - pip install -r test-requirements.txt
 
 # command to run tests
-script: pytest
+script:
+  - pytest --cov=./named_enum --cov-report=xml
+
+# Push the results back to codecov
+after_success:
+  - codecov
