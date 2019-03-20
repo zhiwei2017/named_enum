@@ -14,7 +14,8 @@ install:
 
 # command to run tests
 script:
-  - pytest --cov=./named_enum --cov-report=xml
+  - pytest
+  - coverage xml
 
 # Push the results back to codecov
 after_success:

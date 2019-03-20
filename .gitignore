@@ -9,3 +9,5 @@ _templates
 dist
 !.readthedocs.yml
 !.travis.yml
+!.pyup.yml
+coverage.xml
