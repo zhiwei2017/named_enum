@@ -29,5 +29,5 @@ setup(
         "Operating System :: OS Independent",
     ],
     setup_requires=["pytest-runner"],
-    tests_require=['pytest'],
+    tests_require=['pytest', 'pytest-mock'],
 )

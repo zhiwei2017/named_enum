@@ -5,7 +5,8 @@ Module for the classes extending the default `Enum` class. It contains 5 classes
 and one method `namedenum`.
 """
 import sys as _sys
-from collections import namedtuple, abc
+from collections import namedtuple
+from collections.abc import Sequence
 from enum import Enum, EnumMeta, _EnumDict
 from functools import partial
 from collections import OrderedDict
@@ -57,14 +58,26 @@ class _NamedEnumDict(_EnumDict):
           tuple class
         :return: None
         """
+        if tuple_cls is tuple or not issubclass(tuple_cls, tuple):
+            raise ValueError("'tuple_cls' must be a customized tuple class "
+                             "using namedtuple generated.")
         _member_names = self._member_names
         _last_values = []
-        # converting the type of the value in customized tuple
-        for value in self._last_values:
-            if isinstance(value, abc.Collection) and not isinstance(value, str):
-                _last_values.append(tuple_cls(*value))
-            else:
+        feature_num = len(getattr(tuple_cls, '_fields'))
+
+        if feature_num == 1:
+            # converting the type of the value in customized tuple
+            for value in self._last_values:
                 _last_values.append(tuple_cls(value))
+        else:
+            # converting the type of the value in customized tuple
+            for value in self._last_values:
+                if not isinstance(value, Sequence):
+                    raise ValueError("unable to unpack the value for the fields.")
+                elif isinstance(value, str):
+                    _last_values.append(tuple_cls(value))
+                else:
+                    _last_values.append(tuple_cls(*value))
         self._clean()
 
         # put the converted items back, the __setitem__ function in _EnumDict
@@ -136,7 +149,7 @@ class NamedEnumMeta(EnumMeta):
             # created the customized tuple class with the defined _field_names_
             _tuple_cls = namedtuple("NamedTuple", _field_names_)
             if {"name", "value"}.issubset(_tuple_cls._fields):
-                raise AttributeError("name or value cannot be attributes")
+                raise AttributeError("'name' or 'value' cannot be attributes")
             # _convert the type of the item in namespace dictionary to the named
             # tuple type
             namespace._convert(_tuple_cls)
@@ -171,6 +184,7 @@ class NamedEnumMeta(EnumMeta):
                     par_func = getattr(cls, func_name)
                     par_func.__doc__ = func_docstring
                     par_func.__name__ = func_name
+            cls._tuple_cls = _tuple_cls
         else:
             cls = super().__new__(mcs, name, bases, namespace)
         return cls
@@ -550,6 +564,29 @@ class NamedEnum(Enum, metaclass=NamedEnumMeta):
     >>> class Triangle(TripleEnum):
     ...     EQUILATERAL = (6, 6, 6)
     ...     RIGHT = (3, 4, 5)
+    >>> Triangle._fields()
+    ('first', 'second', 'third')
+    >>> Triangle.names()
+    ('EQUILATERAL', 'RIGHT')
+    >>> Triangle.values()
+    (NamedTuple(first=6, second=6, third=6), NamedTuple(first=3, second=4, third=5))
+    >>> Triangle.describe()
+    Class: Triangle
+           Name | First | Second | Third
+    ------------------------------------
+    EQUILATERAL |     6 |      6 |     6
+          RIGHT |     3 |      4 |     5
+    <BLANKLINE>
+    >>> Triangle.as_dict()
+    {'EQUILATERAL': NamedTuple(first=6, second=6, third=6), 'RIGHT': NamedTuple(first=3, second=4, third=5)}
+    >>> Triangle.as_list()
+    [('EQUILATERAL', NamedTuple(first=6, second=6, third=6)), ('RIGHT', NamedTuple(first=3, second=4, third=5))]
+    >>> Triangle.as_set() == {('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5)), ('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6))}
+    True
+    >>> Triangle.as_tuple()
+    (('EQUILATERAL', NamedTuple(first=6, second=6, third=6)), ('RIGHT', NamedTuple(first=3, second=4, third=5)))
+    >>> Triangle.as_ordereddict()
+    OrderedDict([('EQUILATERAL', NamedTuple(first=6, second=6, third=6)), ('RIGHT', NamedTuple(first=3, second=4, third=5))])
     >>> Triangle.firsts()
     (6, 3)
     >>> Triangle.seconds()
