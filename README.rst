@@ -1,6 +1,6 @@
-=========
+==========
 named-enum
-=========
+==========
 
 .. readthedocs badge
 .. image:: https://readthedocs.org/projects/named-enum/badge/?version=latest
@@ -12,12 +12,16 @@ named-enum
     :target: https://travis-ci.com/KnightConan/named_enum
 
 .. python version badge from PyPI
-.. image:: https://pyup.io/repos/github/KnightConan/named_enum/python-3-shield.svg
+.. image:: https://img.shields.io/pypi/pyversions/named-enum.svg
     :target: https://pyup.io/repos/github/KnightConan/named_enum/
-    :alt: Python 3
+    :alt: Python 3.6 | Python 3.7
 
 .. pypi version badge
 .. image:: https://badge.fury.io/py/named-enum.svg
+    :target: https://badge.fury.io/py/named-enum
+
+.. pypi format
+.. image:: https://img.shields.io/pypi/format/named-enum.svg
     :target: https://badge.fury.io/py/named-enum
 
 .. codecov badge
@@ -30,12 +34,15 @@ named-enum
     :alt: Updates
 
 .. license badge
-.. image:: https://img.shields.io/badge/License-MIT-yellow.svg
-    :target: https://opensource.org/licenses/MIT
+.. image:: https://img.shields.io/pypi/l/named-enum.svg
+    :target: https://pypi.python.org/pypi/named-enum/
 
 .. download statistics badge
 .. image:: https://pepy.tech/badge/named-enum
     :target: https://pepy.tech/project/named-enum
+
+.. image:: https://img.shields.io/badge/saythanks.io-☼-1EAEDB.svg
+    :target: https://saythanks.io/to/KnightConan
 
 Introduction
 ------------
