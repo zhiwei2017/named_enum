@@ -28,9 +28,9 @@ copyright = '2018, Zhiwei Zhang'
 author = 'Zhiwei Zhang'
 
 # The short X.Y version
-version = '0.1.0'
+version = '1.0.0'
 # The full version, including alpha/beta/rc tags
-release = '0.1.0'
+release = '1.0.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -82,6 +82,8 @@ pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+add_module_names = False
 
 # -- Options for HTML output -------------------------------------------------
 

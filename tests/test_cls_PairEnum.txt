@@ -443,13 +443,11 @@
 
 # Test class method as_set::
 
-    >>> from collections import namedtuple
-    >>> NamedTuple = namedtuple("NamedTuple", PairEnum._fields())
     >>> PairEnum.as_set()
     set()
-    >>> Pair.as_set() == {('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('MIKE_AND_MOLLY', NamedTuple(first='Mike', second='Molly')), ('MICHEAL_AND_MOLLY', NamedTuple(first='Micheal', second='Molly'))}
+    >>> Pair.as_set() == {('TOM_AND_JERRY', Pair._tuple_cls(first='Tom', second='Jerry')), ('MIKE_AND_MOLLY', Pair._tuple_cls(first='Mike', second='Molly')), ('MICHEAL_AND_MOLLY', Pair._tuple_cls(first='Micheal', second='Molly'))}
     True
-    >>> FPair.as_set() == {('SIMPSONS', NamedTuple(first='Homer', second='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey')), ('MCDUCK_NEPHEWS', NamedTuple(first='Huey', second='Dewey'))}
+    >>> FPair.as_set() == {('SIMPSONS', FPair._tuple_cls(first='Homer', second='Marge')), ('DUCKS', FPair._tuple_cls(first='Huey', second='Dewey')), ('MCDUCK_NEPHEWS', FPair._tuple_cls(first='Huey', second='Dewey'))}
     True
 
     >>> Pair.TOM_AND_JERRY.as_set()
