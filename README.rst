@@ -15,6 +15,10 @@ named-enum
 .. image:: https://travis-ci.com/KnightConan/named_enum.svg?branch=master
     :target: https://travis-ci.com/KnightConan/named_enum
 
+.. appveyor building badge
+.. image:: https://ci.appveyor.com/api/projects/status/fi9ayfyo1w4oi2w8/branch/master?svg=true
+    :target: https://ci.appveyor.com/project/KnightConan/named-enum
+
 .. pypi version badge
 .. image:: https://img.shields.io/pypi/v/named-enum.svg
     :target: https://pypi.python.org/pypi/named-enum/
