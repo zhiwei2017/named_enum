@@ -2,6 +2,10 @@
 named-enum
 ==========
 
+.. license badge
+.. image:: https://img.shields.io/pypi/l/named-enum.svg
+    :target: https://pypi.python.org/pypi/named-enum/
+
 .. readthedocs badge
 .. image:: https://readthedocs.org/projects/named-enum/badge/?version=latest
     :target: https://named-enum.readthedocs.io/en/latest/?badge=latest
@@ -11,21 +15,25 @@ named-enum
 .. image:: https://travis-ci.com/KnightConan/named_enum.svg?branch=master
     :target: https://travis-ci.com/KnightConan/named_enum
 
+.. pypi version badge
+.. image:: https://img.shields.io/pypi/v/named-enum.svg
+    :target: https://pypi.python.org/pypi/named-enum/
+
+.. development status from pypi
+.. image:: https://img.shields.io/pypi/status/named-enum.svg
+    :target: https://pypi.python.org/pypi/named-enum/
+
 .. python version badge from PyPI
 .. image:: https://img.shields.io/pypi/pyversions/named-enum.svg
-    :target: https://pyup.io/repos/github/KnightConan/named_enum/
+    :target: https://pypi.python.org/pypi/named-enum/
     :alt: Python 3.6 | Python 3.7
-
-.. pypi version badge
-.. image:: https://badge.fury.io/py/named-enum.svg
-    :target: https://badge.fury.io/py/named-enum
 
 .. pypi format
 .. image:: https://img.shields.io/pypi/format/named-enum.svg
     :target: https://badge.fury.io/py/named-enum
 
 .. codecov badge
-.. image:: https://codecov.io/gh/KnightConan/named_enum/branch/unit_test/graph/badge.svg
+.. image:: https://codecov.io/gh/KnightConan/named_enum/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/KnightConan/named_enum
 
 .. pyup badge
@@ -33,14 +41,11 @@ named-enum
     :target: https://pyup.io/repos/github/KnightConan/named_enum/
     :alt: Updates
 
-.. license badge
-.. image:: https://img.shields.io/pypi/l/named-enum.svg
-    :target: https://pypi.python.org/pypi/named-enum/
-
 .. download statistics badge
 .. image:: https://pepy.tech/badge/named-enum
     :target: https://pepy.tech/project/named-enum
 
+.. send message to the author
 .. image:: https://img.shields.io/badge/saythanks.io-☼-1EAEDB.svg
     :target: https://saythanks.io/to/KnightConan
 
