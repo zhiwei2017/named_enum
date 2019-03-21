@@ -28,9 +28,10 @@ class _NamedEnumDict(_EnumDict):
         """
         Makes an exception for the single underscore name '_field_names_'.
 
-        :param key: str: variable or function names defined in class
-        :param value: different types: values or functions
-        :return: None
+        :param key: variable or function names defined in class
+        :type key: str
+        :param value: values or functions
+        :type value: int, str, object, ...
         """
         if key == '_field_names_':
             dict.__setitem__(self, key, value)
@@ -41,8 +42,6 @@ class _NamedEnumDict(_EnumDict):
         """
         Removes all the items, and set the variables '_member_names' and
         '_last_values' to empty.
-
-        :return: None
         """
         # for dictionary, that's the only way to _clean it
         for name in self._member_names:
@@ -54,9 +53,9 @@ class _NamedEnumDict(_EnumDict):
         """
         Uses the given tuple class to _convert the items.
 
-        :param tuple_cls: customized tuple class: using namedtuple generated
+        :param tuple_cls: using namedtuple generated
           tuple class
-        :return: None
+        :type tuple_cls: customized tuple class
         """
         if tuple_cls is tuple or not issubclass(tuple_cls, tuple):
             raise ValueError("'tuple_cls' must be a customized tuple class "
@@ -111,9 +110,12 @@ class NamedEnumMeta(EnumMeta):
         Namespace hook, uses _NamedEnumDict as the type of namespace instead of
         _EnumDict.
 
-        :param cls: str: name of the class to create
-        :param bases: tuple: parent classes of the class to create
+        :param cls: name of the class to create
+        :type cls: str
+        :param bases: parent classes of the class to create
+        :type bases: tuple
         :return: namespace dictionary
+        :rtype: _NamedEnumDict
         """
         # create the namespace dict
         enum_dict = _NamedEnumDict()
@@ -131,11 +133,15 @@ class NamedEnumMeta(EnumMeta):
         to be the data type of the value of enumeration iem and add those extra
         functions to the class.
 
-        :param name: str: name of the instance class
-        :param bases: tuple: base classes, its instance class inherits from
-        :param namespace: dict: contains the attributes and functions of the
+        :param name: name of the instance class
+        :type name: str
+        :param bases: base classes, its instance class inherits from
+        :type bases: tuple
+        :param namespace: contains the attributes and functions of the
           instance class
+        :type namespace: dict
         :return: class object
+        :rtype: object
         """
         # if the _field_names_ not defined in the class, get it from its parent
         # class; otherwise uses the defined one.
@@ -197,6 +203,7 @@ class NamedEnumMeta(EnumMeta):
         returns an empty `tuple`.
 
         :return: tuple of field names
+        :rtype: tuple
 
         >>> class TripleEnum(NamedEnum):
         ...     _field_names_ = ("first", "second", "third")
@@ -221,11 +228,15 @@ class NamedEnumMeta(EnumMeta):
         It's used to generate the particular function with name format
         `<field_name>s` for each `field_name`.
 
-        :param cls: Enum class: subclass of NamedEnum class
-        :param field_name: str: attribute's name
-        :param as_tuple: bool: returns a tuple of the values if True; otherwise
+        :param cls: subclass of NamedEnum class
+        :type cls: Enum class
+        :param field_name: attribute's name
+        :type field_name: str
+        :param as_tuple: returns a tuple of the values if True; otherwise
           returns a generator
-        :return: tuple of different types/ generator
+        :type as_tuple: bool
+        :return: corresponding values of the field name in all enumeration items
+        :rtype: tuple_, Generator_
         """
         g = (getattr(item.value, field_name)
              for item in cls.gen(name_value_pair=False))
@@ -241,12 +252,17 @@ class NamedEnumMeta(EnumMeta):
         It's used to generate the particular function with name format
         `from_<field_name>` for each `field_name`.
 
-        :param cls: Enum class: subclass of NamedEnum class
-        :param field_name: str: attribute's name
-        :param field_value: different values: key to search for
-        :param as_tuple: bool: returns a tuple of the value if True; otherwise
+        :param cls: subclass of NamedEnum class
+        :type cls: Enum class
+        :param field_name: attribute's name
+        :type field_name: str
+        :param field_value: key to search for
+        :type field_value: int, str, object, ...
+        :param as_tuple: returns a tuple of the values if True; otherwise
           returns a generator
-        :return: tuple of enumeration items matching the condition/ generator
+        :type as_tuple: bool
+        :return: collection of enumeration items matching the condition
+        :rtype: tuple_, Generator_
         """
         g = (item for item in cls.gen(name_value_pair=False)
              if getattr(item.value, field_name) == field_value)
@@ -262,10 +278,14 @@ class NamedEnumMeta(EnumMeta):
         It's used to generate the particular function with name format
         `has_<field_name>` for each `field_name`.
 
-        :param cls: Enum class: subclass of NamedEnum class
-        :param field_name: str: attribute's name
-        :param field_value: different values: key to search for
+        :param cls: subclass of NamedEnum class
+        :type cls: Enum class
+        :param field_name: attribute's name
+        :type field_name: str
+        :param field_value: key to search for
+        :type field_value: int, str, object, ...
         :return: True, if has at least one matching; otherwise False.
+        :rtype: bool
         """
         gen_field_values = mcs._field_values(cls, field_name, as_tuple=False)
         return field_value in gen_field_values
@@ -276,10 +296,12 @@ class NamedEnumMeta(EnumMeta):
         and value, if name_value_pair is True; otherwise a generator of the
         enumeration items.
 
-        :param name_value_pair: bool: controls the return result. If true,
+        :param name_value_pair: controls the return result. If true,
           returns the generator of name-value pair; if False, returns the
           generator of the enumeration items.
-        :return: generator
+        :type name_value_pair: bool
+        :return: a generator which iterates all the enumeration items
+        :rtype: Generator_
 
         >>> from types import GeneratorType
         >>> class TripleEnum(NamedEnum):
@@ -316,10 +338,12 @@ class NamedEnumMeta(EnumMeta):
         It's used for generating the functions like `as_dict`, `as_tuple`,
         `as_set`, `as_list`, `as_ordereddict`.
 
-        :param cls: Enum class: subclass of NamedEnum class
-        :param data_type: different data type: dict, list, set, tuple,
-          OrderedDict
+        :param cls: subclass of NamedEnum class
+        :type cls: Enum class
+        :param data_type: desired data type for the output
+        :type data_type: dict, list, set, tuple, OrderedDict_
         :return: converted value depending on the given data type
+        :rtype: dict, list, set, tuple, OrderedDict_
         """
         return data_type(cls.gen())
 
@@ -329,6 +353,7 @@ class NamedEnumMeta(EnumMeta):
         of the enumeration item and value is its value.
 
         :return: a dictionary containing name-value-pairs of the enumeration
+        :rtype: dict
 
         >>> class TripleEnum(NamedEnum):
         ...     _field_names_ = ("first", "second", "third")
@@ -348,6 +373,7 @@ class NamedEnumMeta(EnumMeta):
         the enumeration item's name and value.
 
         :return: a tuple containing name-value-pairs of the enumeration
+        :rtype: tuple
 
         >>> class TripleEnum(NamedEnum):
         ...     _field_names_ = ("first", "second", "third")
@@ -367,6 +393,7 @@ class NamedEnumMeta(EnumMeta):
         the enumeration item's name and value.
 
         :return: a set containing name-value-pairs of the enumeration
+        :rtype: set
 
         >>> class TripleEnum(NamedEnum):
         ...     _field_names_ = ("first", "second", "third")
@@ -388,6 +415,7 @@ class NamedEnumMeta(EnumMeta):
         the enumeration item's name and value.
 
         :return: a list containing name-value-pairs of the enumeration
+        :rtype: list
 
         >>> class TripleEnum(NamedEnum):
         ...     _field_names_ = ("first", "second", "third")
@@ -407,6 +435,7 @@ class NamedEnumMeta(EnumMeta):
         tuple of the enumeration item's name and value.
 
         :return: an OrderedDict containing name-value-pairs of the enumeration
+        :rtype: OrderedDict_
 
         >>> class TripleEnum(NamedEnum):
         ...     _field_names_ = ("first", "second", "third")
@@ -424,15 +453,14 @@ class NamedEnumMeta(EnumMeta):
         """
         Overrides the __repr__ function from EnumMeta class.
 
-        :return: str
+        :return: string represents the class
+        :rtype: str
         """
         return "<named enum %r>" % cls.__name__
 
     def describe(cls):
         """
         Prints in the console a table showing the content of the enumeration.
-
-        :return: None
 
         >>> class TripleEnum(NamedEnum):
         ...     _field_names_ = ("first", "second", "third")
@@ -482,9 +510,11 @@ class NamedEnumMeta(EnumMeta):
         Returns the names of all the enumeration items as a `tuple`, if
         parameter `as_tuple` is `True`; otherwise returns a generator.
 
-        :param as_tuple: bool: returns a tuple if True; otherwise returns a
-          generator
-        :return: tuple/generator
+        :param as_tuple: returns a tuple if True; otherwise returns a generator.
+        :type as_tuple: bool
+        :return: names of all the enumeration items inside the class in a
+          specific form
+        :rtype: tuple_, Generator_
 
         >>> from types import GeneratorType
         >>> class TripleEnum(NamedEnum):
@@ -513,9 +543,11 @@ class NamedEnumMeta(EnumMeta):
         Returns the values of all the enumeration items as a tuple, if
         parameter `as_tuple` is `True`, otherwise returns a generator.
 
-        :param as_tuple: bool: returns a tuple if True; otherwise returns a
-          generator
-        :return: tuple/generator
+        :param as_tuple: returns a tuple if True; otherwise returns a generator
+        :type as_tuple: bool
+        :return: values of all the enumeration items inside the class in a
+          specific form
+        :rtype: tuple_, Generator_
 
         >>> from types import GeneratorType
         >>> class TripleEnum(NamedEnum):
@@ -654,8 +686,10 @@ class NamedEnum(Enum, metaclass=NamedEnumMeta):
         user wants to get the value of a field in an enumeration item, it
         returns the corresponding field's value from the value of enumeration.
 
-        :param item: str: name of the field or attribute
-        :return: different types
+        :param item: name of the field or attribute
+        :type item: str
+        :return: corresponding value
+        :rtype: int, str, object, ...
         """
         if item in self.__class__._fields():
             return getattr(self._value_, item)
@@ -665,7 +699,8 @@ class NamedEnum(Enum, metaclass=NamedEnumMeta):
         """
         Displays the value as well.
 
-        :return: str
+        :return: string represents the enumeration item
+        :rtype: str
         """
         return "%s.%s: %r" % (
             self.__class__.__name__, self._name_, self._value_)
@@ -954,12 +989,17 @@ def namedenum(typename, field_names=None, *, verbose=False, module=None):
     field_names as the _field_names_ in named enum class. The implementation is
     similar to the namedtuple function.
 
-    :param typename: str: name of the create class
-    :param field_names: Sequence: field names for the named enum class
-    :param verbose: bool: displays the code for the named enum class creation,
+    :param typename: name for the created class
+    :type typename: str
+    :param field_names: field names for the named enum class
+    :type field_names: Sequence_
+    :param verbose: displays the code for the named enum class creation,
       if True
-    :param module: None/str: which module, the new created enum class belongs to
+    :type verbose: bool
+    :param module: which module the new created enum class belongs to
+    :type module: None, str
     :return: subclass of NamedEnum
+    :rtype: object
 
     >>> TripleEnum = namedenum("TripleEnum", ("first", "second", "third"))
     >>> TripleEnum

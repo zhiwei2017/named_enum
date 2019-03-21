@@ -21,8 +21,10 @@ Source Code
             Collective method to return the values of the attribute `key` from
             all the enumeration items.
 
-            :param as_tuple: bool: returns a tuple of the values if True; otherwise returns a generator
-            :return: tuple of different types/ generator
+            :param as_tuple: returns a tuple of the values if True; otherwise returns a generator
+            :type as_tuple: bool
+            :return: corresponding values of the field `key` in all enumeration items
+            :rtype: tuple_, Generator_
 
             .. code-block:: python
 
@@ -38,8 +40,10 @@ Source Code
             Collective method to return the values of the attribute `label` from
             all the enumeration items.
 
-            :param as_tuple: bool: returns a tuple of the values if True; otherwise returns a generator
-            :return: tuple of different types/ generator
+            :param as_tuple: returns a tuple of the values if True; otherwise returns a generator
+            :type as_tuple: bool
+            :return: corresponding values of the field `label` in all enumeration items
+            :rtype: tuple_, Generator_
 
             .. code-block:: python
 
@@ -56,9 +60,12 @@ Source Code
             given `field_value` of field `key`, if `as_tuple` is True; otherwise
             returns a generator.
 
-            :param field_value: different values: key to search for
-            :param as_tuple: bool: returns a tuple of the values if True; otherwise returns a generator
-            :return: tuple of different types/ generator
+            :param field_value: value of the field `key` to search for
+            :type field_value: int, str, object, ...
+            :param as_tuple: returns a tuple of the values if True; otherwise returns a generator
+            :type as_tuple: bool
+            :return: collection of enumeration items whose has the given `field_value` as value of `key`
+            :rtype: tuple_, Generator_
 
             .. code-block:: python
 
@@ -81,9 +88,12 @@ Source Code
             given `field_value` of field `label`, if `as_tuple` is True; otherwise
             returns a generator.
 
-            :param field_value: different values: key to search for
-            :param as_tuple: bool: returns a tuple of the values if True; otherwise returns a generator
-            :return: tuple of different types/ generator
+            :param field_value: value of the field `label` to search for
+            :type field_value: int, str, object, ...
+            :param as_tuple: returns a tuple of the values if True; otherwise returns a generator
+            :type as_tuple: bool
+            :return: collection of enumeration items whose has the given `field_value` as value of `label`
+            :rtype: tuple_, Generator_
 
             .. code-block:: python
 
@@ -106,8 +116,10 @@ Source Code
             enumeration item in which the value of the field `key` matches
             the given `field_value`.
 
-            :param field_value: different values: key to search for
+            :param field_value: value of the field `key` to search for
+            :type field_value: int, str, object, ...
             :return: True, if has at least one matching; otherwise False.
+            :rtype: bool
 
             .. code-block:: python
 
@@ -126,8 +138,10 @@ Source Code
             enumeration item in which the value of the field `label` matches
             the given `field_value`.
 
-            :param field_value: different values: key to search for
+            :param field_value: value of the field `label` to search for
+            :type field_value: int, str, object, ...
             :return: True, if has at least one matching; otherwise False.
+            :rtype: bool
 
             .. code-block:: python
 
@@ -149,8 +163,10 @@ Source Code
             Collective method to return the values of the attribute `first` from
             all the enumeration items.
 
-            :param as_tuple: bool: returns a tuple of the values if True; otherwise returns a generator
-            :return: tuple of different types/ generator
+            :param as_tuple: returns a tuple of the values if True; otherwise returns a generator
+            :type as_tuple: bool
+            :return: corresponding values of the field `first` in all enumeration items
+            :rtype: tuple_, Generator_
 
             .. code-block:: python
 
@@ -166,8 +182,10 @@ Source Code
             Collective method to return the values of the attribute `second` from
             all the enumeration items.
 
-            :param as_tuple: bool: returns a tuple of the values if True; otherwise returns a generator
-            :return: tuple of different types/ generator
+            :param as_tuple: returns a tuple of the values if True; otherwise returns a generator
+            :type as_tuple: bool
+            :return: corresponding values of the field `second` in all enumeration items
+            :rtype: tuple_, Generator_
 
             .. code-block:: python
 
@@ -184,9 +202,12 @@ Source Code
             given `field_value` of field `first`, if `as_tuple` is True; otherwise
             returns a generator.
 
-            :param field_value: different values: key to search for
-            :param as_tuple: bool: returns a tuple of the values if True; otherwise returns a generator
-            :return: tuple of different types/ generator
+            :param field_value: value of the field `first` to search for
+            :type field_value: int, str, object, ...
+            :param as_tuple: returns a tuple of the values if True; otherwise returns a generator
+            :type as_tuple: bool
+            :return: collection of enumeration items whose has the given `field_value` as value of `first`
+            :rtype: tuple_, Generator_
 
             .. code-block:: python
 
@@ -209,9 +230,12 @@ Source Code
             given `field_value` of field `second`, if `as_tuple` is True; otherwise
             returns a generator.
 
-            :param field_value: different values: key to search for
-            :param as_tuple: bool: returns a tuple of the values if True; otherwise returns a generator
-            :return: tuple of different types/ generator
+            :param field_value: value of the field `second` to search for
+            :type field_value: int, str, object, ...
+            :param as_tuple: returns a tuple of the values if True; otherwise returns a generator
+            :type as_tuple: bool
+            :return: collection of enumeration items whose has the given `field_value` as value of `second`
+            :rtype: tuple_, Generator_
 
             .. code-block:: python
 
@@ -234,8 +258,10 @@ Source Code
             enumeration item in which the value of the field `first` matches
             the given `field_value`.
 
-            :param field_value: different values: key to search for
+            :param field_value: value of the field `first` to search for
+            :type field_value: int, str, object, ...
             :return: True, if has at least one matching; otherwise False.
+            :rtype: bool
 
             .. code-block:: python
 
@@ -254,8 +280,10 @@ Source Code
             enumeration item in which the value of the field `second` matches
             the given `field_value`.
 
-            :param field_value: different values: key to search for
+            :param field_value: value of the field `second` to search for
+            :type field_value: int, str, object, ...
             :return: True, if has at least one matching; otherwise False.
+            :rtype: bool
 
             .. code-block:: python
 
@@ -267,3 +295,9 @@ Source Code
                 True
                 >>> Pair.has_second('Pepe')
                 False
+
+
+.. _OrderedDict: https://docs.python.org/3/library/collections.html#collections.OrderedDict
+.. _Generator: https://docs.python.org/3/library/collections.abc.html#collections.abc.Generator
+.. _Sequence: https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence
+.. _tuple: https://docs.python.org/3/library/stdtypes.html#tuple
