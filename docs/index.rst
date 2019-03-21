@@ -31,6 +31,10 @@ If you like it, please |start|_ it in |github|_.
 
 Status
 ------
+.. license badge
+.. image:: https://img.shields.io/pypi/l/named-enum.svg
+    :target: https://pypi.python.org/pypi/named-enum/
+
 .. readthedocs badge
 .. image:: https://readthedocs.org/projects/named-enum/badge/?version=latest
     :target: https://named-enum.readthedocs.io/en/latest/?badge=latest
@@ -40,17 +44,29 @@ Status
 .. image:: https://travis-ci.com/KnightConan/named_enum.svg?branch=master
     :target: https://travis-ci.com/KnightConan/named_enum
 
-.. python version badge from PyPI
-.. image:: https://pyup.io/repos/github/KnightConan/named_enum/python-3-shield.svg
-    :target: https://pyup.io/repos/github/KnightConan/named_enum/
-    :alt: Python 3
+.. appveyor building badge
+.. image:: https://ci.appveyor.com/api/projects/status/fi9ayfyo1w4oi2w8/branch/master?svg=true
+    :target: https://ci.appveyor.com/project/KnightConan/named-enum
 
 .. pypi version badge
-.. image:: https://badge.fury.io/py/named-enum.svg
+.. image:: https://img.shields.io/pypi/v/named-enum.svg
+    :target: https://pypi.python.org/pypi/named-enum/
+
+.. development status from pypi
+.. image:: https://img.shields.io/pypi/status/named-enum.svg
+    :target: https://pypi.python.org/pypi/named-enum/
+
+.. python version badge from PyPI
+.. image:: https://img.shields.io/pypi/pyversions/named-enum.svg
+    :target: https://pypi.python.org/pypi/named-enum/
+    :alt: Python 3.6 | Python 3.7
+
+.. pypi format
+.. image:: https://img.shields.io/pypi/format/named-enum.svg
     :target: https://badge.fury.io/py/named-enum
 
 .. codecov badge
-.. image:: https://codecov.io/gh/KnightConan/named_enum/branch/unit_test/graph/badge.svg
+.. image:: https://codecov.io/gh/KnightConan/named_enum/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/KnightConan/named_enum
 
 .. pyup badge
@@ -58,13 +74,13 @@ Status
     :target: https://pyup.io/repos/github/KnightConan/named_enum/
     :alt: Updates
 
-.. license badge
-.. image:: https://img.shields.io/badge/License-MIT-yellow.svg
-    :target: https://opensource.org/licenses/MIT
-
 .. download statistics badge
 .. image:: https://pepy.tech/badge/named-enum
     :target: https://pepy.tech/project/named-enum
+
+.. send message to the author
+.. image:: https://img.shields.io/badge/saythanks.io-☼-1EAEDB.svg
+    :target: https://saythanks.io/to/KnightConan
 
 About
 -----
