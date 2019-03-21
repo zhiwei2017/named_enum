@@ -15,14 +15,10 @@ The idea of this package was inspired by `Cristian Alfonso González Mora <https
 
 If you like it, please |start|_ it in |github|_.
 
-.. |start| image:: https://image.flaticon.com/icons/svg/149/149763.svg
-    :height: 22
-    :width: 22
+.. |start| image:: https://img.icons8.com/material-rounded/26/000000/star.png
     :alt: star
 
-.. |github| image:: https://image.flaticon.com/icons/svg/25/25231.svg
-    :height: 22
-    :width: 22
+.. |github| image:: https://img.icons8.com/small/26/000000/github.png
     :alt: github
 
 .. _github: https://github.com/KnightConan/named_enum
