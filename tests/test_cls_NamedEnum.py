@@ -18,6 +18,14 @@ class TestNamedEnum(CommonEnumTest, ExtraEnumTest):
     enum_cls = Triangle
     # a map specifying multiple argument sets for a test method
     params = {
+        "test___contains__": [
+            dict(checked_member="EQUILATERAL", expected=True),
+            dict(checked_member="RIGHT", expected=True),
+            dict(checked_member="TOM_AND_JERRY", expected=False),
+            dict(checked_member=Triangle.EQUILATERAL, expected=True),
+            dict(checked_member=Triangle.RIGHT, expected=True),
+            dict(checked_member=Triangle, expected=False),
+            dict(checked_member=TripleEnum, expected=False)],
         "test__fields": [dict(expected_normal_output=('first', 'second', 'third'))],
         "test_gen": [
             dict(name_value_pair=True,

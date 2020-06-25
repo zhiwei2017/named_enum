@@ -39,6 +39,19 @@ class TestNamedEnumMeta:
         assert result == expected_result
         mocked__get_mixins_.assert_called_once_with(tuple())
 
+    @pytest.mark.parametrize('checked_member, expected',
+                             [("red", True),
+                              ("blue", True),
+                              ("yellow", False),
+                              (Color.red, True),
+                              (Color.blue, True),
+                              (Color, False),
+                              (NamedEnumMeta, False)])
+    @mock.patch.object(Enum, '_member_map_', create=True,
+                       new_callable=mock.PropertyMock(return_value=Color._member_map_))
+    def test___contains__(self, mocked__member_map_, checked_member, expected):
+        assert NamedEnumMeta.__contains__(Enum, checked_member) == expected
+
     @pytest.mark.parametrize('_field_names_, expected',
                              [(None, tuple()),
                               ("ha", ('key', 'value'))])

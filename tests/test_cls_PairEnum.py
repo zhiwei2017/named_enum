@@ -13,6 +13,14 @@ class TestPairEnum(CommonEnumTest, ExtraEnumTest):
     enum_cls = Pair
     # a map specifying multiple argument sets for a test method
     params = {
+        "test___contains__": [
+            dict(checked_member="TOM_AND_JERRY", expected=True),
+            dict(checked_member="MIKE_AND_MOLLY", expected=True),
+            dict(checked_member="GALLAGHERS", expected=False),
+            dict(checked_member=Pair.TOM_AND_JERRY, expected=True),
+            dict(checked_member=Pair.MIKE_AND_MOLLY, expected=True),
+            dict(checked_member=Pair, expected=False),
+            dict(checked_member=PairEnum, expected=False)],
         "test__fields": [dict(expected_normal_output=('first', 'second'))],
         "test_gen": [
             dict(name_value_pair=True,
