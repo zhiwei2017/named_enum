@@ -1,5 +1,8 @@
-from setuptools import setup
 import os
+import distutils.text_file
+from pathlib import Path
+from typing import List
+from setuptools import setup
 
 
 # Load README as description of package
@@ -9,6 +12,12 @@ with open('README.rst') as readme_file:
 # Get current version
 with open(os.path.join('VERSION')) as version_file:
     version = version_file.read().strip()
+
+
+def _parse_requirements(filename: str) -> List[str]:
+    """Return requirements from requirements file."""
+    return distutils.text_file.TextFile(filename=str(Path(__file__).with_name(filename))).readlines()
+
 
 setup(
     name='named_enum',
@@ -31,11 +40,12 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: Implementation",
         "Topic :: Utilities",
         "Natural Language :: English",
         "Intended Audience :: Developers",
     ],
     setup_requires=["pytest-runner"],
-    tests_require=['pytest', 'pytest-mock', 'pytest-cov'],
+    tests_require=_parse_requirements('test-requirements.txt'),
 )
