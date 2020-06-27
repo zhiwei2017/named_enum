@@ -1,5 +1,5 @@
 import pytest
-from pytest_mock import mocker
+from unittest import mock
 from collections import OrderedDict
 from named_enum import ExtendedEnum
 from .helper import generator_tester
@@ -14,15 +14,12 @@ class TestExtendedEnum:
     def test__fields(self):
         assert TVCouple._fields() == tuple()
 
-    def test_gen(self, mocker):
-        result = TVCouple.gen(True)
-        expected_result = [
-            ('GALLAGHERS', ("FRANK", "MONICA")),
-            ('MIKE_AND_MOLLY', ("Mike", "Molly"))]
-        generator_tester(result, expected_result)
-
-        result = TVCouple.gen(False)
-        expected_result = [TVCouple.GALLAGHERS, TVCouple.MIKE_AND_MOLLY]
+    @pytest.mark.parametrize("name_value_pair, expected_result",
+                             [(True, [('GALLAGHERS', ("FRANK", "MONICA")),
+                                      ('MIKE_AND_MOLLY', ("Mike", "Molly"))]),
+                              (False, [TVCouple.GALLAGHERS, TVCouple.MIKE_AND_MOLLY])])
+    def test_gen(self, name_value_pair, expected_result):
+        result = TVCouple.gen(name_value_pair)
         generator_tester(result, expected_result)
 
     @pytest.mark.parametrize('func_name, value',
@@ -50,12 +47,11 @@ class TestExtendedEnum:
                               (set, {('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly"))}),
                               (tuple, (('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly")))),
                               (OrderedDict, OrderedDict([('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly"))]))])
-    def test__as_data_type(self, mocker, data_type, expected):
-        mocker.spy(TVCouple, 'gen')
+    @mock.patch.object(TVCouple, 'gen', side_effect=TVCouple.gen)
+    def test__as_data_type(self, mocked_gen, data_type, expected):
         result = TVCouple._as_data_type(data_type)
         assert result == expected
-        assert TVCouple.gen.call_count == 1
-        TVCouple.gen.assert_called_with()
+        mocked_gen.assert_called_once_with(name_value_pair=True)
 
     @pytest.mark.parametrize("func_name, expected",
                              [("as_dict", {'GALLAGHERS': ("FRANK", "MONICA"), 'MIKE_AND_MOLLY': ("Mike", "Molly")}),
@@ -63,29 +59,30 @@ class TestExtendedEnum:
                               ("as_set", {('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly"))}),
                               ("as_tuple", (('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly")))),
                               ("as_ordereddict", OrderedDict([('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly"))]))])
-    def test_as_x(self, mocker, func_name, expected):
-        mocker.spy(TVCouple, '_as_data_type')
+    @mock.patch.object(TVCouple, '_as_data_type', side_effect=TVCouple._as_data_type)
+    def test_as_x(self, mocked__as_data_type, func_name, expected):
         result = getattr(TVCouple, func_name)()
         assert result == expected
-        assert TVCouple._as_data_type.call_count == 1
-        TVCouple._as_data_type.assert_called_with(type(expected))
+        mocked__as_data_type.assert_called_once_with(type(expected))
 
-    def test___repr__(self, mocker):
-        mocker.spy(type(TVCouple), '__repr__')
+    @mock.patch.object(type(TVCouple), "__repr__",
+                       side_effect=type(TVCouple).__repr__, autospec=True)
+    def test___repr__(self, mocked_repr):
         assert repr(TVCouple) == "<named enum 'TVCouple'>"
-        assert type(TVCouple).__repr__.call_count == 1
+        assert mocked_repr.call_count == 1
         assert str(TVCouple) == "<named enum 'TVCouple'>"
-        assert type(TVCouple).__repr__.call_count == 2
+        assert mocked_repr.call_count == 2
 
-    def test___str__(self, mocker):
-        mocker.spy(TVCouple, '__str__')
+    @mock.patch.object(TVCouple, "__str__", side_effect=TVCouple.__str__,
+                       autospec=True)
+    def test___str__(self, mocked_str):
         result = str(TVCouple.MIKE_AND_MOLLY)
         assert result == "TVCouple.MIKE_AND_MOLLY: ('Mike', 'Molly')"
-        assert TVCouple.__str__.call_count == 1
+        assert mocked_str.call_count == 1
 
         result = str(TVCouple.GALLAGHERS)
         assert result == "TVCouple.GALLAGHERS: ('FRANK', 'MONICA')"
-        assert TVCouple.__str__.call_count == 2
+        assert mocked_str.call_count == 2
 
     def test_describe(self, capsys):
         TVCouple.describe()
@@ -95,17 +92,20 @@ class TestExtendedEnum:
                       "   GALLAGHERS | ('FRANK', 'MONICA')\n" \
                       "MIKE_AND_MOLLY |   ('Mike', 'Molly')\n\n"
 
-    def test_names(self, mocker):
-        result = TVCouple.names(True)
-        assert result == ('GALLAGHERS', 'MIKE_AND_MOLLY')
+    @pytest.mark.parametrize("as_tuple", [True, False])
+    def test_names(self, as_tuple):
+        expected_result = ('GALLAGHERS', 'MIKE_AND_MOLLY')
+        result = TVCouple.names(as_tuple)
+        if as_tuple:
+            assert result == expected_result
+        else:
+            generator_tester(result, expected_result)
 
-        result = TVCouple.names(False)
-        generator_tester(result, ('GALLAGHERS', 'MIKE_AND_MOLLY'))
-
-    def test_values(self, mocker):
-        expected = (('FRANK', 'MONICA'), ('Mike', 'Molly'))
-        result = TVCouple.values(True)
-        assert result == expected
-
-        result = TVCouple.values(False)
-        generator_tester(result, expected)
+    @pytest.mark.parametrize("as_tuple", [True, False])
+    def test_values(self, as_tuple):
+        expected_result = (('FRANK', 'MONICA'), ('Mike', 'Molly'))
+        result = TVCouple.values(as_tuple)
+        if as_tuple:
+            assert result == expected_result
+        else:
+            generator_tester(result, expected_result)
