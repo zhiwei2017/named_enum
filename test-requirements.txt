@@ -1,5 +1,5 @@
 pytest==4.5.0
-pytest-cov==2.7.1
+pytest-cov==2.10.0
 pytest-mock==1.10.4
 pytest-runner==5.1
 codecov==2.0.17
