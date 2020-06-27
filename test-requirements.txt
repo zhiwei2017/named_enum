@@ -1,6 +1,6 @@
 pytest==4.5.0
 pytest-cov==2.7.1
 pytest-mock==1.10.4
-pytest-runner==5.1
+pytest-runner==5.2
 codecov==2.0.17
 coverage==4.5.3
