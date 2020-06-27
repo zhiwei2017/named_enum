@@ -345,7 +345,7 @@ class NamedEnumMeta(EnumMeta):
         :return: converted value depending on the given data type
         :rtype: dict, list, set, tuple, OrderedDict_
         """
-        return data_type(cls.gen())
+        return data_type(cls.gen(name_value_pair=True))
 
     def as_dict(cls):
         """
