@@ -32,18 +32,15 @@ class TestNamedEnum:
         assert Triangle._fields() == tuple()
 
     def test_gen(self, mocker):
-        mocker.spy(Triangle._member_map_, 'items')
         result = Triangle.gen(True)
         expected_result = [
             ('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)),
             ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))]
         generator_tester(result, expected_result)
-        assert Triangle._member_map_.items.call_count == 1
 
         result = Triangle.gen(False)
         expected_result = [Triangle.EQUILATERAL, Triangle.RIGHT]
         generator_tester(result, expected_result)
-        assert Triangle._member_map_.items.call_count == 2
 
     @pytest.mark.parametrize('func_name, expected',
                              [('firsts', (6, 3)),
@@ -167,26 +164,20 @@ class TestNamedEnum:
                       "     5\n\n"
 
     def test_names(self, mocker):
-        mocker.spy(Triangle._member_map_, 'keys')
         result = Triangle.names(True)
         assert result == ('EQUILATERAL', 'RIGHT')
-        assert Triangle._member_map_.keys.call_count == 1
 
         result = Triangle.names(False)
         generator_tester(result, ('EQUILATERAL', 'RIGHT'))
-        assert Triangle._member_map_.keys.call_count == 2
 
     def test_values(self, mocker):
-        mocker.spy(Triangle._member_map_, 'values')
         expected = (Triangle._tuple_cls(first=6, second=6, third=6),
                     Triangle._tuple_cls(first=3, second=4, third=5))
         result = Triangle.values(True)
         assert result == expected
-        assert Triangle._member_map_.values.call_count == 1
 
         result = Triangle.values(False)
         generator_tester(result, expected)
-        assert Triangle._member_map_.values.call_count == 2
 
     def test___getattr__(self):
         result = getattr(Triangle.RIGHT, 'first')

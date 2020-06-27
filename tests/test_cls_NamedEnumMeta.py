@@ -64,10 +64,8 @@ class TestNamedEnumMeta:
         mocker.patch.object(NamedEnumMeta, '_member_map_', create=True)
         NamedEnumMeta._member_map_ = Color._member_map_
 
-        mocker.spy(NamedEnumMeta._member_map_, 'items')
         result = NamedEnumMeta.gen(NamedEnumMeta, *params)
         generator_tester(result, expected)
-        assert NamedEnumMeta._member_map_.items.call_count == 1
 
     def test__field_values(self, mocker):
         mocker.patch.object(NamedEnumMeta, 'gen')
@@ -143,24 +141,18 @@ class TestNamedEnumMeta:
         mocker.patch.object(NamedEnumMeta, '_member_map_', create=True)
         NamedEnumMeta._member_map_ = Color._member_map_
 
-        mocker.spy(NamedEnumMeta._member_map_, 'keys')
         result = NamedEnumMeta.names(NamedEnumMeta, True)
         assert result == ('red', 'blue')
-        assert NamedEnumMeta._member_map_.keys.call_count == 1
 
         result = NamedEnumMeta.names(NamedEnumMeta, False)
         generator_tester(result, ('red', 'blue'))
-        assert NamedEnumMeta._member_map_.keys.call_count == 2
 
     def test_values(self, mocker):
         mocker.patch.object(NamedEnumMeta, '_member_map_', create=True)
         NamedEnumMeta._member_map_ = Color._member_map_
 
-        mocker.spy(NamedEnumMeta._member_map_, 'values')
         result = NamedEnumMeta.values(NamedEnumMeta, True)
         assert result == (1, 2)
-        assert NamedEnumMeta._member_map_.values.call_count == 1
 
         result = NamedEnumMeta.values(NamedEnumMeta, False)
         generator_tester(result, (1, 2))
-        assert NamedEnumMeta._member_map_.values.call_count == 2
