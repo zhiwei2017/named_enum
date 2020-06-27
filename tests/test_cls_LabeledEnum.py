@@ -19,18 +19,15 @@ class TestLabeledEnum:
         assert NBALegendary._fields() == tuple()
 
     def test_gen(self, mocker):
-        mocker.spy(NBALegendary._member_map_, 'items')
         result = NBALegendary.gen(True)
         expected_result = [
             ('JOHNSON', NBALegendary._tuple_cls(key="Johnson", label="Magic Johnson")),
             ('Jordan', NBALegendary._tuple_cls(key="Jordan", label="Air Jordan"))]
         generator_tester(result, expected_result)
-        assert NBALegendary._member_map_.items.call_count == 1
 
         result = NBALegendary.gen(False)
         expected_result = [NBALegendary.JOHNSON, NBALegendary.Jordan]
         generator_tester(result, expected_result)
-        assert NBALegendary._member_map_.items.call_count == 2
 
     @pytest.mark.parametrize('func_name, expected',
                              [('keys', ("Johnson", "Jordan")),
@@ -147,26 +144,20 @@ class TestLabeledEnum:
                       " Jordan |  Jordan |    Air Jordan\n\n"
 
     def test_names(self, mocker):
-        mocker.spy(NBALegendary._member_map_, 'keys')
         result = NBALegendary.names(True)
         assert result == ('JOHNSON', 'Jordan')
-        assert NBALegendary._member_map_.keys.call_count == 1
 
         result = NBALegendary.names(False)
         generator_tester(result, ('JOHNSON', 'Jordan'))
-        assert NBALegendary._member_map_.keys.call_count == 2
 
     def test_values(self, mocker):
-        mocker.spy(NBALegendary._member_map_, 'values')
         expected = (NBALegendary._tuple_cls(key="Johnson", label="Magic Johnson"),
                     NBALegendary._tuple_cls(key="Jordan", label="Air Jordan"))
         result = NBALegendary.values(True)
         assert result == expected
-        assert NBALegendary._member_map_.values.call_count == 1
 
         result = NBALegendary.values(False)
         generator_tester(result, expected)
-        assert NBALegendary._member_map_.values.call_count == 2
 
     def test___getattr__(self):
         result = getattr(NBALegendary.Jordan, 'key')

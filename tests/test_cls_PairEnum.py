@@ -19,18 +19,15 @@ class TestPairEnum:
         assert Pair._fields() == tuple()
 
     def test_gen(self, mocker):
-        mocker.spy(Pair._member_map_, 'items')
         result = Pair.gen(True)
         expected_result = [
             ('TOM_AND_JERRY', Pair._tuple_cls(first="Tom", second="Jerry")),
             ('MIKE_AND_MOLLY', Pair._tuple_cls(first="Mike", second="Molly"))]
         generator_tester(result, expected_result)
-        assert Pair._member_map_.items.call_count == 1
 
         result = Pair.gen(False)
         expected_result = [Pair.TOM_AND_JERRY, Pair.MIKE_AND_MOLLY]
         generator_tester(result, expected_result)
-        assert Pair._member_map_.items.call_count == 2
 
     @pytest.mark.parametrize('func_name, expected',
                              [('firsts', ("Tom", "Mike")),
@@ -147,26 +144,20 @@ class TestPairEnum:
                       "MIKE_AND_MOLLY |  Mike |  Molly\n\n"
 
     def test_names(self, mocker):
-        mocker.spy(Pair._member_map_, 'keys')
         result = Pair.names(True)
         assert result == ('TOM_AND_JERRY', 'MIKE_AND_MOLLY')
-        assert Pair._member_map_.keys.call_count == 1
 
         result = Pair.names(False)
         generator_tester(result, ('TOM_AND_JERRY', 'MIKE_AND_MOLLY'))
-        assert Pair._member_map_.keys.call_count == 2
 
     def test_values(self, mocker):
-        mocker.spy(Pair._member_map_, 'values')
         expected = (Pair._tuple_cls(first="Tom", second="Jerry"),
                     Pair._tuple_cls(first="Mike", second="Molly"))
         result = Pair.values(True)
         assert result == expected
-        assert Pair._member_map_.values.call_count == 1
 
         result = Pair.values(False)
         generator_tester(result, expected)
-        assert Pair._member_map_.values.call_count == 2
 
     def test___getattr__(self):
         result = getattr(Pair.MIKE_AND_MOLLY, 'first')

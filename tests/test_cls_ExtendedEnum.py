@@ -15,18 +15,15 @@ class TestExtendedEnum:
         assert TVCouple._fields() == tuple()
 
     def test_gen(self, mocker):
-        mocker.spy(TVCouple._member_map_, 'items')
         result = TVCouple.gen(True)
         expected_result = [
             ('GALLAGHERS', ("FRANK", "MONICA")),
             ('MIKE_AND_MOLLY', ("Mike", "Molly"))]
         generator_tester(result, expected_result)
-        assert TVCouple._member_map_.items.call_count == 1
 
         result = TVCouple.gen(False)
         expected_result = [TVCouple.GALLAGHERS, TVCouple.MIKE_AND_MOLLY]
         generator_tester(result, expected_result)
-        assert TVCouple._member_map_.items.call_count == 2
 
     @pytest.mark.parametrize('func_name, value',
                              [('firsts', True),
@@ -99,22 +96,16 @@ class TestExtendedEnum:
                       "MIKE_AND_MOLLY |   ('Mike', 'Molly')\n\n"
 
     def test_names(self, mocker):
-        mocker.spy(TVCouple._member_map_, 'keys')
         result = TVCouple.names(True)
         assert result == ('GALLAGHERS', 'MIKE_AND_MOLLY')
-        assert TVCouple._member_map_.keys.call_count == 1
 
         result = TVCouple.names(False)
         generator_tester(result, ('GALLAGHERS', 'MIKE_AND_MOLLY'))
-        assert TVCouple._member_map_.keys.call_count == 2
 
     def test_values(self, mocker):
-        mocker.spy(TVCouple._member_map_, 'values')
         expected = (('FRANK', 'MONICA'), ('Mike', 'Molly'))
         result = TVCouple.values(True)
         assert result == expected
-        assert TVCouple._member_map_.values.call_count == 1
 
         result = TVCouple.values(False)
         generator_tester(result, expected)
-        assert TVCouple._member_map_.values.call_count == 2
