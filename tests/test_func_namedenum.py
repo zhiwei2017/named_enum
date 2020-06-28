@@ -1,10 +1,8 @@
-import pytest
 import sys as _sys
-from pytest_mock import mocker
-
+from unittest import mock
 from named_enum import namedenum
 from collections import OrderedDict
-from .helper import generator_tester
+from .helper import CommonEnumTest, ExtraEnumTest
 
 
 TripleEnum = namedenum("TripleEnum", ["first", "second", "third"],
@@ -16,185 +14,137 @@ class Triangle(TripleEnum):
     RIGHT = (3, 4, 5)
 
 
-class TestNamedEnum:
-    def test_error(self, mocker):
-        mocker.patch.object(_sys, '_getframe')
-        _sys._getframe.side_effect = lambda value: AttributeError()
-        TripleFakeEnum = namedenum('TripleFakeEnum', ("first", "second", "third"), module=None)
+class TestNamedEnumFunc(CommonEnumTest, ExtraEnumTest):
+    # an enum class for the test methods
+    enum_cls = Triangle
+    # a map specifying multiple argument sets for a test method
+    params = {
+        "test___contains__": [
+            dict(checked_member="EQUILATERAL", expected=True),
+            dict(checked_member="RIGHT", expected=True),
+            dict(checked_member="TOM_AND_JERRY", expected=False),
+            dict(checked_member=Triangle.EQUILATERAL, expected=True),
+            dict(checked_member=Triangle.RIGHT, expected=True),
+            dict(checked_member=Triangle, expected=False),
+            dict(checked_member=TripleEnum, expected=False)],
+        "test__fields": [dict(expected_normal_output=('first', 'second', 'third'))],
+        "test_gen": [
+            dict(name_value_pair=True,
+                 expected_result=[
+                     ('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)),
+                     ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))]),
+            dict(name_value_pair=False,
+                 expected_result=[Triangle.EQUILATERAL, Triangle.RIGHT])],
+        "test__field_values": [
+            dict(func_name='firsts', as_tuple=True, expected=(6, 3)),
+            dict(func_name='firsts', as_tuple=False, expected=(6, 3)),
+            dict(func_name='seconds', as_tuple=True, expected=(6, 4)),
+            dict(func_name='seconds', as_tuple=False, expected=(6, 4)),
+            dict(func_name='thirds', as_tuple=True, expected=(6, 5)),
+            dict(func_name='thirds', as_tuple=False, expected=(6, 5))],
+        "test__from_field": [
+            dict(func_name='from_first', value=6, as_tuple=True, expected=(Triangle.EQUILATERAL,)),
+            dict(func_name='from_first', value=6, as_tuple=False, expected=(Triangle.EQUILATERAL,)),
+            dict(func_name='from_first', value=3, as_tuple=True, expected=(Triangle.RIGHT,)),
+            dict(func_name='from_first', value=3, as_tuple=False, expected=(Triangle.RIGHT,)),
+            dict(func_name='from_first', value=63, as_tuple=True, expected=tuple()),
+            dict(func_name='from_first', value=63, as_tuple=False, expected=tuple()),
+            dict(func_name='from_second', value=6, as_tuple=True, expected=(Triangle.EQUILATERAL,)),
+            dict(func_name='from_second', value=6, as_tuple=False, expected=(Triangle.EQUILATERAL,)),
+            dict(func_name='from_second', value=4, as_tuple=True, expected=(Triangle.RIGHT,)),
+            dict(func_name='from_second', value=4, as_tuple=False, expected=(Triangle.RIGHT,)),
+            dict(func_name='from_second', value=64, as_tuple=True, expected=tuple()),
+            dict(func_name='from_second', value=64, as_tuple=False, expected=tuple()),
+            dict(func_name='from_third', value=6, as_tuple=True, expected=(Triangle.EQUILATERAL,)),
+            dict(func_name='from_third', value=6, as_tuple=False, expected=(Triangle.EQUILATERAL,)),
+            dict(func_name='from_third', value=5, as_tuple=True, expected=(Triangle.RIGHT,)),
+            dict(func_name='from_third', value=5, as_tuple=False, expected=(Triangle.RIGHT,)),
+            dict(func_name='from_third', value=65, as_tuple=True, expected=tuple()),
+            dict(func_name='from_third', value=65, as_tuple=False, expected=tuple())],
+        "test__has_field": [
+            dict(func_name='has_first', value=6, expected=True),
+            dict(func_name='has_first', value=3, expected=True),
+            dict(func_name='has_first', value=63, expected=False),
+            dict(func_name='has_second', value=6, expected=True),
+            dict(func_name='has_second', value=4, expected=True),
+            dict(func_name='has_second', value=64, expected=False),
+            dict(func_name='has_third', value=6, expected=True),
+            dict(func_name='has_third', value=5, expected=True),
+            dict(func_name='has_third', value=65, expected=False)],
+        "test__func_fail": [
+            dict(func_name='forths', func_param=(True,), error_type=AttributeError),
+            dict(func_name='forths', func_param=(False,), error_type=AttributeError),
+            dict(func_name='from_forth', func_param=(6, True), error_type=AttributeError),
+            dict(func_name='from_forth', func_param=(6, False), error_type=AttributeError),
+            dict(func_name='has_forth', func_param=(6, True), error_type=AttributeError),
+            dict(func_name='has_forth', func_param=(6, False), error_type=AttributeError)],
+        "test__as_data_type": [
+            dict(data_type=dict,
+                 expected={'EQUILATERAL': Triangle._tuple_cls(first=6, second=6, third=6),
+                           'RIGHT': Triangle._tuple_cls(first=3, second=4, third=5)}),
+            dict(data_type=list,
+                 expected=[('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)),
+                           ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))]),
+            dict(data_type=set,
+                 expected={('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)),
+                           ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))}),
+            dict(data_type=tuple,
+                 expected=(('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)),
+                           ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5)))),
+            dict(data_type=OrderedDict,
+                 expected=OrderedDict([
+                     ('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)),
+                     ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))]))],
+        "test_as_x": [
+            dict(func_name="as_dict",
+                 expected={'EQUILATERAL': Triangle._tuple_cls(first=6, second=6, third=6),
+                           'RIGHT': Triangle._tuple_cls(first=3, second=4, third=5)}),
+            dict(func_name="as_list",
+                 expected=[('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)),
+                           ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))]),
+            dict(func_name="as_set",
+                 expected={('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)),
+                           ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))}),
+            dict(func_name="as_tuple",
+                 expected=(('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)),
+                           ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5)))),
+            dict(func_name="as_ordereddict",
+                 expected=OrderedDict([
+                     ('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)),
+                     ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))]))],
+        "test___repr__": [dict(expected="<named enum 'Triangle'>")],
+        "test___str__": [
+            dict(obj=Triangle.RIGHT,
+                 expected="Triangle.RIGHT: NamedTuple(first=3, second=4, third=5)"),
+            dict(obj=Triangle.EQUILATERAL,
+                 expected="Triangle.EQUILATERAL: NamedTuple(first=6, second=6, third=6)")],
+        "test_describe": [dict(expected="Class: Triangle\n       Name | First |"
+                                        " Second | Third\n---------------------"
+                                        "---------------\nEQUILATERAL |     6 |"
+                                        "      6 |     6\n      RIGHT |     3 |"
+                                        "      4 |     5\n\n")],
+        "test_names_values": [
+            dict(func_name="names", as_tuple=True,
+                 expected_result=('EQUILATERAL', 'RIGHT')),
+            dict(func_name="names", as_tuple=False,
+                 expected_result=('EQUILATERAL', 'RIGHT')),
+            dict(func_name="values", as_tuple=True,
+                 expected_result=(Triangle._tuple_cls(first=6, second=6, third=6),
+                                  Triangle._tuple_cls(first=3, second=4, third=5))),
+            dict(func_name="values", as_tuple=False,
+                 expected_result=(Triangle._tuple_cls(first=6, second=6, third=6),
+                                  Triangle._tuple_cls(first=3, second=4, third=5)))],
+        "test___getattr___success": [
+            dict(obj=Triangle.RIGHT, func_name="first", expected=3),
+            dict(obj=Triangle.RIGHT, func_name="name", expected='RIGHT')],
+        "test___getattr___fail": [
+            dict(obj=Triangle.RIGHT, func_name='key',
+                 err_msg="'Triangle' object has no attribute 'key'")]
+    }
+
+    @mock.patch.object(_sys, '_getframe', side_effect=AttributeError)
+    def test_error(self, mocked__getframe):
+        TripleFakeEnum = namedenum('TripleFakeEnum',
+                                   ("first", "second", "third"), module=None)
         assert TripleFakeEnum.__module__ == 'TripleFakeEnum'
-        _sys._getframe.assert_called_with(1)
-
-    def test__fields(self, mocker):
-        assert Triangle._fields() == ('first', 'second', 'third')
-
-        mocker.patch.object(Triangle, '_field_names_')
-        Triangle._field_names_ = None
-        assert Triangle._fields() == tuple()
-
-    def test_gen(self, mocker):
-        mocker.spy(Triangle._member_map_, 'items')
-        result = Triangle.gen(True)
-        expected_result = [
-            ('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)),
-            ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))]
-        generator_tester(result, expected_result)
-        assert Triangle._member_map_.items.call_count == 1
-
-        result = Triangle.gen(False)
-        expected_result = [Triangle.EQUILATERAL, Triangle.RIGHT]
-        generator_tester(result, expected_result)
-        assert Triangle._member_map_.items.call_count == 2
-
-    @pytest.mark.parametrize('func_name, expected',
-                             [('firsts', (6, 3)),
-                              ('seconds', (6, 4)),
-                              ('thirds', (6, 5))])
-    def test__field_values(self, mocker, func_name, expected):
-        mocker.spy(Triangle, 'gen')
-        result = getattr(Triangle, func_name)(True)
-        assert result == expected
-        assert Triangle.gen.call_count == 1
-        Triangle.gen.assert_called_with(name_value_pair=False)
-
-        result = getattr(Triangle, func_name)(False)
-        generator_tester(result, expected)
-        assert Triangle.gen.call_count == 2
-        Triangle.gen.assert_called_with(name_value_pair=False)
-
-    @pytest.mark.parametrize('func_name, value, expected',
-                             [('from_first', 6, (Triangle.EQUILATERAL, )),
-                              ('from_first', 3, (Triangle.RIGHT, )),
-                              ('from_first', 63, tuple()),
-                              ('from_second', 6, (Triangle.EQUILATERAL, )),
-                              ('from_second', 4, (Triangle.RIGHT, )),
-                              ('from_second', 64, tuple()),
-                              ('from_third', 6, (Triangle.EQUILATERAL, )),
-                              ('from_third', 5, (Triangle.RIGHT, )),
-                              ('from_third', 65, tuple())])
-    def test__from_field(self, mocker, func_name, value, expected):
-        mocker.spy(Triangle, 'gen')
-        result = getattr(Triangle, func_name)(value, True)
-        assert result == expected
-        assert Triangle.gen.call_count == 1
-        Triangle.gen.assert_called_with(name_value_pair=False)
-
-        result = getattr(Triangle, func_name)(value, False)
-        generator_tester(result, expected)
-        assert Triangle.gen.call_count == 2
-        Triangle.gen.assert_called_with(name_value_pair=False)
-
-    @pytest.mark.parametrize('func_name, value, expected',
-                             [('has_first', 6, True),
-                              ('has_first', 3, True),
-                              ('has_first', 63, False),
-                              ('has_second', 6, True),
-                              ('has_second', 4, True),
-                              ('has_second', 64, False),
-                              ('has_third', 6, True),
-                              ('has_third', 5, True),
-                              ('has_third', 65, False)])
-    def test__has_field(self, mocker, func_name, value, expected):
-        mocker.spy(Triangle, 'gen')
-        result = getattr(Triangle, func_name)(value)
-        assert result == expected
-        assert Triangle.gen.call_count == 1
-        Triangle.gen.assert_called_with(name_value_pair=False)
-
-    @pytest.mark.parametrize('func_name, func_param, error_type, error_msg',
-                             [('forths', (True, ), AttributeError, 'forths'),
-                              ('forths', (False, ), AttributeError, 'forths'),
-                              ('from_forth', (6, True), AttributeError, 'from_forth'),
-                              ('from_forth', (6, False), AttributeError, 'from_forth'),
-                              ('has_forth', (6, True), AttributeError, 'has_forth'),
-                              ('has_forth', (6, False), AttributeError, 'has_forth'),
-                              ])
-    def test__func_fail(self, func_name, func_param, error_type, error_msg):
-        with pytest.raises(error_type) as excinfo:
-            getattr(Triangle, func_name)(*func_param)
-        assert error_msg == str(excinfo.value)
-
-    @pytest.mark.parametrize("data_type, expected",
-                             [(dict, {'EQUILATERAL': Triangle._tuple_cls(first=6, second=6, third=6), 'RIGHT': Triangle._tuple_cls(first=3, second=4, third=5)}),
-                              (list, [('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)), ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))]),
-                              (set, {('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)), ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))}),
-                              (tuple, (('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)), ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5)))),
-                              (OrderedDict, OrderedDict([('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)), ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))]))])
-    def test__as_data_type(self, mocker, data_type, expected):
-        mocker.spy(Triangle, 'gen')
-        result = Triangle._as_data_type(data_type)
-        assert result == expected
-        assert Triangle.gen.call_count == 1
-        Triangle.gen.assert_called_with()
-
-    @pytest.mark.parametrize("func_name, expected",
-                             [("as_dict", {'EQUILATERAL': Triangle._tuple_cls(first=6, second=6, third=6), 'RIGHT': Triangle._tuple_cls(first=3, second=4, third=5)}),
-                              ("as_list", [('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)), ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))]),
-                              ("as_set", {('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)), ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))}),
-                              ("as_tuple", (('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)), ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5)))),
-                              ("as_ordereddict", OrderedDict([('EQUILATERAL', Triangle._tuple_cls(first=6, second=6, third=6)), ('RIGHT', Triangle._tuple_cls(first=3, second=4, third=5))]))])
-    def test_as_x(self, mocker, func_name, expected):
-        mocker.spy(Triangle, '_as_data_type')
-        result = getattr(Triangle, func_name)()
-        assert result == expected
-        assert Triangle._as_data_type.call_count == 1
-        Triangle._as_data_type.assert_called_with(type(expected))
-
-    def test___repr__(self, mocker):
-        mocker.spy(type(Triangle), '__repr__')
-        assert repr(Triangle) == "<named enum 'Triangle'>"
-        assert type(Triangle).__repr__.call_count == 1
-        assert str(Triangle) == "<named enum 'Triangle'>"
-        assert type(Triangle).__repr__.call_count == 2
-
-    def test___str__(self, mocker):
-        mocker.spy(Triangle, '__str__')
-        result = str(Triangle.RIGHT)
-        assert result == "Triangle.RIGHT: NamedTuple(first=3, second=4, " \
-                         "third=5)"
-        assert Triangle.__str__.call_count == 1
-
-        result = str(Triangle.EQUILATERAL)
-        assert result == "Triangle.EQUILATERAL: NamedTuple(first=6, second=6, " \
-                         "third=6)"
-        assert Triangle.__str__.call_count == 2
-
-    def test_describe(self, capsys):
-        Triangle.describe()
-        out, err = capsys.readouterr()
-        assert out == "Class: Triangle\n       Name | First | Second | Third" \
-                      "\n------------------------------------\nEQUILATERAL | " \
-                      "    6 |      6 |     6\n      RIGHT |     3 |      4 |" \
-                      "     5\n\n"
-
-    def test_names(self, mocker):
-        mocker.spy(Triangle._member_map_, 'keys')
-        result = Triangle.names(True)
-        assert result == ('EQUILATERAL', 'RIGHT')
-        assert Triangle._member_map_.keys.call_count == 1
-
-        result = Triangle.names(False)
-        generator_tester(result, ('EQUILATERAL', 'RIGHT'))
-        assert Triangle._member_map_.keys.call_count == 2
-
-    def test_values(self, mocker):
-        mocker.spy(Triangle._member_map_, 'values')
-        expected = (Triangle._tuple_cls(first=6, second=6, third=6),
-                    Triangle._tuple_cls(first=3, second=4, third=5))
-        result = Triangle.values(True)
-        assert result == expected
-        assert Triangle._member_map_.values.call_count == 1
-
-        result = Triangle.values(False)
-        generator_tester(result, expected)
-        assert Triangle._member_map_.values.call_count == 2
-
-    def test___getattr__(self):
-        result = getattr(Triangle.RIGHT, 'first')
-        assert result == 3
-
-        result = getattr(Triangle.RIGHT, 'name')
-        assert result == 'RIGHT'
-
-        with pytest.raises(AttributeError) as exe_infg:
-            getattr(Triangle.RIGHT, 'key')
-        assert "'Triangle' object has no attribute 'key'" == str(exe_infg.value)
+        mocked__getframe.assert_called_with(1)

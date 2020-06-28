@@ -18,8 +18,7 @@ __all__ = [
 
 
 class _NamedEnumDict(_EnumDict):
-    """
-    Customizes _EnumDict, such that it allows setting the value for the keyword
+    """Customizes _EnumDict, such that it allows setting the value for the keyword
     '_field_names_' and provides the functions for cleaning itself and
     converting the collection type value (except str) to NamedTuple type.
     """
@@ -39,8 +38,7 @@ class _NamedEnumDict(_EnumDict):
             super().__setitem__(key, value)
 
     def _clean(self):
-        """
-        Removes all the items, and set the variables '_member_names' and
+        """Removes all the items, and set the variables '_member_names' and
         '_last_values' to empty.
         """
         # for dictionary, that's the only way to _clean it
@@ -50,8 +48,7 @@ class _NamedEnumDict(_EnumDict):
         self._member_names, self._last_values = [], []
 
     def _convert(self, tuple_cls):
-        """
-        Uses the given tuple class to _convert the items.
+        """Uses the given tuple class to _convert the items.
 
         :param tuple_cls: using namedtuple generated
           tuple class
@@ -86,8 +83,7 @@ class _NamedEnumDict(_EnumDict):
 
 
 class NamedEnumMeta(EnumMeta):
-    """
-    Extends the `EnumMeta` class for three purposes:
+    """Extends the `EnumMeta` class for three purposes:
 
     1.  uses the `_NamedEnumDict` as the data type of the `namespace` parameter
     for `__new__` function, such that we can use the `namedtuple` as the data
@@ -106,8 +102,7 @@ class NamedEnumMeta(EnumMeta):
     """
     @classmethod
     def __prepare__(mcs, cls, bases):
-        """
-        Namespace hook, uses _NamedEnumDict as the type of namespace instead of
+        """Namespace hook, uses _NamedEnumDict as the type of namespace instead of
         _EnumDict.
 
         :param cls: name of the class to create
@@ -127,8 +122,7 @@ class NamedEnumMeta(EnumMeta):
         return enum_dict
 
     def __new__(mcs, name, bases, namespace):
-        """
-        Besides the class creation, this function also intends to create a named
+        """Besides the class creation, this function also intends to create a named
         tuple data type depending on the given value of '_field_names_' variable
         to be the data type of the value of enumeration iem and add those extra
         functions to the class.
@@ -195,9 +189,21 @@ class NamedEnumMeta(EnumMeta):
             cls = super().__new__(mcs, name, bases, namespace)
         return cls
 
-    def _fields(cls):
+    def __contains__(cls, member):
+        """Overrides the magic method in Enum class, which doesn't support
+        member name search from python 3.8.
+
+        :param member: the lookup value
+        :type member: str | Enum class
+        :return: if the member is contained in the enumeration.
+        :rtype: bool
         """
-        Returns the defined field names as a `tuple` for the enumeration class.
+        if isinstance(member, str):
+            return member in cls._member_map_
+        return isinstance(member, cls) and member._name_ in cls._member_map_
+
+    def _fields(cls):
+        """Returns the defined field names as a `tuple` for the enumeration class.
 
         If the variable `_field_names_` is `None` or empty value, then
         returns an empty `tuple`.
@@ -221,8 +227,7 @@ class NamedEnumMeta(EnumMeta):
 
     @classmethod
     def _field_values(mcs, cls, field_name, as_tuple=True):
-        """
-        Base function returns a `tuple`/`generator` containing just the value of the
+        """Base function returns a `tuple`/`generator` containing just the value of the
         given field_name of all the elements from the cls.
 
         It's used to generate the particular function with name format
@@ -244,8 +249,7 @@ class NamedEnumMeta(EnumMeta):
 
     @classmethod
     def _from_field(mcs, cls, field_name, field_value, as_tuple=True):
-        """
-        Base function returns a `tuple` of the defined enumeration items
+        """Base function returns a `tuple` of the defined enumeration items
         regarding to the given `field_value` of field with `field_name`, if
         `as_tuple` is True; otherwise returns a generator.
 
@@ -270,8 +274,7 @@ class NamedEnumMeta(EnumMeta):
 
     @classmethod
     def _has_field(mcs, cls, field_name, field_value):
-        """
-        Base function returns a boolean value which indicates if there is at
+        """Base function returns a boolean value which indicates if there is at
         least one enumeration item in which the value of the field `field_name`
         corresponding value matches the given `field_value`.
 
@@ -291,8 +294,7 @@ class NamedEnumMeta(EnumMeta):
         return field_value in gen_field_values
 
     def gen(cls, name_value_pair=True):
-        """
-        Returns a generator of pairs consisting of each enumeration item's name
+        """Returns a generator of pairs consisting of each enumeration item's name
         and value, if name_value_pair is True; otherwise a generator of the
         enumeration items.
 
@@ -331,8 +333,7 @@ class NamedEnumMeta(EnumMeta):
         return (item for name, item in cls._member_map_.items())
 
     def _as_data_type(cls, data_type):
-        """
-        Base function converts the enumeration class to the given data type
+        """Base function converts the enumeration class to the given data type
         value.
 
         It's used for generating the functions like `as_dict`, `as_tuple`,
@@ -345,11 +346,10 @@ class NamedEnumMeta(EnumMeta):
         :return: converted value depending on the given data type
         :rtype: dict, list, set, tuple, OrderedDict_
         """
-        return data_type(cls.gen())
+        return data_type(cls.gen(name_value_pair=True))
 
     def as_dict(cls):
-        """
-        Converts the enumeration to a `dict`, in which the key is the name
+        """Converts the enumeration to a `dict`, in which the key is the name
         of the enumeration item and value is its value.
 
         :return: a dictionary containing name-value-pairs of the enumeration

@@ -10,4 +10,5 @@ dist
 !.readthedocs.yml
 !.travis.yml
 !.pyup.yml
+!.github
 coverage.xml
