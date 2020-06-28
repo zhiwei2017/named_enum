@@ -1,0 +1,1229 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>__init__ &mdash; named_enum 1.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> named_enum
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source_code.html">Source Code</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">named_enum</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>__init__</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for __init__</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module for the classes extending the default `Enum` class. It contains 5 classes:</span>
+<span class="sd">`ExtendedEnumMeta`, `ExtendedEnum`, `ExtendedEnum`, `LabeledEnum`, `PairEnum`</span>
+<span class="sd">and one method `namedenum`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span> <span class="k">as</span> <span class="nn">_sys</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="k">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">EnumMeta</span><span class="p">,</span> <span class="n">_EnumDict</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;NamedEnumMeta&#39;</span><span class="p">,</span> <span class="s1">&#39;NamedEnum&#39;</span><span class="p">,</span> <span class="s1">&#39;ExtendedEnum&#39;</span><span class="p">,</span> <span class="s1">&#39;LabeledEnum&#39;</span><span class="p">,</span> <span class="s1">&#39;PairEnum&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;namedenum&#39;</span>
+<span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">_NamedEnumDict</span><span class="p">(</span><span class="n">_EnumDict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Customizes _EnumDict, such that it allows setting the value for the keyword</span>
+<span class="sd">    &#39;_field_names_&#39; and provides the functions for cleaning itself and</span>
+<span class="sd">    converting the collection type value (except str) to NamedTuple type.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Makes an exception for the single underscore name &#39;_field_names_&#39;.</span>
+
+<span class="sd">        :param key: variable or function names defined in class</span>
+<span class="sd">        :type key: str</span>
+<span class="sd">        :param value: values or functions</span>
+<span class="sd">        :type value: int, str, object, ...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="s1">&#39;_field_names_&#39;</span><span class="p">:</span>
+            <span class="nb">dict</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__setitem__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Removes all the items, and set the variables &#39;_member_names&#39; and</span>
+<span class="sd">        &#39;_last_values&#39; to empty.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># for dictionary, that&#39;s the only way to _clean it</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member_names</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="c1"># _clean the variables as well</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_member_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_values</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tuple_cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Uses the given tuple class to _convert the items.</span>
+
+<span class="sd">        :param tuple_cls: using namedtuple generated</span>
+<span class="sd">          tuple class</span>
+<span class="sd">        :type tuple_cls: customized tuple class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">tuple_cls</span> <span class="ow">is</span> <span class="nb">tuple</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">tuple_cls</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;tuple_cls&#39; must be a customized tuple class &quot;</span>
+                             <span class="s2">&quot;using namedtuple generated.&quot;</span><span class="p">)</span>
+        <span class="n">_member_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member_names</span>
+        <span class="n">_last_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">feature_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">tuple_cls</span><span class="p">,</span> <span class="s1">&#39;_fields&#39;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">feature_num</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># converting the type of the value in customized tuple</span>
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_values</span><span class="p">:</span>
+                <span class="n">_last_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tuple_cls</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># converting the type of the value in customized tuple</span>
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_values</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unable to unpack the value for the fields.&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">_last_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tuple_cls</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_last_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tuple_cls</span><span class="p">(</span><span class="o">*</span><span class="n">value</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clean</span><span class="p">()</span>
+
+        <span class="c1"># put the converted items back, the __setitem__ function in _EnumDict</span>
+        <span class="c1"># will fill the variables, like &#39;_member_names&#39; and &#39;_last_values&#39;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_member_names</span><span class="p">):</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_last_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="NamedEnumMeta"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnumMeta">[docs]</a><span class="k">class</span> <span class="nc">NamedEnumMeta</span><span class="p">(</span><span class="n">EnumMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extends the `EnumMeta` class for three purposes:</span>
+
+<span class="sd">    1.  uses the `_NamedEnumDict` as the data type of the `namespace` parameter</span>
+<span class="sd">    for `__new__` function, such that we can use the `namedtuple` as the data</span>
+<span class="sd">    type of the value of each enumeration item.</span>
+
+<span class="sd">    2.  provides extra functions, which is independent of the variable</span>
+<span class="sd">    `_field_names_`, such as `names`, `values`, `as_dict`, `as_list`, `as_set`,</span>
+<span class="sd">    `as_tuple`, `as_ordereddict`, `describe`, `gen`. The aim is extending the</span>
+<span class="sd">    Enum class for complicated use cases in software development.</span>
+
+<span class="sd">    3.  provides functions for each field name defined in class variable</span>
+<span class="sd">    `_field_names_` in the NamedEnum class and its subclasses, for example:</span>
+
+<span class="sd">    assuming `&#39;key&#39;` is included in `_field_names_`, then the functions for this</span>
+<span class="sd">    field name are: `keys`, `from_key`, `has_key`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__prepare__</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">bases</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Namespace hook, uses _NamedEnumDict as the type of namespace instead of</span>
+<span class="sd">        _EnumDict.</span>
+
+<span class="sd">        :param cls: name of the class to create</span>
+<span class="sd">        :type cls: str</span>
+<span class="sd">        :param bases: parent classes of the class to create</span>
+<span class="sd">        :type bases: tuple</span>
+<span class="sd">        :return: namespace dictionary</span>
+<span class="sd">        :rtype: _NamedEnumDict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># create the namespace dict</span>
+        <span class="n">enum_dict</span> <span class="o">=</span> <span class="n">_NamedEnumDict</span><span class="p">()</span>
+        <span class="c1"># inherit previous flags and _generate_next_value_ function</span>
+        <span class="n">member_type</span><span class="p">,</span> <span class="n">first_enum</span> <span class="o">=</span> <span class="n">mcs</span><span class="o">.</span><span class="n">_get_mixins_</span><span class="p">(</span><span class="n">bases</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">first_enum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">enum_dict</span><span class="p">[</span><span class="s1">&#39;_generate_next_value_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+                <span class="n">first_enum</span><span class="p">,</span> <span class="s1">&#39;_generate_next_value_&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">enum_dict</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">namespace</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Besides the class creation, this function also intends to create a named</span>
+<span class="sd">        tuple data type depending on the given value of &#39;_field_names_&#39; variable</span>
+<span class="sd">        to be the data type of the value of enumeration iem and add those extra</span>
+<span class="sd">        functions to the class.</span>
+
+<span class="sd">        :param name: name of the instance class</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param bases: base classes, its instance class inherits from</span>
+<span class="sd">        :type bases: tuple</span>
+<span class="sd">        :param namespace: contains the attributes and functions of the</span>
+<span class="sd">          instance class</span>
+<span class="sd">        :type namespace: dict</span>
+<span class="sd">        :return: class object</span>
+<span class="sd">        :rtype: object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if the _field_names_ not defined in the class, get it from its parent</span>
+        <span class="c1"># class; otherwise uses the defined one.</span>
+        <span class="k">if</span> <span class="s1">&#39;_field_names_&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">namespace</span><span class="p">:</span>
+            <span class="n">_field_names_</span> <span class="o">=</span> <span class="n">bases</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;_field_names_&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_field_names_</span> <span class="o">=</span> <span class="n">namespace</span><span class="p">[</span><span class="s1">&#39;_field_names_&#39;</span><span class="p">]</span>
+        <span class="c1"># if the _field_names_ is not defined, then switch back to the normal</span>
+        <span class="c1"># enum but with extended functions</span>
+        <span class="k">if</span> <span class="n">_field_names_</span><span class="p">:</span>
+            <span class="c1"># created the customized tuple class with the defined _field_names_</span>
+            <span class="n">_tuple_cls</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;NamedTuple&quot;</span><span class="p">,</span> <span class="n">_field_names_</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">}</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">_tuple_cls</span><span class="o">.</span><span class="n">_fields</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;&#39;name&#39; or &#39;value&#39; cannot be attributes&quot;</span><span class="p">)</span>
+            <span class="c1"># _convert the type of the item in namespace dictionary to the named</span>
+            <span class="c1"># tuple type</span>
+            <span class="n">namespace</span><span class="o">.</span><span class="n">_convert</span><span class="p">(</span><span class="n">_tuple_cls</span><span class="p">)</span>
+            <span class="c1"># create the class and define a class variable to hold the</span>
+            <span class="c1"># customized tuple class. It&#39;s needed to return the field names.</span>
+            <span class="bp">cls</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_tuple_cls</span> <span class="o">=</span> <span class="n">_tuple_cls</span>
+            <span class="c1"># the function name formats, docstring formats and bases functions</span>
+            <span class="n">func_factory_mapping</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">s&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;Collective method to return the values of the attribute `</span><span class="si">%s</span><span class="s2">` &quot;</span>
+                 <span class="s2">&quot;from all the enumeration items.&quot;</span><span class="p">,</span>
+                 <span class="n">mcs</span><span class="o">.</span><span class="n">_field_values</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;from_</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;Returns a tuple of the defined enumeration items regarding to &quot;</span>
+                 <span class="s2">&quot;the given `field_value` of field `</span><span class="si">%s</span><span class="s2">`, if `as_tuple` is True; &quot;</span>
+                 <span class="s2">&quot;otherwise returns a generator.&quot;</span><span class="p">,</span>
+                 <span class="n">mcs</span><span class="o">.</span><span class="n">_from_field</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">&quot;has_</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;Returns a boolean value which indicates if there is at least &quot;</span>
+                 <span class="s2">&quot;one enumeration item in which the value of the field `</span><span class="si">%s</span><span class="s2">` &quot;</span>
+                 <span class="s2">&quot;matches the given field_value.&quot;</span><span class="p">,</span>
+                 <span class="n">mcs</span><span class="o">.</span><span class="n">_has_field</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="c1"># function creation factory: create functions for each field_name</span>
+            <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_fields</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">docstring</span><span class="p">,</span> <span class="n">mcs_func</span> <span class="ow">in</span> <span class="n">func_factory_mapping</span><span class="p">:</span>
+                    <span class="n">func_name</span> <span class="o">=</span> <span class="n">name</span> <span class="o">%</span> <span class="n">field_name</span>
+                    <span class="n">func_docstring</span> <span class="o">=</span> <span class="n">docstring</span> <span class="o">%</span> <span class="n">field_name</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">partial</span><span class="p">(</span><span class="n">mcs_func</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">field_name</span><span class="p">))</span>
+                    <span class="c1"># override the docstring of the partial function</span>
+                    <span class="n">par_func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">func_name</span><span class="p">)</span>
+                    <span class="n">par_func</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">func_docstring</span>
+                    <span class="n">par_func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">func_name</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_tuple_cls</span> <span class="o">=</span> <span class="n">_tuple_cls</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">cls</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">member</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overrides the magic method in Enum class, which doesn&#39;t support</span>
+<span class="sd">        member name search from python 3.8.</span>
+
+<span class="sd">        :param member: the lookup value</span>
+<span class="sd">        :type member: str | Enum class</span>
+<span class="sd">        :return: if the member is contained in the enumeration.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_member_map_</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span> <span class="ow">and</span> <span class="n">member</span><span class="o">.</span><span class="n">_name_</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_member_map_</span>
+
+<div class="viewcode-block" id="NamedEnumMeta._fields"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnumMeta._fields">[docs]</a>    <span class="k">def</span> <span class="nf">_fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the defined field names as a `tuple` for the enumeration class.</span>
+
+<span class="sd">        If the variable `_field_names_` is `None` or empty value, then</span>
+<span class="sd">        returns an empty `tuple`.</span>
+
+<span class="sd">        :return: tuple of field names</span>
+<span class="sd">        :rtype: tuple</span>
+
+<span class="sd">        &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">        ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; TripleEnum._fields()</span>
+<span class="sd">        (&#39;first&#39;, &#39;second&#39;, &#39;third&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">        ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">        ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">        &gt;&gt;&gt; Triangle._fields()</span>
+<span class="sd">        (&#39;first&#39;, &#39;second&#39;, &#39;third&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_field_names_</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_tuple_cls</span><span class="o">.</span><span class="n">_fields</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">()</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_field_values</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">as_tuple</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Base function returns a `tuple`/`generator` containing just the value of the</span>
+<span class="sd">        given field_name of all the elements from the cls.</span>
+
+<span class="sd">        It&#39;s used to generate the particular function with name format</span>
+<span class="sd">        `&lt;field_name&gt;s` for each `field_name`.</span>
+
+<span class="sd">        :param cls: subclass of NamedEnum class</span>
+<span class="sd">        :type cls: Enum class</span>
+<span class="sd">        :param field_name: attribute&#39;s name</span>
+<span class="sd">        :type field_name: str</span>
+<span class="sd">        :param as_tuple: returns a tuple of the values if True; otherwise</span>
+<span class="sd">          returns a generator</span>
+<span class="sd">        :type as_tuple: bool</span>
+<span class="sd">        :return: corresponding values of the field name in all enumeration items</span>
+<span class="sd">        :rtype: tuple_, Generator_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">field_name</span><span class="p">)</span>
+             <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">name_value_pair</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">if</span> <span class="n">as_tuple</span> <span class="k">else</span> <span class="n">g</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_from_field</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">field_value</span><span class="p">,</span> <span class="n">as_tuple</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Base function returns a `tuple` of the defined enumeration items</span>
+<span class="sd">        regarding to the given `field_value` of field with `field_name`, if</span>
+<span class="sd">        `as_tuple` is True; otherwise returns a generator.</span>
+
+<span class="sd">        It&#39;s used to generate the particular function with name format</span>
+<span class="sd">        `from_&lt;field_name&gt;` for each `field_name`.</span>
+
+<span class="sd">        :param cls: subclass of NamedEnum class</span>
+<span class="sd">        :type cls: Enum class</span>
+<span class="sd">        :param field_name: attribute&#39;s name</span>
+<span class="sd">        :type field_name: str</span>
+<span class="sd">        :param field_value: key to search for</span>
+<span class="sd">        :type field_value: int, str, object, ...</span>
+<span class="sd">        :param as_tuple: returns a tuple of the values if True; otherwise</span>
+<span class="sd">          returns a generator</span>
+<span class="sd">        :type as_tuple: bool</span>
+<span class="sd">        :return: collection of enumeration items matching the condition</span>
+<span class="sd">        :rtype: tuple_, Generator_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="p">(</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">name_value_pair</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+             <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">field_name</span><span class="p">)</span> <span class="o">==</span> <span class="n">field_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">if</span> <span class="n">as_tuple</span> <span class="k">else</span> <span class="n">g</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_has_field</span><span class="p">(</span><span class="n">mcs</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">field_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Base function returns a boolean value which indicates if there is at</span>
+<span class="sd">        least one enumeration item in which the value of the field `field_name`</span>
+<span class="sd">        corresponding value matches the given `field_value`.</span>
+
+<span class="sd">        It&#39;s used to generate the particular function with name format</span>
+<span class="sd">        `has_&lt;field_name&gt;` for each `field_name`.</span>
+
+<span class="sd">        :param cls: subclass of NamedEnum class</span>
+<span class="sd">        :type cls: Enum class</span>
+<span class="sd">        :param field_name: attribute&#39;s name</span>
+<span class="sd">        :type field_name: str</span>
+<span class="sd">        :param field_value: key to search for</span>
+<span class="sd">        :type field_value: int, str, object, ...</span>
+<span class="sd">        :return: True, if has at least one matching; otherwise False.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gen_field_values</span> <span class="o">=</span> <span class="n">mcs</span><span class="o">.</span><span class="n">_field_values</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">as_tuple</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">field_value</span> <span class="ow">in</span> <span class="n">gen_field_values</span>
+
+<div class="viewcode-block" id="NamedEnumMeta.gen"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnumMeta.gen">[docs]</a>    <span class="k">def</span> <span class="nf">gen</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name_value_pair</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a generator of pairs consisting of each enumeration item&#39;s name</span>
+<span class="sd">        and value, if name_value_pair is True; otherwise a generator of the</span>
+<span class="sd">        enumeration items.</span>
+
+<span class="sd">        :param name_value_pair: controls the return result. If true,</span>
+<span class="sd">          returns the generator of name-value pair; if False, returns the</span>
+<span class="sd">          generator of the enumeration items.</span>
+<span class="sd">        :type name_value_pair: bool</span>
+<span class="sd">        :return: a generator which iterates all the enumeration items</span>
+<span class="sd">        :rtype: Generator_</span>
+
+<span class="sd">        &gt;&gt;&gt; from types import GeneratorType</span>
+<span class="sd">        &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">        ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">        ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">        ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(TripleEnum.gen(), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(TripleEnum.gen())</span>
+<span class="sd">        []</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(TripleEnum.gen(name_value_pair=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(TripleEnum.gen(name_value_pair=False))</span>
+<span class="sd">        []</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Triangle.gen(), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Triangle.gen())</span>
+<span class="sd">        [(&#39;EQUILATERAL&#39;, NamedTuple(first=6, second=6, third=6)), (&#39;RIGHT&#39;, NamedTuple(first=3, second=4, third=5))]</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Triangle.gen(name_value_pair=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Triangle.gen(name_value_pair=False))</span>
+<span class="sd">        [&lt;Triangle.EQUILATERAL: NamedTuple(first=6, second=6, third=6)&gt;, &lt;Triangle.RIGHT: NamedTuple(first=3, second=4, third=5)&gt;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name_value_pair</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_member_map_</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">item</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_member_map_</span><span class="o">.</span><span class="n">items</span><span class="p">())</span></div>
+
+    <span class="k">def</span> <span class="nf">_as_data_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Base function converts the enumeration class to the given data type</span>
+<span class="sd">        value.</span>
+
+<span class="sd">        It&#39;s used for generating the functions like `as_dict`, `as_tuple`,</span>
+<span class="sd">        `as_set`, `as_list`, `as_ordereddict`.</span>
+
+<span class="sd">        :param cls: subclass of NamedEnum class</span>
+<span class="sd">        :type cls: Enum class</span>
+<span class="sd">        :param data_type: desired data type for the output</span>
+<span class="sd">        :type data_type: dict, list, set, tuple, OrderedDict_</span>
+<span class="sd">        :return: converted value depending on the given data type</span>
+<span class="sd">        :rtype: dict, list, set, tuple, OrderedDict_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">data_type</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">name_value_pair</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<div class="viewcode-block" id="NamedEnumMeta.as_dict"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnumMeta.as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts the enumeration to a `dict`, in which the key is the name</span>
+<span class="sd">        of the enumeration item and value is its value.</span>
+
+<span class="sd">        :return: a dictionary containing name-value-pairs of the enumeration</span>
+<span class="sd">        :rtype: dict</span>
+
+<span class="sd">        &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">        ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">        ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">        ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">        &gt;&gt;&gt; TripleEnum.as_dict()</span>
+<span class="sd">        {}</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.as_dict()</span>
+<span class="sd">        {&#39;EQUILATERAL&#39;: NamedTuple(first=6, second=6, third=6), &#39;RIGHT&#39;: NamedTuple(first=3, second=4, third=5)}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_as_data_type</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NamedEnumMeta.as_tuple"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnumMeta.as_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">as_tuple</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the enumerations to a `tuple`, in which each item is a tuple of</span>
+<span class="sd">        the enumeration item&#39;s name and value.</span>
+
+<span class="sd">        :return: a tuple containing name-value-pairs of the enumeration</span>
+<span class="sd">        :rtype: tuple</span>
+
+<span class="sd">        &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">        ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">        ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">        ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">        &gt;&gt;&gt; TripleEnum.as_tuple()</span>
+<span class="sd">        ()</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.as_tuple()</span>
+<span class="sd">        ((&#39;EQUILATERAL&#39;, NamedTuple(first=6, second=6, third=6)), (&#39;RIGHT&#39;, NamedTuple(first=3, second=4, third=5)))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_as_data_type</span><span class="p">(</span><span class="nb">tuple</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NamedEnumMeta.as_set"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnumMeta.as_set">[docs]</a>    <span class="k">def</span> <span class="nf">as_set</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the enumerations to a `set`, in which each item is a tuple of</span>
+<span class="sd">        the enumeration item&#39;s name and value.</span>
+
+<span class="sd">        :return: a set containing name-value-pairs of the enumeration</span>
+<span class="sd">        :rtype: set</span>
+
+<span class="sd">        &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">        ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">        ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">        ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">        &gt;&gt;&gt; TripleEnum.as_set() == set()</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Triangle.as_set(), set)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; dict(Triangle.as_set()) == Triangle.as_dict()</span>
+<span class="sd">        True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_as_data_type</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NamedEnumMeta.as_list"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnumMeta.as_list">[docs]</a>    <span class="k">def</span> <span class="nf">as_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the enumerations to a `list`, in which each item is a tuple of</span>
+<span class="sd">        the enumeration item&#39;s name and value.</span>
+
+<span class="sd">        :return: a list containing name-value-pairs of the enumeration</span>
+<span class="sd">        :rtype: list</span>
+
+<span class="sd">        &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">        ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">        ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">        ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">        &gt;&gt;&gt; TripleEnum.as_list()</span>
+<span class="sd">        []</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.as_list()</span>
+<span class="sd">        [(&#39;EQUILATERAL&#39;, NamedTuple(first=6, second=6, third=6)), (&#39;RIGHT&#39;, NamedTuple(first=3, second=4, third=5))]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_as_data_type</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NamedEnumMeta.as_ordereddict"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnumMeta.as_ordereddict">[docs]</a>    <span class="k">def</span> <span class="nf">as_ordereddict</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts the enumerations to an `OrderedDict`, in which each item is a</span>
+<span class="sd">        tuple of the enumeration item&#39;s name and value.</span>
+
+<span class="sd">        :return: an OrderedDict containing name-value-pairs of the enumeration</span>
+<span class="sd">        :rtype: OrderedDict_</span>
+
+<span class="sd">        &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">        ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">        ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">        ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">        &gt;&gt;&gt; TripleEnum.as_ordereddict()</span>
+<span class="sd">        OrderedDict()</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.as_ordereddict()</span>
+<span class="sd">        OrderedDict([(&#39;EQUILATERAL&#39;, NamedTuple(first=6, second=6, third=6)), (&#39;RIGHT&#39;, NamedTuple(first=3, second=4, third=5))])</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_as_data_type</span><span class="p">(</span><span class="n">OrderedDict</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overrides the __repr__ function from EnumMeta class.</span>
+
+<span class="sd">        :return: string represents the class</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;&lt;named enum </span><span class="si">%r</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
+
+<div class="viewcode-block" id="NamedEnumMeta.describe"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnumMeta.describe">[docs]</a>    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints in the console a table showing the content of the enumeration.</span>
+
+<span class="sd">        &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">        ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">        ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">        ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">        &gt;&gt;&gt; TripleEnum.describe()</span>
+<span class="sd">        Class: TripleEnum</span>
+<span class="sd">        Name | First | Second | Third</span>
+<span class="sd">        -----------------------------</span>
+<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.describe()</span>
+<span class="sd">        Class: Triangle</span>
+<span class="sd">               Name | First | Second | Third</span>
+<span class="sd">        ------------------------------------</span>
+<span class="sd">        EQUILATERAL |     6 |      6 |     6</span>
+<span class="sd">              RIGHT |     3 |      4 |     5</span>
+<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
+        <span class="n">max_lengths</span><span class="p">,</span> <span class="n">headers</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_fields</span><span class="p">()</span> <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_fields</span><span class="p">()</span> <span class="k">else</span> <span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,)</span>
+        <span class="n">row_format</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;{:&gt;</span><span class="si">%d</span><span class="s2">}&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">names</span><span class="p">())</span>
+        <span class="n">max_lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">names</span><span class="p">))))</span>
+        <span class="n">headers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">attr_name</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">attr_func</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">s&quot;</span> <span class="o">%</span> <span class="n">attr_name</span>
+            <span class="n">attr_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr_func</span><span class="p">)()))</span>
+            <span class="n">max_lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="p">[</span><span class="n">attr_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">attr_list</span><span class="p">))))</span>
+            <span class="n">headers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr_name</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+        <span class="n">row_format</span> <span class="o">=</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">row_format</span><span class="p">)</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">max_lengths</span><span class="p">)</span>
+        <span class="n">header_line</span> <span class="o">=</span> <span class="n">row_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">headers</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="s2">&quot;Class: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="n">header_line</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">output</span> <span class="o">+=</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">header_line</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_fields</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">gen</span><span class="p">():</span>
+                <span class="n">output</span> <span class="o">+=</span> <span class="n">row_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">gen</span><span class="p">():</span>
+                <span class="n">output</span> <span class="o">+=</span> <span class="n">row_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NamedEnumMeta.names"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnumMeta.names">[docs]</a>    <span class="k">def</span> <span class="nf">names</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">as_tuple</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the names of all the enumeration items as a `tuple`, if</span>
+<span class="sd">        parameter `as_tuple` is `True`; otherwise returns a generator.</span>
+
+<span class="sd">        :param as_tuple: returns a tuple if True; otherwise returns a generator.</span>
+<span class="sd">        :type as_tuple: bool</span>
+<span class="sd">        :return: names of all the enumeration items inside the class in a</span>
+<span class="sd">          specific form</span>
+<span class="sd">        :rtype: tuple_, Generator_</span>
+
+<span class="sd">        &gt;&gt;&gt; from types import GeneratorType</span>
+<span class="sd">        &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">        ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">        ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">        ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">        &gt;&gt;&gt; TripleEnum.names()</span>
+<span class="sd">        ()</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(TripleEnum.names(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(TripleEnum.names(as_tuple=False))</span>
+<span class="sd">        []</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.names()</span>
+<span class="sd">        (&#39;EQUILATERAL&#39;, &#39;RIGHT&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Triangle.names(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Triangle.names(as_tuple=False))</span>
+<span class="sd">        [&#39;EQUILATERAL&#39;, &#39;RIGHT&#39;]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_member_map_</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">if</span> <span class="n">as_tuple</span> <span class="k">else</span> <span class="n">g</span></div>
+
+<div class="viewcode-block" id="NamedEnumMeta.values"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnumMeta.values">[docs]</a>    <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">as_tuple</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the values of all the enumeration items as a tuple, if</span>
+<span class="sd">        parameter `as_tuple` is `True`, otherwise returns a generator.</span>
+
+<span class="sd">        :param as_tuple: returns a tuple if True; otherwise returns a generator</span>
+<span class="sd">        :type as_tuple: bool</span>
+<span class="sd">        :return: values of all the enumeration items inside the class in a</span>
+<span class="sd">          specific form</span>
+<span class="sd">        :rtype: tuple_, Generator_</span>
+
+<span class="sd">        &gt;&gt;&gt; from types import GeneratorType</span>
+<span class="sd">        &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">        ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">        ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">        ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">        &gt;&gt;&gt; TripleEnum.values()</span>
+<span class="sd">        ()</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(TripleEnum.values(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(TripleEnum.values(as_tuple=False))</span>
+<span class="sd">        []</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.values()</span>
+<span class="sd">        (NamedTuple(first=6, second=6, third=6), NamedTuple(first=3, second=4, third=5))</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Triangle.values(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Triangle.values(as_tuple=False))</span>
+<span class="sd">        [NamedTuple(first=6, second=6, third=6), NamedTuple(first=3, second=4, third=5)]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_member_map_</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="k">if</span> <span class="n">as_tuple</span> <span class="k">else</span> <span class="n">g</span></div></div>
+
+
+<div class="viewcode-block" id="NamedEnum"><a class="viewcode-back" href="../source_code.html#__init__.NamedEnum">[docs]</a><span class="k">class</span> <span class="nc">NamedEnum</span><span class="p">(</span><span class="n">Enum</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">NamedEnumMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Through the value of variable `_field_names_` to control its subclass for</span>
+<span class="sd">    different use cases:</span>
+
+<span class="sd">    1.  value of `_field_names_` is `None` or empty. In this case, its</span>
+<span class="sd">    subclass works like an extended Enum class with extra function:</span>
+<span class="sd">    `names`, `values`, `as_dict`, `as_list`, `as_set`, `as_tuple`,</span>
+<span class="sd">    `as_ordereddict`, `describe`.</span>
+
+<span class="sd">    2.  value of `_field_names_` is neither `None` or empty. In this case, its</span>
+<span class="sd">    subclass keeps the extra functions mentioned in **1**, and gives each</span>
+<span class="sd">    element in the enumeration item&#39;s value a name and provides functions for</span>
+<span class="sd">    each attribute/field, like: `&lt;field_name&gt;s`, `from_&lt;field_name&gt;`,</span>
+<span class="sd">    `has_&lt;field_name&gt;`.</span>
+
+<span class="sd">    Instead of the setting the attributes to the enumeration instance, it uses</span>
+<span class="sd">    the function `__getattr__` to achieve it.</span>
+
+<span class="sd">    &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">    ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">    ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">    ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">    &gt;&gt;&gt; Triangle._fields()</span>
+<span class="sd">    (&#39;first&#39;, &#39;second&#39;, &#39;third&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.names()</span>
+<span class="sd">    (&#39;EQUILATERAL&#39;, &#39;RIGHT&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.values()</span>
+<span class="sd">    (NamedTuple(first=6, second=6, third=6), NamedTuple(first=3, second=4, third=5))</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.describe()</span>
+<span class="sd">    Class: Triangle</span>
+<span class="sd">           Name | First | Second | Third</span>
+<span class="sd">    ------------------------------------</span>
+<span class="sd">    EQUILATERAL |     6 |      6 |     6</span>
+<span class="sd">          RIGHT |     3 |      4 |     5</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.as_dict()</span>
+<span class="sd">    {&#39;EQUILATERAL&#39;: NamedTuple(first=6, second=6, third=6), &#39;RIGHT&#39;: NamedTuple(first=3, second=4, third=5)}</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.as_list()</span>
+<span class="sd">    [(&#39;EQUILATERAL&#39;, NamedTuple(first=6, second=6, third=6)), (&#39;RIGHT&#39;, NamedTuple(first=3, second=4, third=5))]</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.as_set() == {(&#39;RIGHT&#39;, Triangle._tuple_cls(first=3, second=4, third=5)), (&#39;EQUILATERAL&#39;, Triangle._tuple_cls(first=6, second=6, third=6))}</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.as_tuple()</span>
+<span class="sd">    ((&#39;EQUILATERAL&#39;, NamedTuple(first=6, second=6, third=6)), (&#39;RIGHT&#39;, NamedTuple(first=3, second=4, third=5)))</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.as_ordereddict()</span>
+<span class="sd">    OrderedDict([(&#39;EQUILATERAL&#39;, NamedTuple(first=6, second=6, third=6)), (&#39;RIGHT&#39;, NamedTuple(first=3, second=4, third=5))])</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.firsts()</span>
+<span class="sd">    (6, 3)</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.seconds()</span>
+<span class="sd">    (6, 4)</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.thirds()</span>
+<span class="sd">    (6, 5)</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.from_first(6)</span>
+<span class="sd">    (&lt;Triangle.EQUILATERAL: NamedTuple(first=6, second=6, third=6)&gt;,)</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.from_first(66)</span>
+<span class="sd">    ()</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.from_second(6)</span>
+<span class="sd">    (&lt;Triangle.EQUILATERAL: NamedTuple(first=6, second=6, third=6)&gt;,)</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.from_second(66)</span>
+<span class="sd">    ()</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.from_third(6)</span>
+<span class="sd">    (&lt;Triangle.EQUILATERAL: NamedTuple(first=6, second=6, third=6)&gt;,)</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.from_third(66)</span>
+<span class="sd">    ()</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.has_first(6)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.has_first(66)</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.has_second(6)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.has_second(66)</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.has_third(6)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.has_third(66)</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.RIGHT</span>
+<span class="sd">    &lt;Triangle.RIGHT: NamedTuple(first=3, second=4, third=5)&gt;</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.RIGHT.first</span>
+<span class="sd">    3</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.RIGHT.second</span>
+<span class="sd">    4</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.RIGHT.third</span>
+<span class="sd">    5</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.RIGHT.name</span>
+<span class="sd">    &#39;RIGHT&#39;</span>
+<span class="sd">    &gt;&gt;&gt; Triangle.RIGHT.value</span>
+<span class="sd">    NamedTuple(first=3, second=4, third=5)</span>
+<span class="sd">    &gt;&gt;&gt; print(Triangle.RIGHT)</span>
+<span class="sd">    Triangle.RIGHT: NamedTuple(first=3, second=4, third=5)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_field_names_</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The place to define the field names of the enumeration class. It accepts the </span>
+<span class="sd">    same format as the parameter `field_names` in function `namedtuple` from </span>
+<span class="sd">    `collections` package. </span>
+<span class="sd">    It&#39;s used in the NamedEnumMeta class&#39;s `__new__` function to generate the </span>
+<span class="sd">    corresponding functions for each field.</span>
+<span class="sd">    If it&#39;s value is `None` or empty, then the enumeration class behaves like a </span>
+<span class="sd">    normal `Enum` class, but with some extended functions to simplify the usages </span>
+<span class="sd">    of enumerations.</span>
+
+<span class="sd">    **Attention**: this variable should not be used to get the field_names, to </span>
+<span class="sd">    do so you can use the class method `_fields`. Because it also accept the </span>
+<span class="sd">    comma separated string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hijacks the default __getattr__ function, such that every time when the</span>
+<span class="sd">        user wants to get the value of a field in an enumeration item, it</span>
+<span class="sd">        returns the corresponding field&#39;s value from the value of enumeration.</span>
+
+<span class="sd">        :param item: name of the field or attribute</span>
+<span class="sd">        :type item: str</span>
+<span class="sd">        :return: corresponding value</span>
+<span class="sd">        :rtype: int, str, object, ...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_fields</span><span class="p">():</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value_</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays the value as well.</span>
+
+<span class="sd">        :return: string represents the enumeration item</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExtendedEnum"><a class="viewcode-back" href="../source_code.html#__init__.ExtendedEnum">[docs]</a><span class="k">class</span> <span class="nc">ExtendedEnum</span><span class="p">(</span><span class="n">NamedEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An alias for the class `NamedEnum`.</span>
+
+<span class="sd">    The goal is explicit directly providing</span>
+<span class="sd">    the users an Enum class with extra functions.</span>
+
+<span class="sd">    &gt;&gt;&gt; from types import GeneratorType</span>
+<span class="sd">    &gt;&gt;&gt; class TVCouple(ExtendedEnum):</span>
+<span class="sd">    ...     GALLAGHERS = (&quot;FRANK&quot;, &quot;MONICA&quot;)</span>
+<span class="sd">    ...     MIKE_AND_MOLLY = (&quot;Mike&quot;, &quot;Molly&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; TVCouple.names()</span>
+<span class="sd">    (&#39;GALLAGHERS&#39;, &#39;MIKE_AND_MOLLY&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(TVCouple.names(as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(TVCouple.names(as_tuple=False))</span>
+<span class="sd">    [&#39;GALLAGHERS&#39;, &#39;MIKE_AND_MOLLY&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; TVCouple.values()</span>
+<span class="sd">    ((&#39;FRANK&#39;, &#39;MONICA&#39;), (&#39;Mike&#39;, &#39;Molly&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(TVCouple.values(as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(TVCouple.values(as_tuple=False))</span>
+<span class="sd">    [(&#39;FRANK&#39;, &#39;MONICA&#39;), (&#39;Mike&#39;, &#39;Molly&#39;)]</span>
+<span class="sd">    &gt;&gt;&gt; TVCouple.describe()</span>
+<span class="sd">    Class: TVCouple</span>
+<span class="sd">              Name |               Value</span>
+<span class="sd">    ------------------------------------</span>
+<span class="sd">        GALLAGHERS | (&#39;FRANK&#39;, &#39;MONICA&#39;)</span>
+<span class="sd">    MIKE_AND_MOLLY |   (&#39;Mike&#39;, &#39;Molly&#39;)</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(TVCouple.gen(), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; tuple(TVCouple.gen())</span>
+<span class="sd">    ((&#39;GALLAGHERS&#39;, (&#39;FRANK&#39;, &#39;MONICA&#39;)), (&#39;MIKE_AND_MOLLY&#39;, (&#39;Mike&#39;, &#39;Molly&#39;)))</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(TVCouple.gen(name_value_pair=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; tuple(TVCouple.gen(name_value_pair=False))</span>
+<span class="sd">    (&lt;TVCouple.GALLAGHERS: (&#39;FRANK&#39;, &#39;MONICA&#39;)&gt;, &lt;TVCouple.MIKE_AND_MOLLY: (&#39;Mike&#39;, &#39;Molly&#39;)&gt;)</span>
+<span class="sd">    &gt;&gt;&gt; TVCouple.as_dict()</span>
+<span class="sd">    {&#39;GALLAGHERS&#39;: (&#39;FRANK&#39;, &#39;MONICA&#39;), &#39;MIKE_AND_MOLLY&#39;: (&#39;Mike&#39;, &#39;Molly&#39;)}</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(TVCouple.as_set(), set)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; sorted(list(TVCouple.as_set()))</span>
+<span class="sd">    [(&#39;GALLAGHERS&#39;, (&#39;FRANK&#39;, &#39;MONICA&#39;)), (&#39;MIKE_AND_MOLLY&#39;, (&#39;Mike&#39;, &#39;Molly&#39;))]</span>
+<span class="sd">    &gt;&gt;&gt; TVCouple.as_tuple()</span>
+<span class="sd">    ((&#39;GALLAGHERS&#39;, (&#39;FRANK&#39;, &#39;MONICA&#39;)), (&#39;MIKE_AND_MOLLY&#39;, (&#39;Mike&#39;, &#39;Molly&#39;)))</span>
+<span class="sd">    &gt;&gt;&gt; TVCouple.as_list()</span>
+<span class="sd">    [(&#39;GALLAGHERS&#39;, (&#39;FRANK&#39;, &#39;MONICA&#39;)), (&#39;MIKE_AND_MOLLY&#39;, (&#39;Mike&#39;, &#39;Molly&#39;))]</span>
+<span class="sd">    &gt;&gt;&gt; TVCouple.as_ordereddict()</span>
+<span class="sd">    OrderedDict([(&#39;GALLAGHERS&#39;, (&#39;FRANK&#39;, &#39;MONICA&#39;)), (&#39;MIKE_AND_MOLLY&#39;, (&#39;Mike&#39;, &#39;Molly&#39;))])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="LabeledEnum"><a class="viewcode-back" href="../source_code.html#__init__.LabeledEnum">[docs]</a><span class="k">class</span> <span class="nc">LabeledEnum</span><span class="p">(</span><span class="n">NamedEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An enumeration class with two attributes `key` and `label`.</span>
+
+<span class="sd">    It can be used in the Django project as the choices of a field in model or</span>
+<span class="sd">    form.</span>
+
+<span class="sd">    &gt;&gt;&gt; from types import GeneratorType</span>
+<span class="sd">    &gt;&gt;&gt; class NBALegendary(LabeledEnum):</span>
+<span class="sd">    ...     JOHNSON = (&quot;Johnson&quot;, &quot;Magic Johnson&quot;)</span>
+<span class="sd">    ...     Jordan = (&quot;Jordan&quot;, &quot;Air Jordan&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.names()</span>
+<span class="sd">    (&#39;JOHNSON&#39;, &#39;Jordan&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(NBALegendary.names(as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(NBALegendary.names(as_tuple=False))</span>
+<span class="sd">    [&#39;JOHNSON&#39;, &#39;Jordan&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.values()</span>
+<span class="sd">    (NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;), NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(NBALegendary.values(as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(NBALegendary.values(as_tuple=False))</span>
+<span class="sd">    [NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;), NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)]</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.describe()</span>
+<span class="sd">    Class: NBALegendary</span>
+<span class="sd">       Name |     Key |         Label</span>
+<span class="sd">    ---------------------------------</span>
+<span class="sd">    JOHNSON | Johnson | Magic Johnson</span>
+<span class="sd">     Jordan |  Jordan |    Air Jordan</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(NBALegendary.gen(), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; tuple(NBALegendary.gen())</span>
+<span class="sd">    ((&#39;JOHNSON&#39;, NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)), (&#39;Jordan&#39;, NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)))</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(NBALegendary.gen(name_value_pair=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; tuple(NBALegendary.gen(name_value_pair=False))</span>
+<span class="sd">    (&lt;NBALegendary.JOHNSON: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)&gt;, &lt;NBALegendary.Jordan: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)&gt;)</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.as_dict()</span>
+<span class="sd">    {&#39;JOHNSON&#39;: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;), &#39;Jordan&#39;: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)}</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(NBALegendary.as_set(), set)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; sorted(list(NBALegendary.as_set()))</span>
+<span class="sd">    [(&#39;JOHNSON&#39;, NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)), (&#39;Jordan&#39;, NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;))]</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.as_tuple()</span>
+<span class="sd">    ((&#39;JOHNSON&#39;, NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)), (&#39;Jordan&#39;, NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)))</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.as_list()</span>
+<span class="sd">    [(&#39;JOHNSON&#39;, NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)), (&#39;Jordan&#39;, NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;))]</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.as_ordereddict()</span>
+<span class="sd">    OrderedDict([(&#39;JOHNSON&#39;, NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)), (&#39;Jordan&#39;, NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;))])</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.keys()</span>
+<span class="sd">    (&#39;Johnson&#39;, &#39;Jordan&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.labels()</span>
+<span class="sd">    (&#39;Magic Johnson&#39;, &#39;Air Jordan&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(NBALegendary.keys(as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(NBALegendary.keys(as_tuple=False))</span>
+<span class="sd">    [&#39;Johnson&#39;, &#39;Jordan&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(NBALegendary.labels(as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(NBALegendary.labels(as_tuple=False))</span>
+<span class="sd">    [&#39;Magic Johnson&#39;, &#39;Air Jordan&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.from_key(&#39;Johnson&#39;)</span>
+<span class="sd">    (&lt;NBALegendary.JOHNSON: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)&gt;,)</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.from_key(&#39;Jordan&#39;)</span>
+<span class="sd">    (&lt;NBALegendary.Jordan: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)&gt;,)</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.from_label(&#39;Magic Johnson&#39;)</span>
+<span class="sd">    (&lt;NBALegendary.JOHNSON: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)&gt;,)</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.from_label(&#39;Air Jordan&#39;)</span>
+<span class="sd">    (&lt;NBALegendary.Jordan: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)&gt;,)</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(NBALegendary.from_key(&#39;Johnson&#39;, as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(NBALegendary.from_key(&#39;Johnson&#39;, as_tuple=False))</span>
+<span class="sd">    [&lt;NBALegendary.JOHNSON: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)&gt;]</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(NBALegendary.from_key(&#39;Jordan&#39;, as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(NBALegendary.from_key(&#39;Jordan&#39;, as_tuple=False))</span>
+<span class="sd">    [&lt;NBALegendary.Jordan: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)&gt;]</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(NBALegendary.from_label(&#39;Magic Johnson&#39;, as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(NBALegendary.from_label(&#39;Magic Johnson&#39;, as_tuple=False))</span>
+<span class="sd">    [&lt;NBALegendary.JOHNSON: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)&gt;]</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(NBALegendary.from_label(&#39;Air Jordan&#39;, as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(NBALegendary.from_label(&#39;Air Jordan&#39;, as_tuple=False))</span>
+<span class="sd">    [&lt;NBALegendary.Jordan: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)&gt;]</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.has_key(&#39;Johnson&#39;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.has_key(&#39;John&#39;)</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.has_key(&#39;Jordan&#39;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.has_key(&#39;George&#39;)</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.has_label(&#39;Magic Johnson&#39;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.has_label(&#39;King James&#39;)</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.has_label(&#39;Air Jordan&#39;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; NBALegendary.has_label(&#39;The Black Mamba&#39;)</span>
+<span class="sd">    False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_field_names_</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;key&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Each enumeration of LabeledEnum has two attributes: `key`, `label`&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="PairEnum"><a class="viewcode-back" href="../source_code.html#__init__.PairEnum">[docs]</a><span class="k">class</span> <span class="nc">PairEnum</span><span class="p">(</span><span class="n">NamedEnum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enumeration with two attributes `first`, `second`, the idea comes from the</span>
+<span class="sd">    C++&#39;s pair container.</span>
+
+<span class="sd">    &gt;&gt;&gt; from types import GeneratorType</span>
+<span class="sd">    &gt;&gt;&gt; class Pair(PairEnum):</span>
+<span class="sd">    ...     TOM_AND_JERRY = (&quot;Tom&quot;, &quot;Jerry&quot;)</span>
+<span class="sd">    ...     BULLS = (&quot;Micheal&quot;, &quot;Pippen&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; Pair.names()</span>
+<span class="sd">    (&#39;TOM_AND_JERRY&#39;, &#39;BULLS&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(Pair.names(as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(Pair.names(as_tuple=False))</span>
+<span class="sd">    [&#39;TOM_AND_JERRY&#39;, &#39;BULLS&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; Pair.values()</span>
+<span class="sd">    (NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;), NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;))</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(Pair.values(as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(Pair.values(as_tuple=False))</span>
+<span class="sd">    [NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;), NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)]</span>
+<span class="sd">    &gt;&gt;&gt; Pair.describe()</span>
+<span class="sd">    Class: Pair</span>
+<span class="sd">             Name |   First | Second</span>
+<span class="sd">    --------------------------------</span>
+<span class="sd">    TOM_AND_JERRY |     Tom |  Jerry</span>
+<span class="sd">            BULLS | Micheal | Pippen</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(Pair.gen(), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; tuple(Pair.gen())</span>
+<span class="sd">    ((&#39;TOM_AND_JERRY&#39;, NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)), (&#39;BULLS&#39;, NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)))</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(Pair.gen(name_value_pair=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; tuple(Pair.gen(name_value_pair=False))</span>
+<span class="sd">    (&lt;Pair.TOM_AND_JERRY: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)&gt;, &lt;Pair.BULLS: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)&gt;)</span>
+<span class="sd">    &gt;&gt;&gt; Pair.as_dict()</span>
+<span class="sd">    {&#39;TOM_AND_JERRY&#39;: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;), &#39;BULLS&#39;: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)}</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(Pair.as_set(), set)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; sorted(list(Pair.as_set()))</span>
+<span class="sd">    [(&#39;BULLS&#39;, NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)), (&#39;TOM_AND_JERRY&#39;, NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;))]</span>
+<span class="sd">    &gt;&gt;&gt; Pair.as_tuple()</span>
+<span class="sd">    ((&#39;TOM_AND_JERRY&#39;, NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)), (&#39;BULLS&#39;, NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)))</span>
+<span class="sd">    &gt;&gt;&gt; Pair.as_list()</span>
+<span class="sd">    [(&#39;TOM_AND_JERRY&#39;, NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)), (&#39;BULLS&#39;, NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;))]</span>
+<span class="sd">    &gt;&gt;&gt; Pair.as_ordereddict()</span>
+<span class="sd">    OrderedDict([(&#39;TOM_AND_JERRY&#39;, NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)), (&#39;BULLS&#39;, NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;))])</span>
+<span class="sd">    &gt;&gt;&gt; Pair.firsts()</span>
+<span class="sd">    (&#39;Tom&#39;, &#39;Micheal&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; Pair.seconds()</span>
+<span class="sd">    (&#39;Jerry&#39;, &#39;Pippen&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(Pair.firsts(as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(Pair.firsts(as_tuple=False))</span>
+<span class="sd">    [&#39;Tom&#39;, &#39;Micheal&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(Pair.seconds(as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(Pair.seconds(as_tuple=False))</span>
+<span class="sd">    [&#39;Jerry&#39;, &#39;Pippen&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; Pair.from_first(&quot;Tom&quot;)</span>
+<span class="sd">    (&lt;Pair.TOM_AND_JERRY: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)&gt;,)</span>
+<span class="sd">    &gt;&gt;&gt; Pair.from_first(&quot;Micheal&quot;)</span>
+<span class="sd">    (&lt;Pair.BULLS: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)&gt;,)</span>
+<span class="sd">    &gt;&gt;&gt; Pair.from_second(&quot;Jerry&quot;)</span>
+<span class="sd">    (&lt;Pair.TOM_AND_JERRY: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)&gt;,)</span>
+<span class="sd">    &gt;&gt;&gt; Pair.from_second(&quot;Pippen&quot;)</span>
+<span class="sd">    (&lt;Pair.BULLS: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)&gt;,)</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(Pair.from_first(&quot;Tom&quot;, as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(Pair.from_first(&quot;Tom&quot;, as_tuple=False))</span>
+<span class="sd">    [&lt;Pair.TOM_AND_JERRY: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)&gt;]</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(Pair.from_first(&quot;Micheal&quot;, as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(Pair.from_first(&quot;Micheal&quot;, as_tuple=False))</span>
+<span class="sd">    [&lt;Pair.BULLS: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)&gt;]</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(Pair.from_second(&quot;Jerry&quot;, as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(Pair.from_second(&quot;Jerry&quot;, as_tuple=False))</span>
+<span class="sd">    [&lt;Pair.TOM_AND_JERRY: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)&gt;]</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(Pair.from_second(&quot;Pippen&quot;, as_tuple=False), GeneratorType)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; list(Pair.from_second(&quot;Pippen&quot;, as_tuple=False))</span>
+<span class="sd">    [&lt;Pair.BULLS: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)&gt;]</span>
+<span class="sd">    &gt;&gt;&gt; Pair.has_first(&#39;Tom&#39;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; Pair.has_first(&#39;Tommy&#39;)</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; Pair.has_first(&#39;Micheal&#39;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; Pair.has_first(&#39;Mike&#39;)</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; Pair.has_second(&#39;Jerry&#39;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; Pair.has_second(&#39;Jeremy&#39;)</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; Pair.has_second(&#39;Pippen&#39;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; Pair.has_second(&#39;Pepe&#39;)</span>
+<span class="sd">    False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_field_names_</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="s2">&quot;second&quot;</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;Each enumeration of PairEnum has two attributes: first, second&quot;&quot;&quot;</span></div>
+
+
+<span class="n">_class_template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">from named_enum import NamedEnum</span>
+
+
+<span class="s2">class </span><span class="si">{typename}</span><span class="s2">(NamedEnum):</span>
+
+<span class="s2">    _field_names_ = </span><span class="si">{field_names!r}</span><span class="s2"></span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="namedenum"><a class="viewcode-back" href="../source_code.html#__init__.namedenum">[docs]</a><span class="k">def</span> <span class="nf">namedenum</span><span class="p">(</span><span class="n">typename</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates an named enum class with the given typename as class name and</span>
+<span class="sd">    field_names as the _field_names_ in named enum class. The implementation is</span>
+<span class="sd">    similar to the namedtuple function.</span>
+
+<span class="sd">    :param typename: name for the created class</span>
+<span class="sd">    :type typename: str</span>
+<span class="sd">    :param field_names: field names for the named enum class</span>
+<span class="sd">    :type field_names: Sequence_</span>
+<span class="sd">    :param verbose: displays the code for the named enum class creation,</span>
+<span class="sd">      if True</span>
+<span class="sd">    :type verbose: bool</span>
+<span class="sd">    :param module: which module the new created enum class belongs to</span>
+<span class="sd">    :type module: None, str</span>
+<span class="sd">    :return: subclass of NamedEnum</span>
+<span class="sd">    :rtype: object</span>
+
+<span class="sd">    &gt;&gt;&gt; TripleEnum = namedenum(&quot;TripleEnum&quot;, (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;))</span>
+<span class="sd">    &gt;&gt;&gt; TripleEnum</span>
+<span class="sd">    &lt;named enum &#39;TripleEnum&#39;&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Fill-in the class template</span>
+    <span class="n">class_definition</span> <span class="o">=</span> <span class="n">_class_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">typename</span><span class="o">=</span><span class="n">typename</span><span class="p">,</span>
+        <span class="n">field_names</span><span class="o">=</span><span class="n">field_names</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Execute the template string in a temporary namespace and support</span>
+    <span class="c1"># tracing utilities by setting a value for frame.f_globals[&#39;__name__&#39;]</span>
+    <span class="n">namespace</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="vm">__name__</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">typename</span><span class="p">)</span>
+    <span class="n">exec</span><span class="p">(</span><span class="n">class_definition</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">namespace</span><span class="p">[</span><span class="n">typename</span><span class="p">]</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">_source</span> <span class="o">=</span> <span class="n">class_definition</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">_source</span><span class="p">)</span>
+
+    <span class="c1"># For pickling to work, the __module__ variable needs to be set to the frame</span>
+    <span class="c1"># where the named tuple is created.  Bypass this step in environments where</span>
+    <span class="c1"># sys._getframe is not defined (Jython for example) or sys._getframe is not</span>
+    <span class="c1"># defined for arguments greater than 0 (IronPython), or where the user has</span>
+    <span class="c1"># specified a particular module.</span>
+    <span class="k">if</span> <span class="n">module</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">_sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">f_globals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="s1">&#39;__main__&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="k">pass</span>
+    <span class="k">if</span> <span class="n">module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">=</span> <span class="n">module</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018-2020, Zhiwei Zhang
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
