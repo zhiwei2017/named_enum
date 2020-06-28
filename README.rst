@@ -12,7 +12,7 @@ named-enum
     :alt: Documentation Status
 
 .. actions building badge
-.. image:: https://github.com/KnightConan/named_enum/workflows/CI/badge.svg?branch=master
+.. image:: ![Unit Test & Build Test](https://github.com/KnightConan/named_enum/workflows/Unit%20Test%20&%20Build%20Test/badge.svg)
     :target: https://github.com/KnightConan/named_enum/actions
 
 .. pypi version badge
