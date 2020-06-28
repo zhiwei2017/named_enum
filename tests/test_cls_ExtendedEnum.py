@@ -1,8 +1,7 @@
 import pytest
-from unittest import mock
 from collections import OrderedDict
 from named_enum import ExtendedEnum
-from .helper import generator_tester
+from .helper import CommonEnumTest
 
 
 class TVCouple(ExtendedEnum):
@@ -10,17 +9,72 @@ class TVCouple(ExtendedEnum):
     MIKE_AND_MOLLY = ("Mike", "Molly")
 
 
-class TestExtendedEnum:
-    def test__fields(self):
-        assert TVCouple._fields() == tuple()
-
-    @pytest.mark.parametrize("name_value_pair, expected_result",
-                             [(True, [('GALLAGHERS', ("FRANK", "MONICA")),
-                                      ('MIKE_AND_MOLLY', ("Mike", "Molly"))]),
-                              (False, [TVCouple.GALLAGHERS, TVCouple.MIKE_AND_MOLLY])])
-    def test_gen(self, name_value_pair, expected_result):
-        result = TVCouple.gen(name_value_pair)
-        generator_tester(result, expected_result)
+class TestExtendedEnum(CommonEnumTest):
+    # an enum class for the test methods
+    enum_cls = TVCouple
+    # a map specifying multiple argument sets for a test method
+    params = {
+        "test__fields": [dict(expected_normal_output=tuple())],
+        "test_gen": [
+            dict(name_value_pair=True,
+                 expected_result=[('GALLAGHERS', ("FRANK", "MONICA")),
+                                  ('MIKE_AND_MOLLY', ("Mike", "Molly"))]),
+            dict(name_value_pair=False,
+                 expected_result=[TVCouple.GALLAGHERS,
+                                  TVCouple.MIKE_AND_MOLLY])],
+        "test__as_data_type": [
+            dict(data_type=dict,
+                 expected={'GALLAGHERS': ("FRANK", "MONICA"),
+                           'MIKE_AND_MOLLY': ("Mike", "Molly")}),
+            dict(data_type=list,
+                 expected=[('GALLAGHERS', ("FRANK", "MONICA")),
+                           ('MIKE_AND_MOLLY', ("Mike", "Molly"))]),
+            dict(data_type=set,
+                 expected={('GALLAGHERS', ("FRANK", "MONICA")),
+                           ('MIKE_AND_MOLLY', ("Mike", "Molly"))}),
+            dict(data_type=tuple,
+                 expected=(('GALLAGHERS', ("FRANK", "MONICA")),
+                           ('MIKE_AND_MOLLY', ("Mike", "Molly")))),
+            dict(data_type=OrderedDict,
+                 expected=OrderedDict([('GALLAGHERS', ("FRANK", "MONICA")),
+                                       ('MIKE_AND_MOLLY', ("Mike", "Molly"))]))],
+        "test_as_x": [
+            dict(func_name="as_dict",
+                 expected={'GALLAGHERS': ("FRANK", "MONICA"),
+                           'MIKE_AND_MOLLY': ("Mike", "Molly")}),
+            dict(func_name="as_list",
+                 expected=[('GALLAGHERS', ("FRANK", "MONICA")),
+                           ('MIKE_AND_MOLLY', ("Mike", "Molly"))]),
+            dict(func_name="as_set",
+                 expected={('GALLAGHERS', ("FRANK", "MONICA")),
+                           ('MIKE_AND_MOLLY', ("Mike", "Molly"))}),
+            dict(func_name="as_tuple",
+                 expected=(('GALLAGHERS', ("FRANK", "MONICA")),
+                           ('MIKE_AND_MOLLY', ("Mike", "Molly")))),
+            dict(func_name="as_ordereddict",
+                 expected=OrderedDict([('GALLAGHERS', ("FRANK", "MONICA")),
+                                       ('MIKE_AND_MOLLY', ("Mike", "Molly"))]))],
+        "test___repr__": [dict(expected="<named enum 'TVCouple'>")],
+        "test___str__": [
+            dict(obj=TVCouple.MIKE_AND_MOLLY,
+                 expected="TVCouple.MIKE_AND_MOLLY: ('Mike', 'Molly')"),
+            dict(obj=TVCouple.GALLAGHERS,
+                 expected="TVCouple.GALLAGHERS: ('FRANK', 'MONICA')")],
+        "test_describe": [dict(expected="Class: TVCouple\n          Name |     "
+                                        "          Value\n---------------------"
+                                        "---------------\n    GALLAGHERS | ('FR"
+                                        "ANK', 'MONICA')\nMIKE_AND_MOLLY |   ('"
+                                        "Mike', 'Molly')\n\n")],
+        "test_names_values": [
+            dict(func_name="names", as_tuple=True,
+                 expected_result=('GALLAGHERS', 'MIKE_AND_MOLLY')),
+            dict(func_name="names", as_tuple=False,
+                 expected_result=('GALLAGHERS', 'MIKE_AND_MOLLY')),
+            dict(func_name="values", as_tuple=True,
+                 expected_result=(('FRANK', 'MONICA'), ('Mike', 'Molly'))),
+            dict(func_name="values", as_tuple=False,
+                 expected_result=(('FRANK', 'MONICA'), ('Mike', 'Molly')))],
+    }
 
     @pytest.mark.parametrize('func_name, value',
                              [('firsts', True),
@@ -40,72 +94,3 @@ class TestExtendedEnum:
     def test_nonexistent_method(self, func_name, value):
         with pytest.raises(AttributeError):
             getattr(TVCouple, func_name)(value)
-
-    @pytest.mark.parametrize("data_type, expected",
-                             [(dict, {'GALLAGHERS': ("FRANK", "MONICA"), 'MIKE_AND_MOLLY': ("Mike", "Molly")}),
-                              (list, [('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly"))]),
-                              (set, {('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly"))}),
-                              (tuple, (('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly")))),
-                              (OrderedDict, OrderedDict([('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly"))]))])
-    @mock.patch.object(TVCouple, 'gen', side_effect=TVCouple.gen)
-    def test__as_data_type(self, mocked_gen, data_type, expected):
-        result = TVCouple._as_data_type(data_type)
-        assert result == expected
-        mocked_gen.assert_called_once_with(name_value_pair=True)
-
-    @pytest.mark.parametrize("func_name, expected",
-                             [("as_dict", {'GALLAGHERS': ("FRANK", "MONICA"), 'MIKE_AND_MOLLY': ("Mike", "Molly")}),
-                              ("as_list", [('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly"))]),
-                              ("as_set", {('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly"))}),
-                              ("as_tuple", (('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly")))),
-                              ("as_ordereddict", OrderedDict([('GALLAGHERS', ("FRANK", "MONICA")), ('MIKE_AND_MOLLY', ("Mike", "Molly"))]))])
-    @mock.patch.object(TVCouple, '_as_data_type', side_effect=TVCouple._as_data_type)
-    def test_as_x(self, mocked__as_data_type, func_name, expected):
-        result = getattr(TVCouple, func_name)()
-        assert result == expected
-        mocked__as_data_type.assert_called_once_with(type(expected))
-
-    @mock.patch.object(type(TVCouple), "__repr__",
-                       side_effect=type(TVCouple).__repr__, autospec=True)
-    def test___repr__(self, mocked_repr):
-        assert repr(TVCouple) == "<named enum 'TVCouple'>"
-        assert mocked_repr.call_count == 1
-        assert str(TVCouple) == "<named enum 'TVCouple'>"
-        assert mocked_repr.call_count == 2
-
-    @mock.patch.object(TVCouple, "__str__", side_effect=TVCouple.__str__,
-                       autospec=True)
-    def test___str__(self, mocked_str):
-        result = str(TVCouple.MIKE_AND_MOLLY)
-        assert result == "TVCouple.MIKE_AND_MOLLY: ('Mike', 'Molly')"
-        assert mocked_str.call_count == 1
-
-        result = str(TVCouple.GALLAGHERS)
-        assert result == "TVCouple.GALLAGHERS: ('FRANK', 'MONICA')"
-        assert mocked_str.call_count == 2
-
-    def test_describe(self, capsys):
-        TVCouple.describe()
-        out, err = capsys.readouterr()
-        assert out == "Class: TVCouple\n          Name |               Value" \
-                      "\n------------------------------------\n " \
-                      "   GALLAGHERS | ('FRANK', 'MONICA')\n" \
-                      "MIKE_AND_MOLLY |   ('Mike', 'Molly')\n\n"
-
-    @pytest.mark.parametrize("as_tuple", [True, False])
-    def test_names(self, as_tuple):
-        expected_result = ('GALLAGHERS', 'MIKE_AND_MOLLY')
-        result = TVCouple.names(as_tuple)
-        if as_tuple:
-            assert result == expected_result
-        else:
-            generator_tester(result, expected_result)
-
-    @pytest.mark.parametrize("as_tuple", [True, False])
-    def test_values(self, as_tuple):
-        expected_result = (('FRANK', 'MONICA'), ('Mike', 'Molly'))
-        result = TVCouple.values(as_tuple)
-        if as_tuple:
-            assert result == expected_result
-        else:
-            generator_tester(result, expected_result)
