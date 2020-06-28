@@ -18,35 +18,23 @@ class MockColor(Enum):
 
 class TestNamedEnumMeta:
 
+    @pytest.mark.parametrize("get_mixins_return_value, set_pairs",
+                             [((None, None), None),
+                              ((None, mock.Mock(spec=[])), [('_generate_next_value_', None)]),
+                              ((None, mock.Mock(spec=['_generate_next_value_'],
+                                                _generate_next_value_=1)),
+                               [('_generate_next_value_', 1)]),
+                              ])
     @mock.patch.object(NamedEnumMeta, '_get_mixins_')
-    def test___prepare__(self, mocked__get_mixins_):
-        mocked__get_mixins_.return_value = (None, None)
+    def test___prepare__(self, mocked__get_mixins_, get_mixins_return_value, set_pairs):
+        mocked__get_mixins_.return_value = get_mixins_return_value
 
-        result = NamedEnumMeta.__prepare__("dummy", ())
         expected_result = _NamedEnumDict()
-        assert isinstance(result, _NamedEnumDict)
-        assert result == expected_result
-        mocked__get_mixins_.assert_called_once_with(tuple())
-
-        mocked__get_mixins_.reset_mock()
-
-        first_enum = mock.Mock(spec=[])
-        mocked__get_mixins_.return_value = (None, first_enum)
+        if set_pairs is not None:
+            for key, value in set_pairs:
+                expected_result[key] = value
 
         result = NamedEnumMeta.__prepare__("dummy", ())
-        expected_result['_generate_next_value_'] = None
-        assert isinstance(result, _NamedEnumDict)
-        assert result == expected_result
-        mocked__get_mixins_.assert_called_once_with(tuple())
-
-        mocked__get_mixins_.reset_mock()
-
-        first_enum = mock.Mock(spec=['_generate_next_value_'],
-                               _generate_next_value_=1)
-        mocked__get_mixins_.return_value =(None, first_enum)
-
-        result = NamedEnumMeta.__prepare__("dummy", ())
-        expected_result['_generate_next_value_'] = 1
         assert isinstance(result, _NamedEnumDict)
         assert result == expected_result
         mocked__get_mixins_.assert_called_once_with(tuple())
@@ -54,13 +42,12 @@ class TestNamedEnumMeta:
     @pytest.mark.parametrize('_field_names_, expected',
                              [(None, tuple()),
                               ("ha", ('key', 'value'))])
-    @mock.patch.object(NamedEnumMeta, '_tuple_cls', create=True)
+    @mock.patch.object(NamedEnumMeta, '_tuple_cls', create=True,
+                       new_callable=mock.PropertyMock(return_value=namedtuple("nt", "key, value")))
     @mock.patch.object(NamedEnumMeta, '_field_names_', create=True)
     def test__fields(self, mocked__field_names_, mocked__tuple_cls,
                      _field_names_, expected):
-        NamedEnumMeta._tuple_cls = namedtuple("nt", "key, value")
         NamedEnumMeta._field_names_ = _field_names_
-
         result = NamedEnumMeta._fields(NamedEnumMeta)
         assert result == expected
 
@@ -73,19 +60,17 @@ class TestNamedEnumMeta:
         result = NamedEnumMeta.gen(NamedEnumMeta, *params)
         generator_tester(result, expected)
 
-    @mock.patch.object(NamedEnumMeta, 'gen')
-    def test__field_values(self, mocked_gen):
-        mocked_gen.return_value = (item for item in MockColor)
-        result = NamedEnumMeta._field_values(NamedEnumMeta, 'a', True)
-        expected = (1, 2)
-        assert result == expected
-        mocked_gen.assert_called_once_with(name_value_pair=False)
-
-        mocked_gen.reset_mock()
-
-        mocked_gen.return_value = (item for item in MockColor)
-        result = NamedEnumMeta._field_values(NamedEnumMeta, 'a', False)
-        generator_tester(result, expected)
+    @pytest.mark.parametrize('field_name, as_tuple, expected',
+                             [("a", True, (1, 2)),
+                              ("a", False, (1, 2))])
+    @mock.patch.object(NamedEnumMeta, 'gen',
+                       side_effect=lambda name_value_pair: (item for item in MockColor))
+    def test__field_values(self, mocked_gen, field_name, as_tuple, expected):
+        result = NamedEnumMeta._field_values(NamedEnumMeta, field_name, as_tuple)
+        if as_tuple:
+            assert result == expected
+        else:
+            generator_tester(result, expected)
         mocked_gen.assert_called_once_with(name_value_pair=False)
 
     @pytest.mark.parametrize('params, expected',
@@ -143,23 +128,16 @@ class TestNamedEnumMeta:
         result = NamedEnumMeta.__repr__(NamedEnumMeta)
         assert result == "<named enum 'NamedEnumMeta'>"
 
-    @pytest.mark.parametrize("as_tuple", [True, False])
+    @pytest.mark.parametrize("func_name, as_tuple, expected_result",
+                             [("names", True, ('red', 'blue')),
+                              ("names", False, ('red', 'blue')),
+                              ("values", True, (1, 2)),
+                              ("values", False, (1, 2))])
     @mock.patch.object(NamedEnumMeta, '_member_map_', create=True,
                        new_callable=mock.PropertyMock(return_value=Color._member_map_))
-    def test_names(self, mocked__member_map_, as_tuple):
+    def test_names_values(self, mocked__member_map_, func_name, as_tuple, expected_result):
         expected_result = ('red', 'blue')
         result = NamedEnumMeta.names(NamedEnumMeta, as_tuple)
-        if as_tuple:
-            assert result == expected_result
-        else:
-            generator_tester(result, expected_result)
-
-    @pytest.mark.parametrize("as_tuple", [True, False])
-    @mock.patch.object(NamedEnumMeta, '_member_map_', create=True,
-                       new_callable=mock.PropertyMock(return_value=Color._member_map_))
-    def test_values(self, mocked__member_map_, as_tuple):
-        expected_result = (1, 2)
-        result = NamedEnumMeta.values(NamedEnumMeta, as_tuple)
         if as_tuple:
             assert result == expected_result
         else:
