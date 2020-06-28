@@ -14,6 +14,14 @@ class TestExtendedEnum(CommonEnumTest):
     enum_cls = TVCouple
     # a map specifying multiple argument sets for a test method
     params = {
+        "test___contains__": [
+            dict(checked_member="GALLAGHERS", expected=True),
+            dict(checked_member="MIKE_AND_MOLLY", expected=True),
+            dict(checked_member="TOM_AND_JERRY", expected=False),
+            dict(checked_member=TVCouple.GALLAGHERS, expected=True),
+            dict(checked_member=TVCouple.MIKE_AND_MOLLY, expected=True),
+            dict(checked_member=TVCouple, expected=False),
+            dict(checked_member=ExtendedEnum, expected=False)],
         "test__fields": [dict(expected_normal_output=tuple())],
         "test_gen": [
             dict(name_value_pair=True,

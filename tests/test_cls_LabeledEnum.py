@@ -13,6 +13,14 @@ class TestLabeledEnum(CommonEnumTest, ExtraEnumTest):
     enum_cls = NBALegendary
     # a map specifying multiple argument sets for a test method
     params = {
+        "test___contains__": [
+            dict(checked_member="JOHNSON", expected=True),
+            dict(checked_member="Jordan", expected=True),
+            dict(checked_member="TOM_AND_JERRY", expected=False),
+            dict(checked_member=NBALegendary.JOHNSON, expected=True),
+            dict(checked_member=NBALegendary.Jordan, expected=True),
+            dict(checked_member=NBALegendary, expected=False),
+            dict(checked_member=LabeledEnum, expected=False)],
         "test__fields": [dict(expected_normal_output=('key', 'label'))],
         "test_gen": [
             dict(name_value_pair=True,

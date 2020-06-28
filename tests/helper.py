@@ -22,6 +22,9 @@ def spy(obj, name):
 class CommonEnumTest:
     enum_cls = None
 
+    def test___contains__(self, checked_member, expected):
+        assert (checked_member in self.enum_cls) == expected
+
     def test__fields(self, expected_normal_output):
         assert self.enum_cls._fields() == expected_normal_output
 
