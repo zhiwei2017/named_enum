@@ -143,6 +143,5 @@ class TestNamedEnum(CommonEnumTest, ExtraEnumTest):
 
     def test___new__(self):
         with pytest.raises(AttributeError) as exe_info:
-            type("TripleFakeEnum", (NamedEnum, ),
-                 {'_field_names_': ("name, value, key")})
+            type("TripleFakeEnum", (NamedEnum, ), {'_field_names_': ("name, value, key")})
         assert "'name' or 'value' cannot be attributes" == str(exe_info.value)
