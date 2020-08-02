@@ -45,9 +45,10 @@ named-enum
 .. image:: https://pepy.tech/badge/named-enum
     :target: https://pepy.tech/project/named-enum
 
-.. send message to the author
-.. image:: https://img.shields.io/badge/saythanks.io-☼-1EAEDB.svg
-    :target: https://saythanks.io/to/KnightConan
+.. Quality Gate Status
+.. image:: https://sonarcloud.io/api/project_badges/measure?project=KnightConan_named_enum&metric=alert_status
+    :target: https://sonarcloud.io/dashboard?id=KnightConan_named_enum
+
 
 Introduction
 ------------

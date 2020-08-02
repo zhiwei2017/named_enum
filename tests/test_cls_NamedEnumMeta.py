@@ -149,8 +149,7 @@ class TestNamedEnumMeta:
     @mock.patch.object(NamedEnumMeta, '_member_map_', create=True,
                        new_callable=mock.PropertyMock(return_value=Color._member_map_))
     def test_names_values(self, mocked__member_map_, func_name, as_tuple, expected_result):
-        expected_result = ('red', 'blue')
-        result = NamedEnumMeta.names(NamedEnumMeta, as_tuple)
+        result = getattr(NamedEnumMeta, func_name)(NamedEnumMeta, as_tuple)
         if as_tuple:
             assert result == expected_result
         else:
