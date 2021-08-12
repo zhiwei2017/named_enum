@@ -1,4 +1,5 @@
 import pytest
+import sys
 from unittest import mock
 from enum import Enum
 from collections import OrderedDict, namedtuple
@@ -18,15 +19,23 @@ class MockColor(Enum):
 
 class TestNamedEnumMeta:
 
-    @pytest.mark.parametrize("get_mixins_return_value, set_pairs",
-                             [((None, None), None),
-                              ((None, mock.Mock(spec=[])), [('_generate_next_value_', None)]),
-                              ((None, mock.Mock(spec=['_generate_next_value_'],
+    @pytest.mark.parametrize("version_info, get_mixins_return_value, set_pairs",
+                             [((3, 7), (None, None), None),
+                              ((3, 8), (None, None), None),
+                              ((3, 7), (None, mock.Mock(spec=[])), [('_generate_next_value_', None)]),
+                              ((3, 8), (None, mock.Mock(spec=[])), [('_generate_next_value_', None)]),
+                              ((3, 7), (None, mock.Mock(spec=['_generate_next_value_'],
+                                                _generate_next_value_=1)),
+                               [('_generate_next_value_', 1)]),
+                              ((3, 8),
+                               (None, mock.Mock(spec=['_generate_next_value_'],
                                                 _generate_next_value_=1)),
                                [('_generate_next_value_', 1)]),
                               ])
     @mock.patch.object(NamedEnumMeta, '_get_mixins_')
-    def test___prepare__(self, mocked__get_mixins_, get_mixins_return_value, set_pairs):
+    @mock.patch("named_enum._sys")
+    def test___prepare__(self, mocked_sys, mocked__get_mixins_, version_info, get_mixins_return_value, set_pairs):
+        mocked_sys.version_info = version_info
         mocked__get_mixins_.return_value = get_mixins_return_value
 
         expected_result = _NamedEnumDict()
@@ -37,7 +46,10 @@ class TestNamedEnumMeta:
         result = NamedEnumMeta.__prepare__("dummy", ())
         assert isinstance(result, _NamedEnumDict)
         assert result == expected_result
-        mocked__get_mixins_.assert_called_once_with(tuple())
+        if version_info >= (3, 8):
+            mocked__get_mixins_.assert_called_once_with('dummy', tuple())
+        else:
+            mocked__get_mixins_.assert_called_once_with(tuple())
 
     @pytest.mark.parametrize('checked_member, expected',
                              [("red", True),
