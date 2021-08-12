@@ -115,7 +115,12 @@ class NamedEnumMeta(EnumMeta):
         # create the namespace dict
         enum_dict = _NamedEnumDict()
         # inherit previous flags and _generate_next_value_ function
-        member_type, first_enum = mcs._get_mixins_(bases)
+        if _sys.version_info >= (3, 8):
+            enum_dict._cls_name = cls
+            # inherit previous flags and _generate_next_value_ function
+            member_type, first_enum = mcs._get_mixins_(cls, bases)
+        else:
+            member_type, first_enum = mcs._get_mixins_(bases)
         if first_enum is not None:
             enum_dict['_generate_next_value_'] = getattr(
                 first_enum, '_generate_next_value_', None)
