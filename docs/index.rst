@@ -96,3 +96,4 @@ Acknowledgement
    setup
    quick_start
    source_code
+   release_notes

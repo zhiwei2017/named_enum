@@ -24,13 +24,13 @@ sys.path.insert(0, ProjectPath)
 # -- Project information -----------------------------------------------------
 
 project = 'named_enum'
-copyright = '2018-2020, Zhiwei Zhang'
+copyright = '2018-2021, Zhiwei Zhang'
 author = 'Zhiwei Zhang'
 
 # The short X.Y version
-version = '1.0.1'
+version = '1.0.2'
 # The full version, including alpha/beta/rc tags
-release = '1.0.1'
+release = '1.0.2'
 
 
 # -- General configuration ---------------------------------------------------
