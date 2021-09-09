@@ -1,42 +1,45 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Quick Start &mdash; named_enum 1.0.1 documentation</title>
+  <title>named-enum &mdash; Named Enum 1.1.0 documentation</title>
   
-
-  
-  
-  
-  
-
-  
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
-  
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
 
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Source Code" href="source_code.html" />
-    <link rel="prev" title="Installation" href="setup.html" /> 
+    <link rel="next" title="Source" href="02_source.html" />
+    <link rel="prev" title="Welcome to the documentation of Named Enum!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -50,7 +53,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> named_enum
+            <a href="index.html" class="icon icon-home"> Named Enum
           
 
           
@@ -60,7 +63,7 @@
             
             
               <div class="version">
-                1.0.1
+                1.1.0
               </div>
             
           
@@ -77,6 +80,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -85,18 +89,33 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#enumeration-creation">Enumeration Creation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#usages">Usages</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">named-enum</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#stable-release">Stable release</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#from-sources">From sources</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="source_code.html">Source Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick Start</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#enumeration-creation">Enumeration Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#usages">Usages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgement">Acknowledgement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#author">Author</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="02_source.html">Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_contributing.html">Contributing</a></li>
 </ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -106,7 +125,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">named_enum</a>
+          <a href="index.html">Named Enum</a>
         
       </nav>
 
@@ -131,19 +150,21 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Quick Start</li>
+      <li>named-enum</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
-            
-            <a href="_sources/quick_start.rst.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/01_about.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -156,13 +177,60 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="quick-start">
-<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="named-enum">
+<h1>named-enum<a class="headerlink" href="#named-enum" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/named-enum/"><img alt="https://img.shields.io/pypi/l/named-enum.svg" src="https://img.shields.io/pypi/l/named-enum.svg" /></a>
+<a class="reference external image-reference" href="https://named-enum.readthedocs.io/en/latest/?badge=latest"><img alt="Documentation Status" src="https://readthedocs.org/projects/named-enum/badge/?version=latest" /></a>
+<a class="reference external image-reference" href="https://github.com/zhiwei2017/named_enum/actions"><img alt="https://github.com/zhiwei2017/named_enum/workflows/Unit%20Test%20&amp;%20Build%20Test/badge.svg" src="https://github.com/zhiwei2017/named_enum/workflows/Unit%20Test%20&amp;%20Build%20Test/badge.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/named-enum/"><img alt="https://img.shields.io/pypi/v/named-enum.svg" src="https://img.shields.io/pypi/v/named-enum.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/named-enum/"><img alt="https://img.shields.io/pypi/status/named-enum.svg" src="https://img.shields.io/pypi/status/named-enum.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/named-enum/"><img alt="Python 3.6 | Python 3.7 | Python 3.8" src="https://img.shields.io/pypi/pyversions/named-enum.svg" /></a>
+<a class="reference external image-reference" href="https://badge.fury.io/py/named-enum"><img alt="https://img.shields.io/pypi/format/named-enum.svg" src="https://img.shields.io/pypi/format/named-enum.svg" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/zhiwei2017/named_enum"><img alt="https://codecov.io/gh/zhiwei2017/named_enum/branch/master/graph/badge.svg" src="https://codecov.io/gh/zhiwei2017/named_enum/branch/master/graph/badge.svg" /></a>
+<a class="reference external image-reference" href="https://pyup.io/repos/github/zhiwei2017/named_enum/"><img alt="Updates" src="https://pyup.io/repos/github/zhiwei2017/named_enum/shield.svg" /></a>
+<a class="reference external image-reference" href="https://pepy.tech/project/named-enum"><img alt="https://pepy.tech/badge/named-enum" src="https://pepy.tech/badge/named-enum" /></a>
+<a class="reference external image-reference" href="https://sonarcloud.io/dashboard?id=KnightConan_named_enum"><img alt="https://sonarcloud.io/api/project_badges/measure?project=KnightConan_named_enum&amp;metric=alert_status" src="https://sonarcloud.io/api/project_badges/measure?project=KnightConan_named_enum&amp;metric=alert_status" /></a>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>This package provides several enumeration classes, which extends the default
+<strong>Enum</strong> class with various functionalities. For each enumeration class, its
+enumeration item’s value is a customised tuple type generated by
+<strong>namedtuple</strong> from <strong>collections</strong> package.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="stable-release">
+<h3>Stable release<a class="headerlink" href="#stable-release" title="Permalink to this headline">¶</a></h3>
+<p>To install Named Enum, run this command in your terminal:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip install named_enum
+</pre></div>
+</div>
+<p>This is the preferred method to install Named Enum, as it will always install the most recent stable release.</p>
+</div>
+<div class="section" id="from-sources">
+<h3>From sources<a class="headerlink" href="#from-sources" title="Permalink to this headline">¶</a></h3>
+<p>The sources for Named Enum can be downloaded from the <a class="reference external" href="https://github.com/zhiwei2017/named_enum">Github repo</a>.</p>
+<p>You can either clone the public repository:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git clone https://github.com/zhiwei2017/named_enum.git
+</pre></div>
+</div>
+<p>Once you have a copy of the source, you can install it with:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python setup.py install
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip install .
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="enumeration-creation">
-<h2>Enumeration Creation<a class="headerlink" href="#enumeration-creation" title="Permalink to this headline">¶</a></h2>
+<h3>Enumeration Creation<a class="headerlink" href="#enumeration-creation" title="Permalink to this headline">¶</a></h3>
 <p>There are two ways to create an enumeration.</p>
 <ul>
-<li><p class="first">Use the provided enumeration classes <code class="docutils literal notranslate"><span class="pre">ExtendedEnum</span></code>, <code class="docutils literal notranslate"><span class="pre">LabeledEnum</span></code>, <code class="docutils literal notranslate"><span class="pre">PairEnum</span></code> to declare your enumeration.</p>
+<li><p>Use the provided enumeration classes <code class="docutils literal notranslate"><span class="pre">ExtendedEnum</span></code>, <code class="docutils literal notranslate"><span class="pre">LabeledEnum</span></code>, <code class="docutils literal notranslate"><span class="pre">PairEnum</span></code> to declare your enumeration.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">named_enum</span> <span class="kn">import</span> <span class="n">ExtendedEnum</span><span class="p">,</span> <span class="n">LabeledEnum</span><span class="p">,</span> <span class="n">PairEnum</span>
 
 <span class="k">class</span> <span class="nc">TVCouple</span><span class="p">(</span><span class="n">ExtendedEnum</span><span class="p">):</span>
@@ -179,13 +247,13 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">customise your own enumeration class and use it to define the enumeration.</p>
+<li><p>Customise your own enumeration class and use it to define the enumeration.</p>
 <ol class="arabic simple">
-<li>create a new enumeration class</li>
+<li><p>Create a new enumeration class</p></li>
 </ol>
 <blockquote>
 <div><ul>
-<li><p class="first">inherit from class <code class="docutils literal notranslate"><span class="pre">NamedEnum</span></code></p>
+<li><p>Inherit from class <code class="docutils literal notranslate"><span class="pre">NamedEnum</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">named_enum</span> <span class="kn">import</span> <span class="n">NamedEnum</span>
 
 <span class="k">class</span> <span class="nc">TripleEnum</span><span class="p">(</span><span class="n">NamedEnum</span><span class="p">):</span>
@@ -194,7 +262,7 @@
 </pre></div>
 </div>
 </li>
-<li><p class="first">use function <code class="docutils literal notranslate"><span class="pre">namedenum</span></code></p>
+<li><p>Use function <code class="docutils literal notranslate"><span class="pre">namedenum</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">named_enum</span> <span class="kn">import</span> <span class="n">namedenum</span>
 
 <span class="c1"># using a sequence of strings to define the field names</span>
@@ -208,7 +276,7 @@
 </ul>
 </div></blockquote>
 <ol class="arabic" start="2">
-<li><p class="first">create enumeration using the customized enumeration class in last step.</p>
+<li><p>Create enumeration using the customized enumeration class in last step.</p>
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">AnimationFamily</span><span class="p">(</span><span class="n">TripleEnum</span><span class="p">):</span>
     <span class="n">SIMPSONS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Homer&quot;</span><span class="p">,</span> <span class="s2">&quot;Bart&quot;</span><span class="p">,</span> <span class="s2">&quot;Marge&quot;</span><span class="p">)</span>
@@ -222,27 +290,25 @@
 </ul>
 </div>
 <div class="section" id="usages">
-<h2>Usages<a class="headerlink" href="#usages" title="Permalink to this headline">¶</a></h2>
+<h3>Usages<a class="headerlink" href="#usages" title="Permalink to this headline">¶</a></h3>
 <ul>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">names(as_tuple=True)</span></code></dt>
-<dd><p class="first"><code class="docutils literal notranslate"><span class="pre">as_tuple=True</span></code>: returns the names of all enumeration items as a tuple.</p>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">names(as_tuple=True)</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">as_tuple=True</span></code>: returns the names of all enumeration items as a tuple.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">names</span><span class="p">()</span>
 <span class="go">(&#39;SIMPSONS&#39;, &#39;DUCKS&#39;)</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">as_tuple=False</span></code>: returns a generator of the names of all enumeration items.</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">GeneratorType</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">names</span><span class="p">(</span><span class="n">as_tuple</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="n">GeneratorType</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">GeneratorType</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">names</span><span class="p">(</span><span class="n">as_tuple</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">GeneratorType</span><span class="p">)</span>
 <span class="go">True</span>
 </pre></div>
 </div>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">values(as_tuple=True)</span></code></dt>
-<dd><p class="first"><code class="docutils literal notranslate"><span class="pre">as_tuple=True</span></code>: returns the values of all enumeration items as a tuple.</p>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">values(as_tuple=True)</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">as_tuple=True</span></code>: returns the values of all enumeration items as a tuple.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
 <span class="p">(</span><span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Marge&#39;</span><span class="p">),</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Huey&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Dewey&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Louie&#39;</span><span class="p">))</span>
@@ -253,18 +319,17 @@
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">as_tuple=False</span></code>: returns a generator of the values of all enumeration items.</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">types</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">as_tuple</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="n">GeneratorType</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">types</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">as_tuple</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">GeneratorType</span><span class="p">)</span>
 <span class="go">True</span>
 </pre></div>
 </div>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">describe()</span></code></dt>
-<dd><p class="first">displays the enumeration as a table.</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">describe()</span></code></dt><dd><p>displays the enumeration as a table.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 <span class="n">Class</span><span class="p">:</span> <span class="n">AnimationFamily</span>
     <span class="n">Name</span> <span class="o">|</span> <span class="n">First</span> <span class="o">|</span> <span class="n">Second</span> <span class="o">|</span> <span class="n">Third</span>
@@ -286,9 +351,8 @@
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">gen(name_value_pair=True)</span></code></dt>
-<dd><p class="first"><code class="docutils literal notranslate"><span class="pre">name_value_pair=True</span></code>: returns a generator comprised of name-value pair of each enumeration item</p>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">gen(name_value_pair=True)</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">name_value_pair=True</span></code>: returns a generator comprised of name-value pair of each enumeration item</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">gen</span><span class="p">())</span>
 <span class="p">((</span><span class="s1">&#39;SIMPSONS&#39;</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Marge&#39;</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;DUCKS&#39;</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Huey&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Dewey&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Louie&#39;</span><span class="p">)))</span>
@@ -299,22 +363,21 @@
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">name_value_pair=False</span></code>: returns a generator of enumeration items</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">name_value_pair</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">name_value_pair</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 <span class="p">(</span><span class="o">&lt;</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">SIMPSONS</span><span class="p">:</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Marge&#39;</span><span class="p">)</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">DUCKS</span><span class="p">:</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Huey&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Dewey&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Louie&#39;</span><span class="p">)</span><span class="o">&gt;</span><span class="p">)</span>
 
 <span class="c1"># ExtendedEnum</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">TVCouple</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">name_value_pair</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">TVCouple</span><span class="o">.</span><span class="n">gen</span><span class="p">(</span><span class="n">name_value_pair</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 <span class="p">(</span><span class="o">&lt;</span><span class="n">TVCouple</span><span class="o">.</span><span class="n">GALLAGHERS</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;FRANK&#39;</span><span class="p">,</span> <span class="s1">&#39;MONICA&#39;</span><span class="p">)</span><span class="o">&gt;</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">TVCouple</span><span class="o">.</span><span class="n">MIKE_AND_MOLLY</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Mike&#39;</span><span class="p">,</span> <span class="s1">&#39;Molly&#39;</span><span class="p">)</span><span class="o">&gt;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">as_dict()</span></code></dt>
-<dd><p class="first">returns a dictionary, in which the key is the enumeration item’s name and the value is the item’s value</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">as_dict()</span></code></dt><dd><p>returns a dictionary, in which the key is the enumeration item’s name and the value is the item’s value</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
 <span class="p">{</span><span class="s1">&#39;SIMPSONS&#39;</span><span class="p">:</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Marge&#39;</span><span class="p">),</span> <span class="s1">&#39;DUCKS&#39;</span><span class="p">:</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Huey&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Dewey&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Louie&#39;</span><span class="p">)}</span>
 
@@ -326,10 +389,9 @@
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">as_set()</span></code></dt>
-<dd><p class="first">returns a set of tuples containing the enumeration item’s name and value</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">as_set()</span></code></dt><dd><p>returns a set of tuples containing the enumeration item’s name and value</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">as_set</span><span class="p">()</span>
 <span class="p">{(</span><span class="s1">&#39;SIMPSONS&#39;</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Marge&#39;</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;DUCKS&#39;</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Huey&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Dewey&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Louie&#39;</span><span class="p">))}</span>
 
@@ -341,10 +403,9 @@
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">as_tuple()</span></code></dt>
-<dd><p class="first">returns a tuple of tuples containing the enumeration item’s name and value</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">as_tuple()</span></code></dt><dd><p>returns a tuple of tuples containing the enumeration item’s name and value</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">as_tuple</span><span class="p">()</span>
 <span class="p">((</span><span class="s1">&#39;SIMPSONS&#39;</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Marge&#39;</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;DUCKS&#39;</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Huey&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Dewey&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Louie&#39;</span><span class="p">)))</span>
 
@@ -356,10 +417,9 @@
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">as_list()</span></code></dt>
-<dd><p class="first">returns a list of tuples containing the enumeration item’s name and value</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">as_list()</span></code></dt><dd><p>returns a list of tuples containing the enumeration item’s name and value</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">as_list</span><span class="p">()</span>
 <span class="p">[(</span><span class="s1">&#39;SIMPSONS&#39;</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Marge&#39;</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;DUCKS&#39;</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Huey&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Dewey&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Louie&#39;</span><span class="p">))]</span>
 
@@ -371,10 +431,9 @@
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">as_ordereddict()</span></code></dt>
-<dd><p class="first">returns an ordered dict, in which the key is the enumeration item’s name and the value is the item’s value</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">as_ordereddict()</span></code></dt><dd><p>returns an ordered dict, in which the key is the enumeration item’s name and the value is the item’s value</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">as_ordereddict</span><span class="p">()</span>
 <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;SIMPSONS&#39;</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Marge&#39;</span><span class="p">)),</span> <span class="p">(</span><span class="s1">&#39;DUCKS&#39;</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Huey&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Dewey&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Louie&#39;</span><span class="p">))])</span>
 
@@ -388,11 +447,9 @@
 </li>
 </ul>
 <p>If you define the enumeration class with <code class="docutils literal notranslate"><span class="pre">_field_names_</span></code> variable, then for each field name in it 3 corresponding functions are generated  and assigned to the enumeration class:</p>
-<blockquote>
-<div><ul>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">&lt;field_name&gt;s(as_tuple=True)</span></code></dt>
-<dd><p class="first"><code class="docutils literal notranslate"><span class="pre">as_tuple=True</span></code>: returns a tuple containing all corresponding values of the field in enumeration items</p>
+<ul>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">&lt;field_name&gt;s(as_tuple=True)</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">as_tuple=True</span></code>: returns a tuple containing all corresponding values of the field in enumeration items</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">firsts</span><span class="p">()</span>
 <span class="p">(</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="s1">&#39;Huey&#39;</span><span class="p">)</span>
@@ -409,17 +466,16 @@
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">as_tuple=False</span></code>: returns a generator of all corresponding values of the field in enumeration items</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">firsts</span><span class="p">(</span><span class="n">as_tuple</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="n">GeneratorType</span><span class="p">)</span>
-<span class="bp">True</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">firsts</span><span class="p">(</span><span class="n">as_tuple</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">GeneratorType</span><span class="p">)</span>
+<span class="kc">True</span>
 </pre></div>
 </div>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">from_&lt;field_name&gt;(field_value,</span> <span class="pre">as_tuple=True)</span></code></dt>
-<dd><p class="first"><code class="docutils literal notranslate"><span class="pre">as_tuple=True</span></code>: returns a tuple containing <strong>all enumeration items</strong> which has the given <code class="docutils literal notranslate"><span class="pre">field_value</span></code> in corresponding field</p>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">from_&lt;field_name&gt;(field_value,</span> <span class="pre">as_tuple=True)</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">as_tuple=True</span></code>: returns a tuple containing <strong>all enumeration items</strong> which has the given <code class="docutils literal notranslate"><span class="pre">field_value</span></code> in corresponding field</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">from_first</span><span class="p">(</span><span class="s1">&#39;Homer&#39;</span><span class="p">)</span>
 <span class="p">(</span><span class="o">&lt;</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">SIMPSONS</span><span class="p">:</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="s1">&#39;Bart&#39;</span><span class="p">,</span> <span class="n">third</span><span class="o">=</span><span class="s1">&#39;Marge&#39;</span><span class="p">)</span><span class="o">&gt;</span><span class="p">,)</span>
@@ -439,50 +495,67 @@
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">as_tuple=False</span></code>: returns a generator of <strong>all enumeration items</strong> which has the given <code class="docutils literal notranslate"><span class="pre">field_value</span></code> in corresponding field</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">from_first</span><span class="p">(</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="n">as_tuple</span><span class="o">=</span><span class="bp">False</span><span class="p">),</span> <span class="n">GeneratorType</span><span class="p">)</span>
-<span class="bp">True</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">AnimationFamily</span><span class="o">.</span><span class="n">from_first</span><span class="p">(</span><span class="s1">&#39;Homer&#39;</span><span class="p">,</span> <span class="n">as_tuple</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">GeneratorType</span><span class="p">)</span>
+<span class="kc">True</span>
 </pre></div>
 </div>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal notranslate"><span class="pre">has_&lt;field_name&gt;(field_value)</span></code></dt>
-<dd><p class="first">returns a boolean value to indicate whether there is at least one enumeration item has the given <code class="docutils literal notranslate"><span class="pre">field_value</span></code> in corresponding field</p>
-<div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">has_&lt;field_name&gt;(field_value)</span></code></dt><dd><p>returns a boolean value to indicate whether there is at least one enumeration item has the given <code class="docutils literal notranslate"><span class="pre">field_value</span></code> in corresponding field</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># TripleEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">has_first</span><span class="p">(</span><span class="s1">&#39;Homer&#39;</span><span class="p">)</span>
-<span class="bp">True</span>
+<span class="kc">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">has_first</span><span class="p">(</span><span class="s1">&#39;Holmes&#39;</span><span class="p">)</span>
-<span class="bp">False</span>
+<span class="kc">False</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">has_second</span><span class="p">(</span><span class="s1">&#39;Dewey&#39;</span><span class="p">)</span>
-<span class="bp">True</span>
+<span class="kc">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">has_second</span><span class="p">(</span><span class="s1">&#39;David&#39;</span><span class="p">)</span>
-<span class="bp">False</span>
+<span class="kc">False</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">has_third</span><span class="p">(</span><span class="s1">&#39;Louie&#39;</span><span class="p">)</span>
-<span class="bp">True</span>
+<span class="kc">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">AnimationFamily</span><span class="o">.</span><span class="n">has_third</span><span class="p">(</span><span class="s1">&#39;Louis&#39;</span><span class="p">)</span>
-<span class="bp">False</span>
+<span class="kc">False</span>
 
 <span class="c1"># LabeledEnum</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">NBALegendary</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s1">&#39;Johnson&#39;</span><span class="p">)</span>
-<span class="bp">True</span>
+<span class="kc">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">NBALegendary</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s1">&#39;John&#39;</span><span class="p">)</span>
-<span class="bp">False</span>
+<span class="kc">False</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">NBALegendary</span><span class="o">.</span><span class="n">has_label</span><span class="p">(</span><span class="s1">&#39;Air Jordan&#39;</span><span class="p">)</span>
-<span class="bp">True</span>
+<span class="kc">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">NBALegendary</span><span class="o">.</span><span class="n">has_label</span><span class="p">(</span><span class="s1">&#39;The Black Mamba&#39;</span><span class="p">)</span>
-<span class="bp">False</span>
+<span class="kc">False</span>
 </pre></div>
 </div>
 </dd>
 </dl>
 </li>
 </ul>
-</div></blockquote>
+</div>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>The documentation about this project is available in
+<a class="reference external" href="https://named-enum.readthedocs.io/en/latest/">Read the Docs</a>.</p>
+</div>
+<div class="section" id="acknowledgement">
+<h2>Acknowledgement<a class="headerlink" href="#acknowledgement" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/cagonza6/">Cristian Alfonso González Mora</a> for the inspiration of this project.</p></li>
+</ul>
+</div>
+<div class="section" id="author">
+<h2>Author<a class="headerlink" href="#author" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/zhiwei2017">Zhiwei Zhang</a> - <em>Maintainer</em> - <a class="reference external" href="mailto:zhiwei2017&#37;&#52;&#48;gmail&#46;com?subject=[GitHub]Named%20Enum">zhiwei2017<span>&#64;</span>gmail<span>&#46;</span>com</a></p></li>
+</ul>
+<p><strong>[ ~ Dependencies scanned by</strong> <a class="reference external" href="https://pyup.io">PyUp.io</a> <strong>~ ]</strong></p>
 </div>
 </div>
 
@@ -491,29 +564,29 @@
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="source_code.html" class="btn btn-neutral float-right" title="Source Code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="setup.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="02_source.html" class="btn btn-neutral float-right" title="Source" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to the documentation of Named Enum!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018-2020, Zhiwei Zhang
+        &#169; Copyright 2021, Zhiwei Zhang.
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
@@ -521,7 +594,6 @@
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
