@@ -31,3 +31,13 @@ We use `SemVer <http://semver.org/>`_ for versioning. For the versions available
     * fix issues in tests found by sonarcloud
 
 * Closed `#66 <https://github.com/KnightConan/named_enum/issues/66>`_:  the package is incompatible with python 3.8+ through `#67 <https://github.com/KnightConan/named_enum/pull/67>`_
+
+`v1.1.0 <https://github.com/KnightConan/named_enum/releases/tag/v1.1.0>`_
+-------------------------------------------------------------------------
+
+*Features/Bug Fixes:*
+
+* Introduces `#68 <https://github.com/KnightConan/named_enum/pull/68>`_:
+
+    * Restructure project with pyckage-cookiecutter
+    * Fix issue, that package is incompatible with python version bigger than 3.8.6, because the changed interface of function get_mixins in EnumMeta class in commit python/cpython@5efb1a7#diff-e5dd6e444e4e6c2cdeb8edf271d057f9da52f7b406dcd8b655dc396fb013bd03
