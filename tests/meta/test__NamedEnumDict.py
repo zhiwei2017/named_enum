@@ -1,5 +1,6 @@
 import pytest
-from named_enum import _NamedEnumDict
+from named_enum.meta import _NamedEnumDict
+from collections import namedtuple
 
 
 class TestNamedEnumDict:
@@ -7,6 +8,7 @@ class TestNamedEnumDict:
     @pytest.fixture(autouse=True)
     def setup(self):
         self.dict = _NamedEnumDict()
+        self.dict._cls_name = "Dummy"
 
     @pytest.fixture
     def fill(self):
@@ -63,18 +65,24 @@ class TestNamedEnumDict:
         assert self.dict._last_values == []
         assert self.dict._member_names == []
 
-    def test__convert(self, fill):
-        """
-        Test the _convert function.
-        """
+    def test__convert_fail(self, fill):
+        """Test the _convert function in failure case."""
         # if the tuple_cls is tuple, it should raise an error
         with pytest.raises(ValueError) as excinfo:
             self.dict._convert(tuple)
         assert "'tuple_cls' must be a customized tuple class using namedtuple" \
-               " generated." in str(excinfo.value)
+               " generated class instead." in str(excinfo.value)
 
+        tuple_cls = namedtuple("NamedTuple", ["key", "value"])
+        self.dict._clean()
+        self.dict['b'] = 1
+        with pytest.raises(ValueError) as exe_info:
+            self.dict._convert(tuple_cls)
+        assert "unable to unpack the value for the fields." in str(exe_info.value)
+
+    def test__convert_success_one_feature(self, fill):
+        """Test the _convert function in success case."""
         # create a named tuple and call the _convert, everything should be fine.
-        from collections import namedtuple
         tuple_cls = namedtuple("NamedTuple", ["key"])
         self.dict._convert(tuple_cls)
 
@@ -88,9 +96,20 @@ class TestNamedEnumDict:
                                           tuple_cls(key=1)]
         assert self.dict._member_names == ['a', '_a', 'b']
 
-        tuple_cls = namedtuple("NamedTuple", ["key", "value"])
-        self.dict._clean()
-        self.dict['b'] = 1
-        with pytest.raises(ValueError) as exe_info:
-            self.dict._convert(tuple_cls)
-        assert "unable to unpack the value for the fields." in str(exe_info.value)
+    # def test__convert_success_more_feature(self, fill):
+    #     """Test the _convert function in success case."""
+    #     # create a named tuple and call the _convert, everything should be fine.
+    #     tuple_cls = namedtuple("NamedTuple", ["key", "value"])
+    #     self.dict._clean()
+    #     self.dict['b'] = '111'
+    #     self.dict._convert(tuple_cls)
+    #
+    #     assert self.dict == {"_field_names_": "b",
+    #                          "a": tuple_cls(key=['a', 'b'], value=['1', '2']),
+    #                          "_a": tuple_cls(key='a', value='1'),
+    #                          "__a__": "a",
+    #                          'b': tuple_cls(key=1)}
+    #     assert self.dict._last_values == [tuple_cls(key=['a', 'b'], value=['1', '2']),
+    #                                       tuple_cls(key='a', value='1'),
+    #                                       tuple_cls(key=1, value=1)]
+    #     assert self.dict._member_names == ['a', '_a', 'b']

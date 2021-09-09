@@ -3,19 +3,28 @@
 # Test __new__ function from meta class::
 
     >>> import types
+    >>> import sys
     >>> from named_enum import PairEnum
-    >>> class Triple(PairEnum):
-    ...     SIMPSONS = ("Homer", "Bart", "Marge")
-    ...     DUCKS = ("Huey", "Dewey", "Louie")
-    Traceback (most recent call last):
-    ...
-    TypeError: __new__() takes 3 positional arguments but 4 were given
-    >>> class Single(PairEnum):
-    ...     SIMPSONS = "Homer"
-    ...     DUCKS = "Huey"
-    Traceback (most recent call last):
-    ...
-    TypeError: __new__() missing 1 required positional argument: 'second'
+    >>> try:
+    ...     class Triple(PairEnum):
+    ...         SIMPSONS = ("Homer", "Bart", "Marge")
+    ...         DUCKS = ("Huey", "Dewey", "Louie")
+    ... except TypeError as e:
+    ...     if sys.version_info >= (3, 9):
+    ...         str(e) == "<lambda>() takes 3 positional arguments but 4 were given"
+    ...     else:
+    ...         str(e) == "__new__() takes 3 positional arguments but 4 were given"
+    True
+    >>> try:
+    ...     class Single(PairEnum):
+    ...         SIMPSONS = "Homer"
+    ...         DUCKS = "Huey"
+    ... except TypeError as e:
+    ...     if sys.version_info >= (3, 9):
+    ...         str(e) == "<lambda>() missing 1 required positional argument: 'second'"
+    ...     else:
+    ...         str(e) == "__new__() missing 1 required positional argument: 'second'"
+    True
     >>> class FPair(PairEnum):
     ...     SIMPSONS = ("Homer", "Marge")
     ...     DUCKS = ("Huey", "Dewey")

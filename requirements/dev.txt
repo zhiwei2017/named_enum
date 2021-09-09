@@ -1,0 +1,10 @@
+-r base.txt
+bandit~=1.7
+flake8~=3.8
+mypy==0.910
+pytest~=5.0
+pytest-cov~=2.6
+pytest-runner~=4.4
+codecov~=2.1
+coverage~=5.1
+tox~=3.20

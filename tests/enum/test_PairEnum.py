@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from named_enum import PairEnum
-from .helper import CommonEnumTest, ExtraEnumTest
+from ..helper import CommonEnumTest, ExtraEnumTest
 
 
 class Pair(PairEnum):

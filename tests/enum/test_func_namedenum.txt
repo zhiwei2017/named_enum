@@ -34,18 +34,27 @@ Test script for namedenum with only typename::
     ...     MCDUCK_NEPHEWS = ("Huey", "Dewey", "Louie")
     ...     THE_SIMPSONS = ("Homer", "Marge", "Lisa")
 
-    >>> class TripleFailLess(TripleEnum):
-    ...     TOM_AND_JERRY = ("Tom", "Jerry")
-    ...     MIKE_AND_MOLLY = ("Mike", "Molly")
-    Traceback (most recent call last):
-    ...
-    TypeError: __new__() missing 1 required positional argument: 'third'
-    >>> class TripleFailMore(TripleEnum):
-    ...     TOM_AND_JERRY = ("Tom", "Jerry", "Cat", "Mouse")
-    ...     MIKE_AND_MOLLY = ("Mike", "Molly", "Husband", "Wife")
-    Traceback (most recent call last):
-    ...
-    TypeError: __new__() takes 4 positional arguments but 5 were given
+    >>> import sys
+    >>> try:
+    ...     class TripleFailLess(TripleEnum):
+    ...         TOM_AND_JERRY = ("Tom", "Jerry")
+    ...         MIKE_AND_MOLLY = ("Mike", "Molly")
+    ... except TypeError as e:
+    ...     if sys.version_info >= (3, 9):
+    ...         str(e) == "<lambda>() missing 1 required positional argument: 'third'"
+    ...     else:
+    ...         str(e) == "__new__() missing 1 required positional argument: 'third'"
+    True
+    >>> try:
+    ...     class TripleFailMore(TripleEnum):
+    ...         TOM_AND_JERRY = ("Tom", "Jerry", "Cat", "Mouse")
+    ...         MIKE_AND_MOLLY = ("Mike", "Molly", "Husband", "Wife")
+    ... except TypeError as e:
+    ...     if sys.version_info >= (3, 9):
+    ...         str(e) == "<lambda>() takes 4 positional arguments but 5 were given"
+    ...     else:
+    ...         str(e) == "__new__() takes 4 positional arguments but 5 were given"
+    True
 
 # Test class method _fields::
 

@@ -1,11 +1,11 @@
-import pytest
+import sys as _sys
+from unittest import mock
+from named_enum import namedenum
 from collections import OrderedDict
-from named_enum import NamedEnum
-from .helper import CommonEnumTest, ExtraEnumTest
+from ..helper import CommonEnumTest, ExtraEnumTest
 
-
-class TripleEnum(NamedEnum):
-    _field_names_ = ("first", "second", "third")
+TripleEnum = namedenum("TripleEnum", ["first", "second", "third"],
+                       verbose=False)
 
 
 class Triangle(TripleEnum):
@@ -13,9 +13,10 @@ class Triangle(TripleEnum):
     RIGHT = (3, 4, 5)
 
 
-class TestNamedEnum(CommonEnumTest, ExtraEnumTest):
+class TestNamedEnumFunc(CommonEnumTest, ExtraEnumTest):
     # an enum class for the test methods
     enum_cls = Triangle
+
     # a map specifying multiple argument sets for a test method
     params = {
         "test___contains__": [
@@ -42,22 +43,22 @@ class TestNamedEnum(CommonEnumTest, ExtraEnumTest):
             dict(func_name='thirds', as_tuple=True, expected=(6, 5)),
             dict(func_name='thirds', as_tuple=False, expected=(6, 5))],
         "test__from_field": [
-            dict(func_name='from_first', value=6, as_tuple=True, expected=(Triangle.EQUILATERAL, )),
+            dict(func_name='from_first', value=6, as_tuple=True, expected=(Triangle.EQUILATERAL,)),
             dict(func_name='from_first', value=6, as_tuple=False, expected=(Triangle.EQUILATERAL,)),
-            dict(func_name='from_first', value=3, as_tuple=True, expected=(Triangle.RIGHT, )),
+            dict(func_name='from_first', value=3, as_tuple=True, expected=(Triangle.RIGHT,)),
             dict(func_name='from_first', value=3, as_tuple=False, expected=(Triangle.RIGHT,)),
             dict(func_name='from_first', value=63, as_tuple=True, expected=tuple()),
             dict(func_name='from_first', value=63, as_tuple=False, expected=tuple()),
-            dict(func_name='from_second', value=6, as_tuple=True, expected=(Triangle.EQUILATERAL, )),
+            dict(func_name='from_second', value=6, as_tuple=True, expected=(Triangle.EQUILATERAL,)),
             dict(func_name='from_second', value=6, as_tuple=False, expected=(Triangle.EQUILATERAL,)),
-            dict(func_name='from_second', value=4, as_tuple=True, expected=(Triangle.RIGHT, )),
-            dict(func_name='from_second', value=4, as_tuple=False, expected=(Triangle.RIGHT, )),
+            dict(func_name='from_second', value=4, as_tuple=True, expected=(Triangle.RIGHT,)),
+            dict(func_name='from_second', value=4, as_tuple=False, expected=(Triangle.RIGHT,)),
             dict(func_name='from_second', value=64, as_tuple=True, expected=tuple()),
             dict(func_name='from_second', value=64, as_tuple=False, expected=tuple()),
-            dict(func_name='from_third', value=6, as_tuple=True, expected=(Triangle.EQUILATERAL, )),
-            dict(func_name='from_third', value=6, as_tuple=False, expected=(Triangle.EQUILATERAL, )),
-            dict(func_name='from_third', value=5, as_tuple=True, expected=(Triangle.RIGHT, )),
-            dict(func_name='from_third', value=5, as_tuple=False, expected=(Triangle.RIGHT, )),
+            dict(func_name='from_third', value=6, as_tuple=True, expected=(Triangle.EQUILATERAL,)),
+            dict(func_name='from_third', value=6, as_tuple=False, expected=(Triangle.EQUILATERAL,)),
+            dict(func_name='from_third', value=5, as_tuple=True, expected=(Triangle.RIGHT,)),
+            dict(func_name='from_third', value=5, as_tuple=False, expected=(Triangle.RIGHT,)),
             dict(func_name='from_third', value=65, as_tuple=True, expected=tuple()),
             dict(func_name='from_third', value=65, as_tuple=False, expected=tuple())],
         "test__has_field": [
@@ -71,8 +72,8 @@ class TestNamedEnum(CommonEnumTest, ExtraEnumTest):
             dict(func_name='has_third', value=5, expected=True),
             dict(func_name='has_third', value=65, expected=False)],
         "test__func_fail": [
-            dict(func_name='forths', func_param=(True, ), error_type=AttributeError),
-            dict(func_name='forths', func_param=(False, ), error_type=AttributeError),
+            dict(func_name='forths', func_param=(True,), error_type=AttributeError),
+            dict(func_name='forths', func_param=(False,), error_type=AttributeError),
             dict(func_name='from_forth', func_param=(6, True), error_type=AttributeError),
             dict(func_name='from_forth', func_param=(6, False), error_type=AttributeError),
             dict(func_name='has_forth', func_param=(6, True), error_type=AttributeError),
@@ -141,7 +142,9 @@ class TestNamedEnum(CommonEnumTest, ExtraEnumTest):
                  err_msg="'Triangle' object has no attribute 'key'")]
     }
 
-    def test___new__(self):
-        with pytest.raises(AttributeError) as exe_info:
-            type("TripleFakeEnum", (NamedEnum, ), {'_field_names_': ("name, value, key")})
-        assert "'name' or 'value' cannot be attributes" == str(exe_info.value)
+    @mock.patch.object(_sys, '_getframe', side_effect=AttributeError)
+    def test_error(self, mocked__getframe):
+        TripleFakeEnum = namedenum('TripleFakeEnum',
+                                   ("first", "second", "third"), module=None)
+        assert TripleFakeEnum.__module__ == 'TripleFakeEnum'
+        mocked__getframe.assert_called_with(1)
