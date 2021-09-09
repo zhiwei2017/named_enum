@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Configuration file for the Sphinx documentation builder.
@@ -12,25 +13,27 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+import datetime
 import os
 import sys
-import sphinx_rtd_theme
 
-
-ProjectPath = os.path.abspath('../named_enum')
-sys.path.insert(0, ProjectPath)
-
+root_path = os.path.abspath('../..')
+sys.path.insert(0, root_path)
 
 # -- Project information -----------------------------------------------------
 
-project = 'named_enum'
-copyright = '2018-2021, Zhiwei Zhang'
+project = 'Named Enum'
 author = 'Zhiwei Zhang'
+copyright = '{}, {}'.format(datetime.datetime.now().year, author)
+
 
 # The short X.Y version
-version = '1.0.2'
+local_vars = dict()
+version_path = os.path.join(root_path, "named_enum", "version.py")
+exec(open(version_path).read(), local_vars)
+version = local_vars["__version__"]
 # The full version, including alpha/beta/rc tags
-release = '1.0.2'
+release = version
 
 
 # -- General configuration ---------------------------------------------------
@@ -46,11 +49,12 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.imgmath',
+    'sphinx.ext.todo',
     'sphinx.ext.coverage',
-    'sphinx.ext.ifconfig',
+    'sphinx.ext.imgmath',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages',
+    'sphinx.ext.autosectionlabel',
+    'sphinx.ext.napoleon'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -59,8 +63,9 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = {
+    '.rst': 'restructuredtext',
+}
 
 # The master toctree document.
 master_doc = 'index'
@@ -80,12 +85,14 @@ exclude_patterns = []
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
+
+# -- Options for todo extension ----------------------------------------------
+
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
-add_module_names = False
 
-# -- Options for HTML output -------------------------------------------------
+# -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
@@ -96,13 +103,12 @@ html_theme = 'sphinx_rtd_theme'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_static_path = []
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -118,7 +124,7 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Named Enum Documentation'
+htmlhelp_basename = 'named_enum_docs'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -145,8 +151,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'named_enum.tex', 'Named Enum Documentation',
-     'Zhiwei Zhang', 'manual'),
+    (master_doc, project + '.tex', project + ' Documentation',
+     author, 'manual'),
 ]
 
 
@@ -155,8 +161,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'named_enum', 'named_enum Documentation',
-     [author], 1)
+    (master_doc, 'named_enum', project + ' Documentation', [author], 1)
 ]
 
 
@@ -166,8 +171,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'named_enum', 'named_enum Documentation',
-     author, 'named_enum', 'One line description of project.',
+    (master_doc, project, project + ' Documentation',
+     author, project, 'Python named enumeration, which extends the built-in Enum class with extra features.',
      'Miscellaneous'),
 ]
 
@@ -196,3 +201,5 @@ epub_exclude_files = ['search.html']
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
+
+add_module_names = False

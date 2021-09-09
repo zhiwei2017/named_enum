@@ -1,10 +1,9 @@
 import pytest
-import sys
 from unittest import mock
 from enum import Enum
 from collections import OrderedDict, namedtuple
-from named_enum import NamedEnumMeta, _NamedEnumDict
-from .helper import generator_tester
+from named_enum.meta import NamedEnumMeta, _NamedEnumDict
+from ..helper import generator_tester
 
 
 class Color(Enum):
@@ -21,24 +20,27 @@ class TestNamedEnumMeta:
 
     @pytest.mark.parametrize("version_info, get_mixins_return_value, set_pairs",
                              [((3, 7), (None, None), None),
-                              ((3, 8), (None, None), None),
+                              ((3, 8, 5), (None, None), None),
+                              ((3, 8, 9), (None, None), None),
                               ((3, 7), (None, mock.Mock(spec=[])), [('_generate_next_value_', None)]),
-                              ((3, 8), (None, mock.Mock(spec=[])), [('_generate_next_value_', None)]),
+                              ((3, 8, 1), (None, mock.Mock(spec=[])), [('_generate_next_value_', None)]),
+                              ((3, 8, 7), (None, mock.Mock(spec=[])), [('_generate_next_value_', None)]),
                               ((3, 7), (None, mock.Mock(spec=['_generate_next_value_'],
                                                 _generate_next_value_=1)),
                                [('_generate_next_value_', 1)]),
-                              ((3, 8),
+                              ((3, 8, 4),
                                (None, mock.Mock(spec=['_generate_next_value_'],
                                                 _generate_next_value_=1)),
                                [('_generate_next_value_', 1)]),
                               ])
     @mock.patch.object(NamedEnumMeta, '_get_mixins_')
-    @mock.patch("named_enum._sys")
+    @mock.patch("named_enum.meta._sys")
     def test___prepare__(self, mocked_sys, mocked__get_mixins_, version_info, get_mixins_return_value, set_pairs):
         mocked_sys.version_info = version_info
         mocked__get_mixins_.return_value = get_mixins_return_value
 
         expected_result = _NamedEnumDict()
+        expected_result._cls_name = "dummy"
         if set_pairs is not None:
             for key, value in set_pairs:
                 expected_result[key] = value
@@ -46,7 +48,7 @@ class TestNamedEnumMeta:
         result = NamedEnumMeta.__prepare__("dummy", ())
         assert isinstance(result, _NamedEnumDict)
         assert result == expected_result
-        if version_info >= (3, 8):
+        if version_info >= (3, 8, 6):
             mocked__get_mixins_.assert_called_once_with('dummy', tuple())
         else:
             mocked__get_mixins_.assert_called_once_with(tuple())

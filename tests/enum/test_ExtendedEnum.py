@@ -1,7 +1,7 @@
 import pytest
 from collections import OrderedDict
 from named_enum import ExtendedEnum
-from .helper import CommonEnumTest
+from ..helper import CommonEnumTest
 
 
 class TVCouple(ExtendedEnum):
