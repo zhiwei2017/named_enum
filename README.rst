@@ -25,7 +25,7 @@ named-enum
 .. python version badge from PyPI
 .. image:: https://img.shields.io/pypi/pyversions/named-enum.svg
     :target: https://pypi.python.org/pypi/named-enum/
-    :alt: Python 3.6 | Python 3.7 | Python 3.8
+    :alt: Python 3.7 | Python 3.8 | Python3.9 | Python3.10
 
 .. pypi format
 .. image:: https://img.shields.io/pypi/format/named-enum.svg
@@ -411,5 +411,6 @@ Author
 ------
 
 * `Zhiwei Zhang <https://github.com/zhiwei2017>`_ - *Maintainer* - `zhiwei2017@gmail.com <mailto:zhiwei2017@gmail.com?subject=[GitHub]Named%20Enum>`_
+* `Jianlan Shao <https://github.com/Lan314>`_ - *Developer* - `jianlan.shao@gmail.com <mailto:jianlan.shao@gmail.com?subject=[GitHub]Named%20Enum>`_
 
 **[ ~ Dependencies scanned by** `PyUp.io <https://pyup.io>`_ **~ ]**

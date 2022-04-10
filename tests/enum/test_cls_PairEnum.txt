@@ -10,8 +10,10 @@
     ...         SIMPSONS = ("Homer", "Bart", "Marge")
     ...         DUCKS = ("Huey", "Dewey", "Louie")
     ... except TypeError as e:
-    ...     if sys.version_info >= (3, 9):
+    ...     if (3, 9) <= sys.version_info < (3, 10):
     ...         str(e) == "<lambda>() takes 3 positional arguments but 4 were given"
+    ...     elif sys.version_info >= (3, 10):
+    ...         str(e) == "NamedTuple.__new__() takes 3 positional arguments but 4 were given"
     ...     else:
     ...         str(e) == "__new__() takes 3 positional arguments but 4 were given"
     True
@@ -20,8 +22,10 @@
     ...         SIMPSONS = "Homer"
     ...         DUCKS = "Huey"
     ... except TypeError as e:
-    ...     if sys.version_info >= (3, 9):
+    ...     if (3, 9) <= sys.version_info < (3, 10):
     ...         str(e) == "<lambda>() missing 1 required positional argument: 'second'"
+    ...     elif sys.version_info >= (3, 10):
+    ...         str(e) == "NamedTuple.__new__() missing 1 required positional argument: 'second'"
     ...     else:
     ...         str(e) == "__new__() missing 1 required positional argument: 'second'"
     True
