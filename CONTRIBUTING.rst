@@ -110,7 +110,7 @@ Deploying
 
 Assume that bump2version_ is installed. To deploy the package, just run::
 
-    $ bump2version patch named_enum/version.py  # possible: major / minor / patch
+    $ bump2version patch  # possible: major / minor / patch
     $ git push
     $ git push --tags
 
