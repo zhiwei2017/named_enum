@@ -1,4 +1,6 @@
 import pytest
+import sys as _sys
+from enum import _EnumDict
 from named_enum.meta import _NamedEnumDict
 from collections import namedtuple
 
@@ -30,7 +32,10 @@ class TestNamedEnumDict:
         assert self.dict == {"_field_names_": "b", "a": ["a", "b"],
                              "_a": "a", "__a__": "a", "b": 1}
         assert self.dict._last_values == [["a", "b"], "a", 1]
-        assert self.dict._member_names == ["a", "_a", "b"]
+        if _sys.version_info < (3, 11):
+            assert self.dict._member_names == ["a", "_a", "b"]
+        else:
+            assert self.dict._member_names == {'_a': None, 'a': None, 'b': None}
 
     def test___setitem__(self):
         """
@@ -52,7 +57,11 @@ class TestNamedEnumDict:
 
         with pytest.raises(ValueError) as excinfo:
             self.dict["_a_"] = "a"
-        assert '_names_ are reserved for future Enum use' in str(excinfo.value)
+        if _sys.version_info < (3, 11):
+            # inherit previous flags and _generate_next_value_ function
+            assert '_names_ are reserved for future Enum use' in str(excinfo.value)
+        else:
+            assert "_sunder_ names, such as '_a_', are reserved for future Enum use" in str(excinfo.value)
 
     def test__clean(self, fill):
         """
@@ -62,8 +71,9 @@ class TestNamedEnumDict:
         self.dict._clean()
 
         assert self.dict == {"_field_names_": "b", "__a__": 'a'}
-        assert self.dict._last_values == []
-        assert self.dict._member_names == []
+        tmp = _EnumDict()
+        assert self.dict._last_values == tmp._last_values
+        assert self.dict._member_names == tmp._member_names
 
     def test__convert_fail(self, fill):
         """Test the _convert function in failure case."""
@@ -78,7 +88,13 @@ class TestNamedEnumDict:
         self.dict['b'] = 1
         with pytest.raises(ValueError) as exe_info:
             self.dict._convert(tuple_cls)
-        assert "unable to unpack the value for the fields." in str(exe_info.value)
+        assert "Unable to unpack the value '1' as NamedTuple for the fields." in str(exe_info.value)
+
+        self.dict._clean()
+        self.dict['b'] = "1,2"
+        with pytest.raises(ValueError) as exe_info:
+            self.dict._convert(tuple_cls)
+        assert "Unable to unpack the value '1,2' as NamedTuple for the fields." in str(exe_info.value)
 
     def test__convert_success_one_feature(self, fill):
         """Test the _convert function in success case."""
@@ -94,22 +110,24 @@ class TestNamedEnumDict:
         assert self.dict._last_values == [tuple_cls(key=['a', 'b']),
                                           tuple_cls(key='a'),
                                           tuple_cls(key=1)]
-        assert self.dict._member_names == ['a', '_a', 'b']
+        if _sys.version_info < (3, 11):
+            assert self.dict._member_names == ["a", "_a", "b"]
+        else:
+            assert self.dict._member_names == {'_a': None, 'a': None, 'b': None}
 
-    # def test__convert_success_more_feature(self, fill):
-    #     """Test the _convert function in success case."""
-    #     # create a named tuple and call the _convert, everything should be fine.
-    #     tuple_cls = namedtuple("NamedTuple", ["key", "value"])
-    #     self.dict._clean()
-    #     self.dict['b'] = '111'
-    #     self.dict._convert(tuple_cls)
-    #
-    #     assert self.dict == {"_field_names_": "b",
-    #                          "a": tuple_cls(key=['a', 'b'], value=['1', '2']),
-    #                          "_a": tuple_cls(key='a', value='1'),
-    #                          "__a__": "a",
-    #                          'b': tuple_cls(key=1)}
-    #     assert self.dict._last_values == [tuple_cls(key=['a', 'b'], value=['1', '2']),
-    #                                       tuple_cls(key='a', value='1'),
-    #                                       tuple_cls(key=1, value=1)]
-    #     assert self.dict._member_names == ['a', '_a', 'b']
+    def test__convert_success_more_feature(self, fill):
+        """Test the _convert function in success case."""
+        # create a named tuple and call the _convert, everything should be fine.
+        tuple_cls = namedtuple("NamedTuple", ["key", "value"])
+        self.dict._clean()
+        self.dict['b'] = [111, 222]
+        self.dict._convert(tuple_cls)
+
+        assert self.dict == {"_field_names_": "b",
+                             '__a__': 'a',
+                             'b': tuple_cls(key=111, value=222)}
+        assert self.dict._last_values == [tuple_cls(key=111, value=222)]
+        if _sys.version_info < (3, 11):
+            assert self.dict._member_names == ["b"]
+        else:
+            assert self.dict._member_names == {'b': None}
