@@ -39,7 +39,9 @@ class _NamedEnumDict(_EnumDict):
         for name in self._member_names:
             del self[name]
         # _clean the variables as well
-        self._member_names, self._last_values = [], []
+        tmp_dict = _EnumDict()
+        self._member_names = tmp_dict._member_names
+        self._last_values = tmp_dict._last_values
 
     def _convert(self, tuple_cls: Type[NamedTuple]) -> None:
         """Uses the given tuple class to _convert the items.
@@ -61,10 +63,10 @@ class _NamedEnumDict(_EnumDict):
         else:
             # converting the type of the value in customized tuple
             for value in self._last_values:
-                if not isinstance(value, Sequence):
-                    raise ValueError("unable to unpack the value for the fields.")
-                elif isinstance(value, str):
-                    _last_values.append(tuple_cls(value))
+                if not isinstance(value, Sequence) or isinstance(value, str):
+                    err_msg = "Unable to unpack the value '{}' as {} " \
+                              "for the fields.".format(value, tuple_cls.__name__)
+                    raise ValueError(err_msg)
                 else:
                     _last_values.append(tuple_cls(*value))
         self._clean()
