@@ -11,7 +11,6 @@ help:
 	@echo "bandit                 : Install and run bandit security analysis.";
 	@echo "mypy                   : Install and run mypy type checking.";
 	@echo "flake8                 : Install and run flake8 linting.";
-	@echo "install_requirements   : Install all the packages listed in txt files in requirements folder.";
 	@echo "test                   : Run tests and generate coverage report.";
 	@echo "build_whl              : Build a python wheel package.";
 
@@ -26,31 +25,28 @@ clean-pyc:
 clean-build:
 	rm -rf build/ dist/ *.egg-info
 
-# Install all the packages listed in txt files in requirements folder.
-install_requirements:
-	find ./requirements -maxdepth 1 -name '*.txt' -exec python -m pip install -r {} \;
-
 # Install and run bandit security analysis
 bandit:
-	python -m pip install bandit
-	bandit -r $(SOURCE_DIR)
+	python3 -m pip install bandit
+	python3 -mbandit -r $(SOURCE_DIR)
 
 # Install and run mypy type checking
 mypy:
-	python -m pip install -r requirements/dev.txt
-	mypy $(SOURCE_DIR)
+	python3 -m pip install -r requirements/dev.txt
+	python3 -m pip install mypy
+	python3 -mmypy $(SOURCE_DIR)
 
 # Install and run flake8 linting
 flake8:
-	python -m pip install flake8
-	flake8 $(SOURCE_DIR)
+	python3 -m pip install flake8
+	python3 -mflake8 $(SOURCE_DIR)
 
 # Install requirements for testing and run tests
 test:
-	python -m pip install -r requirements/dev.txt
-	python -m pip install -e .
-	pytest
+	python3 -m pip install -r requirements/dev.txt
+	python3 -m pip install -e .
+	python3 -m pytest
 
 # build wheel package
 build_whl:
-	python setup.py bdist_wheel
+	python3 setup.py bdist_wheel

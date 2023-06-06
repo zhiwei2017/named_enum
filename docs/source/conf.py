@@ -14,11 +14,6 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import datetime
-import os
-import sys
-
-root_path = os.path.abspath('../..')
-sys.path.insert(0, root_path)
 
 # -- Project information -----------------------------------------------------
 
@@ -28,10 +23,7 @@ copyright = '{}, {}'.format(datetime.datetime.now().year, author)
 
 
 # The short X.Y version
-local_vars = dict()
-version_path = os.path.join(root_path, "named_enum", "version.py")
-exec(open(version_path).read(), local_vars)
-version = local_vars["__version__"]
+version = "1.2.0"
 # The full version, including alpha/beta/rc tags
 release = version
 
