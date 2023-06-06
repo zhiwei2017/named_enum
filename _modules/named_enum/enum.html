@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>named_enum.enum &mdash; Named Enum 1.2.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Named Enum
+          </a>
+              <div class="version">
+                1.2.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../01_about.html">named-enum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../02_source.html">Source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../03_authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../04_contributing.html">Contributing</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Named Enum</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">named_enum.enum</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for named_enum.enum</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;Module for the classes extending the default `Enum` class. It contains four</span>
+<span class="sd">classes:</span>
+<span class="sd">`ExtendedEnum`, `ExtendedEnum`, `LabeledEnum`, `PairEnum` and one function</span>
+<span class="sd">`namedenum`.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span> <span class="k">as</span> <span class="nn">_sys</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.meta</span> <span class="kn">import</span> <span class="n">NamedEnumMeta</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;NamedEnum&#39;</span><span class="p">,</span> <span class="s1">&#39;ExtendedEnum&#39;</span><span class="p">,</span> <span class="s1">&#39;LabeledEnum&#39;</span><span class="p">,</span> <span class="s1">&#39;PairEnum&#39;</span><span class="p">,</span> <span class="s1">&#39;namedenum&#39;</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="NamedEnum"><a class="viewcode-back" href="../../02_source.html#named_enum.enum.NamedEnum">[docs]</a><span class="k">class</span> <span class="nc">NamedEnum</span><span class="p">(</span><span class="n">Enum</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">NamedEnumMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Through the value of variable `_field_names_` to control its subclass for</span>
+<span class="sd">    different use cases:</span>
+
+<span class="sd">    1.  value of `_field_names_` is `None` or empty. In this case, its</span>
+<span class="sd">    subclass works like an extended Enum class with extra function:</span>
+<span class="sd">    `names`, `values`, `as_dict`, `as_list`, `as_set`, `as_tuple`,</span>
+<span class="sd">    `as_ordereddict`, `describe`.</span>
+
+<span class="sd">    2.  value of `_field_names_` is neither `None` or empty. In this case, its</span>
+<span class="sd">    subclass keeps the extra functions mentioned in **1**, and gives each</span>
+<span class="sd">    element in the enumeration item&#39;s value a name and provides functions for</span>
+<span class="sd">    each attribute/field, like: `&lt;field_name&gt;s`, `from_&lt;field_name&gt;`,</span>
+<span class="sd">    `has_&lt;field_name&gt;`.</span>
+
+<span class="sd">    Instead of the setting the attributes to the enumeration instance, it uses</span>
+<span class="sd">    the function `__getattr__` to achieve it.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; class TripleEnum(NamedEnum):</span>
+<span class="sd">        ...     _field_names_ = (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; class Triangle(TripleEnum):</span>
+<span class="sd">        ...     EQUILATERAL = (6, 6, 6)</span>
+<span class="sd">        ...     RIGHT = (3, 4, 5)</span>
+<span class="sd">        &gt;&gt;&gt; Triangle._fields()</span>
+<span class="sd">        (&#39;first&#39;, &#39;second&#39;, &#39;third&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.names()</span>
+<span class="sd">        (&#39;EQUILATERAL&#39;, &#39;RIGHT&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.values()</span>
+<span class="sd">        (NamedTuple(first=6, second=6, third=6), NamedTuple(first=3, second=4, third=5))</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.describe()</span>
+<span class="sd">        Class: Triangle</span>
+<span class="sd">               Name | First | Second | Third</span>
+<span class="sd">        ------------------------------------</span>
+<span class="sd">        EQUILATERAL |     6 |      6 |     6</span>
+<span class="sd">              RIGHT |     3 |      4 |     5</span>
+<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.as_dict()</span>
+<span class="sd">        {&#39;EQUILATERAL&#39;: NamedTuple(first=6, second=6, third=6), &#39;RIGHT&#39;: NamedTuple(first=3, second=4, third=5)}</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.as_list()</span>
+<span class="sd">        [(&#39;EQUILATERAL&#39;, NamedTuple(first=6, second=6, third=6)), (&#39;RIGHT&#39;, NamedTuple(first=3, second=4, third=5))]</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.as_set() == {(&#39;RIGHT&#39;, Triangle._tuple_cls(first=3, second=4, third=5)),</span>
+<span class="sd">        ... (&#39;EQUILATERAL&#39;, Triangle._tuple_cls(first=6, second=6, third=6))}</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.as_tuple()</span>
+<span class="sd">        ((&#39;EQUILATERAL&#39;, NamedTuple(first=6, second=6, third=6)), (&#39;RIGHT&#39;, NamedTuple(first=3, second=4, third=5)))</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.as_ordereddict()</span>
+<span class="sd">        OrderedDict([(&#39;EQUILATERAL&#39;, NamedTuple(first=6, second=6, third=6)), (&#39;RIGHT&#39;, NamedTuple(first=3, second=4, third=5))])</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.firsts()</span>
+<span class="sd">        (6, 3)</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.seconds()</span>
+<span class="sd">        (6, 4)</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.thirds()</span>
+<span class="sd">        (6, 5)</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.from_first(6)</span>
+<span class="sd">        (&lt;Triangle.EQUILATERAL: NamedTuple(first=6, second=6, third=6)&gt;,)</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.from_first(66)</span>
+<span class="sd">        ()</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.from_second(6)</span>
+<span class="sd">        (&lt;Triangle.EQUILATERAL: NamedTuple(first=6, second=6, third=6)&gt;,)</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.from_second(66)</span>
+<span class="sd">        ()</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.from_third(6)</span>
+<span class="sd">        (&lt;Triangle.EQUILATERAL: NamedTuple(first=6, second=6, third=6)&gt;,)</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.from_third(66)</span>
+<span class="sd">        ()</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.has_first(6)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.has_first(66)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.has_second(6)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.has_second(66)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.has_third(6)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.has_third(66)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.RIGHT</span>
+<span class="sd">        &lt;Triangle.RIGHT: NamedTuple(first=3, second=4, third=5)&gt;</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.RIGHT.first</span>
+<span class="sd">        3</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.RIGHT.second</span>
+<span class="sd">        4</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.RIGHT.third</span>
+<span class="sd">        5</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.RIGHT.name</span>
+<span class="sd">        &#39;RIGHT&#39;</span>
+<span class="sd">        &gt;&gt;&gt; Triangle.RIGHT.value</span>
+<span class="sd">        NamedTuple(first=3, second=4, third=5)</span>
+<span class="sd">        &gt;&gt;&gt; print(Triangle.RIGHT)</span>
+<span class="sd">        Triangle.RIGHT: NamedTuple(first=3, second=4, third=5)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_field_names_</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The place to define the field names of the enumeration class. It accepts</span>
+<span class="sd">    the same format as the parameter `field_names` in function `namedtuple` from</span>
+<span class="sd">    `collections` package.</span>
+<span class="sd">    It&#39;s used in the NamedEnumMeta class&#39;s `__new__` function to generate the</span>
+<span class="sd">    corresponding functions for each field.</span>
+<span class="sd">    If it&#39;s value is `None` or empty, then the enumeration class behaves like a</span>
+<span class="sd">    normal `Enum` class, but with some extended functions to simplify the usages</span>
+<span class="sd">    of enumerations.</span>
+
+<span class="sd">    **Attention**: this variable should not be used to get the field_names, to</span>
+<span class="sd">    do so you can use the class method `_fields`. Because it also accept the</span>
+<span class="sd">    comma separated string.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Hijacks the default `__getattr__` function, such that every time when the</span>
+<span class="sd">        user wants to get the value of a field in an enumeration item, it</span>
+<span class="sd">        returns the corresponding field&#39;s value from the value of enumeration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            item (str): name of the field or attribute.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Any: corresponding value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">_fields</span><span class="p">():</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value_</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Displays the value as well.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: string represents the enumeration item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">: </span><span class="si">%r</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExtendedEnum"><a class="viewcode-back" href="../../02_source.html#named_enum.enum.ExtendedEnum">[docs]</a><span class="k">class</span> <span class="nc">ExtendedEnum</span><span class="p">(</span><span class="n">NamedEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An alias for the class `NamedEnum`.</span>
+
+<span class="sd">    The goal is explicit directly providing</span>
+<span class="sd">    the users an Enum class with extra functions.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from types import GeneratorType</span>
+<span class="sd">        &gt;&gt;&gt; class TVCouple(ExtendedEnum):</span>
+<span class="sd">        ...     GALLAGHERS = (&quot;FRANK&quot;, &quot;MONICA&quot;)</span>
+<span class="sd">        ...     MIKE_AND_MOLLY = (&quot;Mike&quot;, &quot;Molly&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; TVCouple.names()</span>
+<span class="sd">        (&#39;GALLAGHERS&#39;, &#39;MIKE_AND_MOLLY&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(TVCouple.names(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(TVCouple.names(as_tuple=False))</span>
+<span class="sd">        [&#39;GALLAGHERS&#39;, &#39;MIKE_AND_MOLLY&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; TVCouple.values()</span>
+<span class="sd">        ((&#39;FRANK&#39;, &#39;MONICA&#39;), (&#39;Mike&#39;, &#39;Molly&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(TVCouple.values(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(TVCouple.values(as_tuple=False))</span>
+<span class="sd">        [(&#39;FRANK&#39;, &#39;MONICA&#39;), (&#39;Mike&#39;, &#39;Molly&#39;)]</span>
+<span class="sd">        &gt;&gt;&gt; TVCouple.describe()</span>
+<span class="sd">        Class: TVCouple</span>
+<span class="sd">                  Name |               Value</span>
+<span class="sd">        ------------------------------------</span>
+<span class="sd">            GALLAGHERS | (&#39;FRANK&#39;, &#39;MONICA&#39;)</span>
+<span class="sd">        MIKE_AND_MOLLY |   (&#39;Mike&#39;, &#39;Molly&#39;)</span>
+<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(TVCouple.gen(), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; tuple(TVCouple.gen())</span>
+<span class="sd">        ((&#39;GALLAGHERS&#39;, (&#39;FRANK&#39;, &#39;MONICA&#39;)), (&#39;MIKE_AND_MOLLY&#39;, (&#39;Mike&#39;, &#39;Molly&#39;)))</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(TVCouple.gen(name_value_pair=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; tuple(TVCouple.gen(name_value_pair=False))</span>
+<span class="sd">        (&lt;TVCouple.GALLAGHERS: (&#39;FRANK&#39;, &#39;MONICA&#39;)&gt;, &lt;TVCouple.MIKE_AND_MOLLY: (&#39;Mike&#39;, &#39;Molly&#39;)&gt;)</span>
+<span class="sd">        &gt;&gt;&gt; TVCouple.as_dict()</span>
+<span class="sd">        {&#39;GALLAGHERS&#39;: (&#39;FRANK&#39;, &#39;MONICA&#39;), &#39;MIKE_AND_MOLLY&#39;: (&#39;Mike&#39;, &#39;Molly&#39;)}</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(TVCouple.as_set(), set)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; sorted(list(TVCouple.as_set()))</span>
+<span class="sd">        [(&#39;GALLAGHERS&#39;, (&#39;FRANK&#39;, &#39;MONICA&#39;)), (&#39;MIKE_AND_MOLLY&#39;, (&#39;Mike&#39;, &#39;Molly&#39;))]</span>
+<span class="sd">        &gt;&gt;&gt; TVCouple.as_tuple()</span>
+<span class="sd">        ((&#39;GALLAGHERS&#39;, (&#39;FRANK&#39;, &#39;MONICA&#39;)), (&#39;MIKE_AND_MOLLY&#39;, (&#39;Mike&#39;, &#39;Molly&#39;)))</span>
+<span class="sd">        &gt;&gt;&gt; TVCouple.as_list()</span>
+<span class="sd">        [(&#39;GALLAGHERS&#39;, (&#39;FRANK&#39;, &#39;MONICA&#39;)), (&#39;MIKE_AND_MOLLY&#39;, (&#39;Mike&#39;, &#39;Molly&#39;))]</span>
+<span class="sd">        &gt;&gt;&gt; TVCouple.as_ordereddict()</span>
+<span class="sd">        OrderedDict([(&#39;GALLAGHERS&#39;, (&#39;FRANK&#39;, &#39;MONICA&#39;)), (&#39;MIKE_AND_MOLLY&#39;, (&#39;Mike&#39;, &#39;Molly&#39;))])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="LabeledEnum"><a class="viewcode-back" href="../../02_source.html#named_enum.enum.LabeledEnum">[docs]</a><span class="k">class</span> <span class="nc">LabeledEnum</span><span class="p">(</span><span class="n">NamedEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;An enumeration class with two attributes `key` and `label`.</span>
+
+<span class="sd">    It can be used in the Django project as the choices of a field in model or</span>
+<span class="sd">    form.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from types import GeneratorType</span>
+<span class="sd">        &gt;&gt;&gt; class NBALegendary(LabeledEnum):</span>
+<span class="sd">        ...     JOHNSON = (&quot;Johnson&quot;, &quot;Magic Johnson&quot;)</span>
+<span class="sd">        ...     Jordan = (&quot;Jordan&quot;, &quot;Air Jordan&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.names()</span>
+<span class="sd">        (&#39;JOHNSON&#39;, &#39;Jordan&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(NBALegendary.names(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(NBALegendary.names(as_tuple=False))</span>
+<span class="sd">        [&#39;JOHNSON&#39;, &#39;Jordan&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.values()</span>
+<span class="sd">        (NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;), NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(NBALegendary.values(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(NBALegendary.values(as_tuple=False))</span>
+<span class="sd">        [NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;), NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)]</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.describe()</span>
+<span class="sd">        Class: NBALegendary</span>
+<span class="sd">           Name |     Key |         Label</span>
+<span class="sd">        ---------------------------------</span>
+<span class="sd">        JOHNSON | Johnson | Magic Johnson</span>
+<span class="sd">         Jordan |  Jordan |    Air Jordan</span>
+<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(NBALegendary.gen(), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; tuple(NBALegendary.gen())</span>
+<span class="sd">        ((&#39;JOHNSON&#39;, NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)), (&#39;Jordan&#39;, NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)))</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(NBALegendary.gen(name_value_pair=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; tuple(NBALegendary.gen(name_value_pair=False))</span>
+<span class="sd">        (&lt;NBALegendary.JOHNSON: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)&gt;, &lt;NBALegendary.Jordan: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)&gt;)</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.as_dict()</span>
+<span class="sd">        {&#39;JOHNSON&#39;: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;), &#39;Jordan&#39;: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)}</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(NBALegendary.as_set(), set)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; sorted(list(NBALegendary.as_set()))</span>
+<span class="sd">        [(&#39;JOHNSON&#39;, NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)), (&#39;Jordan&#39;, NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;))]</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.as_tuple()</span>
+<span class="sd">        ((&#39;JOHNSON&#39;, NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)), (&#39;Jordan&#39;, NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)))</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.as_list()</span>
+<span class="sd">        [(&#39;JOHNSON&#39;, NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)), (&#39;Jordan&#39;, NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;))]</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.as_ordereddict()</span>
+<span class="sd">        OrderedDict([(&#39;JOHNSON&#39;, NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)), (&#39;Jordan&#39;, NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;))])</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.keys()</span>
+<span class="sd">        (&#39;Johnson&#39;, &#39;Jordan&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.labels()</span>
+<span class="sd">        (&#39;Magic Johnson&#39;, &#39;Air Jordan&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(NBALegendary.keys(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(NBALegendary.keys(as_tuple=False))</span>
+<span class="sd">        [&#39;Johnson&#39;, &#39;Jordan&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(NBALegendary.labels(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(NBALegendary.labels(as_tuple=False))</span>
+<span class="sd">        [&#39;Magic Johnson&#39;, &#39;Air Jordan&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.from_key(&#39;Johnson&#39;)</span>
+<span class="sd">        (&lt;NBALegendary.JOHNSON: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)&gt;,)</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.from_key(&#39;Jordan&#39;)</span>
+<span class="sd">        (&lt;NBALegendary.Jordan: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)&gt;,)</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.from_label(&#39;Magic Johnson&#39;)</span>
+<span class="sd">        (&lt;NBALegendary.JOHNSON: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)&gt;,)</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.from_label(&#39;Air Jordan&#39;)</span>
+<span class="sd">        (&lt;NBALegendary.Jordan: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)&gt;,)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(NBALegendary.from_key(&#39;Johnson&#39;, as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(NBALegendary.from_key(&#39;Johnson&#39;, as_tuple=False))</span>
+<span class="sd">        [&lt;NBALegendary.JOHNSON: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)&gt;]</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(NBALegendary.from_key(&#39;Jordan&#39;, as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(NBALegendary.from_key(&#39;Jordan&#39;, as_tuple=False))</span>
+<span class="sd">        [&lt;NBALegendary.Jordan: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)&gt;]</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(NBALegendary.from_label(&#39;Magic Johnson&#39;, as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(NBALegendary.from_label(&#39;Magic Johnson&#39;, as_tuple=False))</span>
+<span class="sd">        [&lt;NBALegendary.JOHNSON: NamedTuple(key=&#39;Johnson&#39;, label=&#39;Magic Johnson&#39;)&gt;]</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(NBALegendary.from_label(&#39;Air Jordan&#39;, as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(NBALegendary.from_label(&#39;Air Jordan&#39;, as_tuple=False))</span>
+<span class="sd">        [&lt;NBALegendary.Jordan: NamedTuple(key=&#39;Jordan&#39;, label=&#39;Air Jordan&#39;)&gt;]</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.has_key(&#39;Johnson&#39;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.has_key(&#39;John&#39;)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.has_key(&#39;Jordan&#39;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.has_key(&#39;George&#39;)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.has_label(&#39;Magic Johnson&#39;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.has_label(&#39;King James&#39;)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.has_label(&#39;Air Jordan&#39;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; NBALegendary.has_label(&#39;The Black Mamba&#39;)</span>
+<span class="sd">        False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_field_names_</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;key&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Each enumeration of LabeledEnum has two attributes: `key`, `label`&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="PairEnum"><a class="viewcode-back" href="../../02_source.html#named_enum.enum.PairEnum">[docs]</a><span class="k">class</span> <span class="nc">PairEnum</span><span class="p">(</span><span class="n">NamedEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enumeration with two attributes `first`, `second`, the idea comes from the</span>
+<span class="sd">    C++&#39;s pair container.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; from types import GeneratorType</span>
+<span class="sd">        &gt;&gt;&gt; class Pair(PairEnum):</span>
+<span class="sd">        ...     TOM_AND_JERRY = (&quot;Tom&quot;, &quot;Jerry&quot;)</span>
+<span class="sd">        ...     BULLS = (&quot;Micheal&quot;, &quot;Pippen&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; Pair.names()</span>
+<span class="sd">        (&#39;TOM_AND_JERRY&#39;, &#39;BULLS&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Pair.names(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Pair.names(as_tuple=False))</span>
+<span class="sd">        [&#39;TOM_AND_JERRY&#39;, &#39;BULLS&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; Pair.values()</span>
+<span class="sd">        (NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;), NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;))</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Pair.values(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Pair.values(as_tuple=False))</span>
+<span class="sd">        [NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;), NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)]</span>
+<span class="sd">        &gt;&gt;&gt; Pair.describe()</span>
+<span class="sd">        Class: Pair</span>
+<span class="sd">                 Name |   First | Second</span>
+<span class="sd">        --------------------------------</span>
+<span class="sd">        TOM_AND_JERRY |     Tom |  Jerry</span>
+<span class="sd">                BULLS | Micheal | Pippen</span>
+<span class="sd">        &lt;BLANKLINE&gt;</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Pair.gen(), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; tuple(Pair.gen())</span>
+<span class="sd">        ((&#39;TOM_AND_JERRY&#39;, NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)), (&#39;BULLS&#39;, NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)))</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Pair.gen(name_value_pair=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; tuple(Pair.gen(name_value_pair=False))</span>
+<span class="sd">        (&lt;Pair.TOM_AND_JERRY: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)&gt;, &lt;Pair.BULLS: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)&gt;)</span>
+<span class="sd">        &gt;&gt;&gt; Pair.as_dict()</span>
+<span class="sd">        {&#39;TOM_AND_JERRY&#39;: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;), &#39;BULLS&#39;: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)}</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Pair.as_set(), set)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; sorted(list(Pair.as_set()))</span>
+<span class="sd">        [(&#39;BULLS&#39;, NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)), (&#39;TOM_AND_JERRY&#39;, NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;))]</span>
+<span class="sd">        &gt;&gt;&gt; Pair.as_tuple()</span>
+<span class="sd">        ((&#39;TOM_AND_JERRY&#39;, NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)), (&#39;BULLS&#39;, NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)))</span>
+<span class="sd">        &gt;&gt;&gt; Pair.as_list()</span>
+<span class="sd">        [(&#39;TOM_AND_JERRY&#39;, NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)), (&#39;BULLS&#39;, NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;))]</span>
+<span class="sd">        &gt;&gt;&gt; Pair.as_ordereddict()</span>
+<span class="sd">        OrderedDict([(&#39;TOM_AND_JERRY&#39;, NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)), (&#39;BULLS&#39;, NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;))])</span>
+<span class="sd">        &gt;&gt;&gt; Pair.firsts()</span>
+<span class="sd">        (&#39;Tom&#39;, &#39;Micheal&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; Pair.seconds()</span>
+<span class="sd">        (&#39;Jerry&#39;, &#39;Pippen&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Pair.firsts(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Pair.firsts(as_tuple=False))</span>
+<span class="sd">        [&#39;Tom&#39;, &#39;Micheal&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Pair.seconds(as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Pair.seconds(as_tuple=False))</span>
+<span class="sd">        [&#39;Jerry&#39;, &#39;Pippen&#39;]</span>
+<span class="sd">        &gt;&gt;&gt; Pair.from_first(&quot;Tom&quot;)</span>
+<span class="sd">        (&lt;Pair.TOM_AND_JERRY: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)&gt;,)</span>
+<span class="sd">        &gt;&gt;&gt; Pair.from_first(&quot;Micheal&quot;)</span>
+<span class="sd">        (&lt;Pair.BULLS: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)&gt;,)</span>
+<span class="sd">        &gt;&gt;&gt; Pair.from_second(&quot;Jerry&quot;)</span>
+<span class="sd">        (&lt;Pair.TOM_AND_JERRY: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)&gt;,)</span>
+<span class="sd">        &gt;&gt;&gt; Pair.from_second(&quot;Pippen&quot;)</span>
+<span class="sd">        (&lt;Pair.BULLS: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)&gt;,)</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Pair.from_first(&quot;Tom&quot;, as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Pair.from_first(&quot;Tom&quot;, as_tuple=False))</span>
+<span class="sd">        [&lt;Pair.TOM_AND_JERRY: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)&gt;]</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Pair.from_first(&quot;Micheal&quot;, as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Pair.from_first(&quot;Micheal&quot;, as_tuple=False))</span>
+<span class="sd">        [&lt;Pair.BULLS: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)&gt;]</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Pair.from_second(&quot;Jerry&quot;, as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Pair.from_second(&quot;Jerry&quot;, as_tuple=False))</span>
+<span class="sd">        [&lt;Pair.TOM_AND_JERRY: NamedTuple(first=&#39;Tom&#39;, second=&#39;Jerry&#39;)&gt;]</span>
+<span class="sd">        &gt;&gt;&gt; isinstance(Pair.from_second(&quot;Pippen&quot;, as_tuple=False), GeneratorType)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; list(Pair.from_second(&quot;Pippen&quot;, as_tuple=False))</span>
+<span class="sd">        [&lt;Pair.BULLS: NamedTuple(first=&#39;Micheal&#39;, second=&#39;Pippen&#39;)&gt;]</span>
+<span class="sd">        &gt;&gt;&gt; Pair.has_first(&#39;Tom&#39;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Pair.has_first(&#39;Tommy&#39;)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Pair.has_first(&#39;Micheal&#39;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Pair.has_first(&#39;Mike&#39;)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Pair.has_second(&#39;Jerry&#39;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Pair.has_second(&#39;Jeremy&#39;)</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Pair.has_second(&#39;Pippen&#39;)</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Pair.has_second(&#39;Pepe&#39;)</span>
+<span class="sd">        False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_field_names_</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;first&quot;</span><span class="p">,</span> <span class="s2">&quot;second&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Each enumeration of PairEnum has two attributes: first, second&quot;&quot;&quot;</span></div>
+
+
+<span class="n">_class_template</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">from named_enum import NamedEnum</span>
+
+
+<span class="s2">class </span><span class="si">{typename}</span><span class="s2">(NamedEnum):</span>
+
+<span class="s2">    _field_names_ = </span><span class="si">{field_names!r}</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="namedenum"><a class="viewcode-back" href="../../02_source.html#named_enum.enum.namedenum">[docs]</a><span class="k">def</span> <span class="nf">namedenum</span><span class="p">(</span><span class="n">typename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">field_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+              <span class="n">verbose</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates an named enum class with the given typename as class name and</span>
+<span class="sd">    field_names as the _field_names_ in named enum class. The implementation is</span>
+<span class="sd">    similar to the namedtuple function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        typename (str): name for the created class.</span>
+<span class="sd">        field_names (Optional[Sequence]): field names for the named enum class.</span>
+<span class="sd">        verbose (Optional[bool]): displays the code for the named enum class</span>
+<span class="sd">         creation, if True.</span>
+<span class="sd">        module (Optional[str]): which module the new created enum class belongs to.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        object: subclass of NamedEnum</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        &gt;&gt;&gt; TripleEnum = namedenum(&quot;TripleEnum&quot;, (&quot;first&quot;, &quot;second&quot;, &quot;third&quot;))</span>
+<span class="sd">        &gt;&gt;&gt; TripleEnum</span>
+<span class="sd">        &lt;named enum &#39;TripleEnum&#39;&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Fill-in the class template</span>
+    <span class="n">class_definition</span> <span class="o">=</span> <span class="n">_class_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">typename</span><span class="o">=</span><span class="n">typename</span><span class="p">,</span>
+        <span class="n">field_names</span><span class="o">=</span><span class="n">field_names</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Execute the template string in a temporary namespace and support</span>
+    <span class="c1"># tracing utilities by setting a value for frame.f_globals[&#39;__name__&#39;]</span>
+    <span class="n">namespace</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="vm">__name__</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">typename</span><span class="p">)</span>
+    <span class="n">exec</span><span class="p">(</span><span class="n">class_definition</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span>  <span class="c1"># nosec</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">namespace</span><span class="p">[</span><span class="n">typename</span><span class="p">]</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">_source</span> <span class="o">=</span> <span class="n">class_definition</span>  <span class="c1"># type: ignore</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">_source</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="c1"># For pickling to work, the __module__ variable needs to be set to the frame</span>
+    <span class="c1"># where the named tuple is created.  Bypass this step in environments where</span>
+    <span class="c1"># sys._getframe is not defined (Jython for example) or sys._getframe is not</span>
+    <span class="c1"># defined for arguments greater than 0 (IronPython), or where the user has</span>
+    <span class="c1"># specified a particular module.</span>
+    <span class="k">if</span> <span class="n">module</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">_sys</span><span class="o">.</span><span class="n">_getframe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">f_globals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;__name__&#39;</span><span class="p">,</span> <span class="s1">&#39;__main__&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="k">pass</span>
+    <span class="k">if</span> <span class="n">module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="vm">__module__</span> <span class="o">=</span> <span class="n">module</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zhiwei Zhang.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
