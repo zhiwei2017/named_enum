@@ -6,6 +6,7 @@ named_enum.meta
 
 .. automodule:: named_enum.meta
     :members:
+    :noindex:
 
     .. autoclass:: NamedEnumMeta
         :members: _fields, describe, gen, names, values, as_dict, as_list, as_set, as_tuple, as_ordereddict
@@ -16,6 +17,7 @@ named_enum.enum
 
 .. automodule:: named_enum.enum
     :members: namedenum
+    :noindex:
 
     .. autoclass:: NamedEnum
         :members: _field_names_
