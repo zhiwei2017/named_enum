@@ -9,9 +9,8 @@ Index
 
    01_about
    02_source
-   03_release_notes
-   04_authors
-   05_contributing
+   03_authors
+   04_contributing
 
    
 Indices and tables
