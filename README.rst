@@ -25,7 +25,7 @@ named-enum
 .. python version badge from PyPI
 .. image:: https://img.shields.io/pypi/pyversions/named-enum.svg
     :target: https://pypi.python.org/pypi/named-enum/
-    :alt: Python 3.7 | Python 3.8 | Python3.9 | Python3.10 | Python3.11
+    :alt: Python 3.7 | Python 3.8 | Python3.9 | Python3.10 | Python3.11 | 3.12
 
 .. pypi format
 .. image:: https://img.shields.io/pypi/format/named-enum.svg
