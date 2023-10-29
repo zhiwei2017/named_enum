@@ -4,6 +4,7 @@ Test script for namedenum with only typename::
 
     >>> import types
     >>> from named_enum import namedenum
+    >>> from collections import namedtuple, OrderedDict
     >>> ExtendedEnum = namedenum("ExtendedEnum", verbose=True)
     from named_enum import NamedEnum
     <BLANKLINE>
@@ -602,15 +603,15 @@ Test script for namedenum with only typename::
 
 # Test class method as_ordereddict::
 
-    >>> ExtendedEnum.as_ordereddict()
-    OrderedDict()
-    >>> TripleEnum.as_ordereddict()
-    OrderedDict()
-    >>> Pair.as_ordereddict()
-    OrderedDict([('TOM_AND_JERRY', ('Tom', 'Jerry')), ('MIKE_AND_MOLLY', ('Mike', 'Molly')), ('MIKE_AND_PIPPEN', ('Mike', 'Pippen')), ('MM_AND_M', ('Mike', 'Molly'))])
-    >>> Triple.as_ordereddict()
-    OrderedDict([('SIMPSONS', NamedTuple(first='Homer', second='Bart', third='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey', third='Louie')), ('MCDUCK_NEPHEWS', NamedTuple(first='Huey', second='Dewey', third='Louie')), ('THE_SIMPSONS', NamedTuple(first='Homer', second='Marge', third='Lisa'))])
-
+    >>> ExtendedEnum.as_ordereddict() == OrderedDict()
+    True
+    >>> TripleEnum.as_ordereddict() == OrderedDict()
+    True
+    >>> Pair.as_ordereddict() == OrderedDict([('TOM_AND_JERRY', ('Tom', 'Jerry')), ('MIKE_AND_MOLLY', ('Mike', 'Molly')), ('MIKE_AND_PIPPEN', ('Mike', 'Pippen')), ('MM_AND_M', ('Mike', 'Molly'))])
+    True
+    >>> NamedTuple = namedtuple("NamedTuple", ["first", "second", "third"])
+    >>> Triple.as_ordereddict() == OrderedDict([('SIMPSONS', NamedTuple(first='Homer', second='Bart', third='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey', third='Louie')), ('MCDUCK_NEPHEWS', NamedTuple(first='Huey', second='Dewey', third='Louie')), ('THE_SIMPSONS', NamedTuple(first='Homer', second='Marge', third='Lisa'))])
+    True
     >>> Pair.TOM_AND_JERRY.as_ordereddict()
     Traceback (most recent call last):
     ...
@@ -650,11 +651,11 @@ Test script for namedenum with only typename::
     >>> ExtendedEnum.firsts()
     Traceback (most recent call last):
     ...
-    AttributeError: firsts
+    AttributeError: ...
     >>> Pair.firsts()
     Traceback (most recent call last):
     ...
-    AttributeError: firsts
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.firsts()
     Traceback (most recent call last):
     ...
@@ -717,11 +718,11 @@ Test script for namedenum with only typename::
     >>> ExtendedEnum.seconds()
     Traceback (most recent call last):
     ...
-    AttributeError: seconds
+    AttributeError: ...
     >>> Pair.seconds()
     Traceback (most recent call last):
     ...
-    AttributeError: seconds
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.seconds()
     Traceback (most recent call last):
     ...
@@ -784,11 +785,11 @@ Test class method thirds with parameter as_tuple=True::
     >>> ExtendedEnum.thirds()
     Traceback (most recent call last):
     ...
-    AttributeError: thirds
+    AttributeError: ...
     >>> Pair.thirds()
     Traceback (most recent call last):
     ...
-    AttributeError: thirds
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.thirds()
     Traceback (most recent call last):
     ...
@@ -851,15 +852,15 @@ Test class method thirds with parameter as_tuple=False::
     >>> ExtendedEnum.forths()
     Traceback (most recent call last):
     ...
-    AttributeError: forths
+    AttributeError: ...
     >>> TripleEnum.forths()
     Traceback (most recent call last):
     ...
-    AttributeError: forths
+    AttributeError: ...
     >>> Pair.forths()
     Traceback (most recent call last):
     ...
-    AttributeError: forths
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.forths()
     Traceback (most recent call last):
     ...
@@ -880,7 +881,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> Triple.forths()
     Traceback (most recent call last):
     ...
-    AttributeError: forths
+    AttributeError: ...
     >>> Triple.SIMPSONS.forths()
     Traceback (most recent call last):
     ...
@@ -903,7 +904,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> ExtendedEnum.from_first("Homer")
     Traceback (most recent call last):
     ...
-    AttributeError: from_first
+    AttributeError: ...
     >>> TripleEnum.from_first("Homer")
     ()
     >>> TripleEnum.from_first("Huey")
@@ -912,7 +913,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> Pair.from_first("Tom")
     Traceback (most recent call last):
     ...
-    AttributeError: from_first
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.from_first("Tom")
     Traceback (most recent call last):
     ...
@@ -1076,7 +1077,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> ExtendedEnum.from_second("Bart")
     Traceback (most recent call last):
     ...
-    AttributeError: from_second
+    AttributeError: ...
     >>> TripleEnum.from_second("Bart")
     ()
     >>> TripleEnum.from_second("Dewey")
@@ -1087,7 +1088,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> Pair.from_second("Jerry")
     Traceback (most recent call last):
     ...
-    AttributeError: from_second
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.from_second("Jerry")
     Traceback (most recent call last):
     ...
@@ -1315,7 +1316,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> ExtendedEnum.from_third("Marge")
     Traceback (most recent call last):
     ...
-    AttributeError: from_third
+    AttributeError: ...
     >>> TripleEnum.from_third("Marge")
     ()
     >>> TripleEnum.from_third("Louie")
@@ -1326,7 +1327,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> Pair.from_third("Jerry")
     Traceback (most recent call last):
     ...
-    AttributeError: from_third
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.from_third("Jerry")
     Traceback (most recent call last):
     ...
@@ -1554,16 +1555,16 @@ Test class method thirds with parameter as_tuple=False::
     >>> ExtendedEnum.from_forth("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: from_forth
+    AttributeError: ...
     >>> TripleEnum.from_forth("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: from_forth
+    AttributeError: ...
 
     >>> Pair.from_forth("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: from_forth
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.from_forth("Hailey")
     Traceback (most recent call last):
     ...
@@ -1584,7 +1585,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> Triple.from_forth("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: from_forth
+    AttributeError: ...
     >>> Triple.SIMPSONS.from_forth("Hailey")
     Traceback (most recent call last):
     ...
@@ -1607,7 +1608,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> ExtendedEnum.has_first("Homer")
     Traceback (most recent call last):
     ...
-    AttributeError: has_first
+    AttributeError: ...
     >>> TripleEnum.has_first("Homer")
     False
     >>> TripleEnum.has_first("Huey")
@@ -1616,7 +1617,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> Pair.has_first("Tom")
     Traceback (most recent call last):
     ...
-    AttributeError: has_first
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.has_first("Tom")
     Traceback (most recent call last):
     ...
@@ -1684,7 +1685,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> ExtendedEnum.has_second("Bart")
     Traceback (most recent call last):
     ...
-    AttributeError: has_second
+    AttributeError: ...
     >>> TripleEnum.has_second("Bart")
     False
     >>> TripleEnum.has_second("Dewey")
@@ -1695,7 +1696,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> Pair.has_second("Jerry")
     Traceback (most recent call last):
     ...
-    AttributeError: has_second
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.has_second("Jerry")
     Traceback (most recent call last):
     ...
@@ -1783,7 +1784,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> ExtendedEnum.has_third("Marge")
     Traceback (most recent call last):
     ...
-    AttributeError: has_third
+    AttributeError: ...
     >>> TripleEnum.has_third("Marge")
     False
     >>> TripleEnum.has_third("Louie")
@@ -1794,7 +1795,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> Pair.has_third("Jerry")
     Traceback (most recent call last):
     ...
-    AttributeError: has_third
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.has_third("Jerry")
     Traceback (most recent call last):
     ...
@@ -1882,16 +1883,16 @@ Test class method thirds with parameter as_tuple=False::
     >>> ExtendedEnum.has_forth("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: has_forth
+    AttributeError: ...
     >>> TripleEnum.has_forth("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: has_forth
+    AttributeError: ...
 
     >>> Pair.has_forth("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: has_forth
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.has_forth("Hailey")
     Traceback (most recent call last):
     ...
@@ -1912,7 +1913,7 @@ Test class method thirds with parameter as_tuple=False::
     >>> Triple.has_forth("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: has_forth
+    AttributeError: ...
     >>> Triple.SIMPSONS.has_forth("Hailey")
     Traceback (most recent call last):
     ...

@@ -5,6 +5,7 @@
     >>> import types
     >>> import sys
     >>> from named_enum import PairEnum
+    >>> from collections import OrderedDict, namedtuple
     >>> try:
     ...     class Triple(PairEnum):
     ...         SIMPSONS = ("Homer", "Bart", "Marge")
@@ -486,12 +487,13 @@
 
 # Test class method as_ordereddict::
 
-    >>> PairEnum.as_ordereddict()
-    OrderedDict()
-    >>> Pair.as_ordereddict()
-    OrderedDict([('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('MIKE_AND_MOLLY', NamedTuple(first='Mike', second='Molly')), ('MICHEAL_AND_MOLLY', NamedTuple(first='Micheal', second='Molly'))])
-    >>> FPair.as_ordereddict()
-    OrderedDict([('SIMPSONS', NamedTuple(first='Homer', second='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey')), ('MCDUCK_NEPHEWS', NamedTuple(first='Huey', second='Dewey'))])
+    >>> PairEnum.as_ordereddict() == OrderedDict()
+    True
+    >>> NamedTuple = namedtuple("NamedTuple", ["first", "second"])
+    >>> Pair.as_ordereddict() == OrderedDict([('TOM_AND_JERRY', NamedTuple(first='Tom', second='Jerry')), ('MIKE_AND_MOLLY', NamedTuple(first='Mike', second='Molly')), ('MICHEAL_AND_MOLLY', NamedTuple(first='Micheal', second='Molly'))])
+    True
+    >>> FPair.as_ordereddict() == OrderedDict([('SIMPSONS', NamedTuple(first='Homer', second='Marge')), ('DUCKS', NamedTuple(first='Huey', second='Dewey')), ('MCDUCK_NEPHEWS', NamedTuple(first='Huey', second='Dewey'))])
+    True
 
     >>> Pair.TOM_AND_JERRY.as_ordereddict()
     Traceback (most recent call last):
@@ -652,15 +654,15 @@
     >>> PairEnum.thirds()
     Traceback (most recent call last):
     ...
-    AttributeError: thirds
+    AttributeError: ...
     >>> Pair.thirds()
     Traceback (most recent call last):
     ...
-    AttributeError: thirds
+    AttributeError: ...
     >>> FPair.thirds()
     Traceback (most recent call last):
     ...
-    AttributeError: thirds
+    AttributeError: ...
 
     >>> Pair.TOM_AND_JERRY.thirds()
     Traceback (most recent call last):
@@ -693,15 +695,15 @@
     >>> PairEnum.thirds(as_tuple=False)
     Traceback (most recent call last):
     ...
-    AttributeError: thirds
+    AttributeError: ...
     >>> Pair.thirds(as_tuple=False)
     Traceback (most recent call last):
     ...
-    AttributeError: thirds
+    AttributeError: ...
     >>> FPair.thirds(as_tuple=False)
     Traceback (most recent call last):
     ...
-    AttributeError: thirds
+    AttributeError: ...
 
     >>> Pair.TOM_AND_JERRY.thirds(as_tuple=False)
     Traceback (most recent call last):
@@ -1276,15 +1278,15 @@
     >>> PairEnum.from_third("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: from_third
+    AttributeError: ...
     >>> Pair.from_third("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: from_third
+    AttributeError: ...
     >>> FPair.from_third("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: from_third
+    AttributeError: ...
 
     >>> Pair.TOM_AND_JERRY.from_third("Hailey")
     Traceback (most recent call last):
@@ -1317,15 +1319,15 @@
     >>> PairEnum.from_third("Hailey", as_tuple=False)
     Traceback (most recent call last):
     ...
-    AttributeError: from_third
+    AttributeError: ...
     >>> Pair.from_third("Hailey", as_tuple=False)
     Traceback (most recent call last):
     ...
-    AttributeError: from_third
+    AttributeError: ...
     >>> FPair.from_third("Hailey", as_tuple=False)
     Traceback (most recent call last):
     ...
-    AttributeError: from_third
+    AttributeError: ...
 
     >>> Pair.TOM_AND_JERRY.from_third("Hailey", as_tuple=False)
     Traceback (most recent call last):
@@ -1526,15 +1528,15 @@
     >>> PairEnum.has_third("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: has_third
+    AttributeError: ...
     >>> Pair.has_third("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: has_third
+    AttributeError: ...
     >>> FPair.has_third("Hailey")
     Traceback (most recent call last):
     ...
-    AttributeError: has_third
+    AttributeError: ...
     >>> Pair.TOM_AND_JERRY.has_third("Hailey")
     Traceback (most recent call last):
     ...

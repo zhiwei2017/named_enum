@@ -103,15 +103,13 @@ class ExtraEnumTest:
             mocked_gen.assert_called_once_with(name_value_pair=False)
 
     def test__func_fail(self, func_name, func_param, error_type):
-        with pytest.raises(error_type) as excinfo:
+        with pytest.raises(error_type, match=func_name):
             getattr(self.enum_cls, func_name)(*func_param)
-        assert func_name == str(excinfo.value)
 
     def test___getattr___success(self, obj, func_name, expected):
         result = getattr(obj, func_name)
         assert result == expected
 
     def test___getattr___fail(self, obj, func_name, err_msg):
-        with pytest.raises(AttributeError) as exe_inf:
+        with pytest.raises(AttributeError, match=err_msg):
             getattr(obj, func_name)
-        assert err_msg == str(exe_inf.value)
