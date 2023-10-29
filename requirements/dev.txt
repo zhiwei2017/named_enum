@@ -1,5 +1,0 @@
--r base.txt
-pytest~=7.3
-pytest-cov~=4.0
-codecov~=2.1
-tox~=3.28
