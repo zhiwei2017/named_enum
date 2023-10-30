@@ -7,7 +7,7 @@ license = "MIT"
 readme = "README.rst"
 repository = "https://github.com/zhiwei2017/named_enum"
 documentation = "https://zhiwei2017.github.io/named_enum/"
-keywords = [
+classifiers = [
     "Operating System :: OS Independent",
     "License :: OSI Approved :: MIT License",
     "Development Status :: 5 - Production/Stable",
