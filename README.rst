@@ -25,7 +25,7 @@ named-enum
 .. python version badge from PyPI
 .. image:: https://img.shields.io/pypi/pyversions/named-enum.svg
     :target: https://pypi.python.org/pypi/named-enum/
-    :alt: Python 3.7 | Python 3.8 | Python3.9 | Python3.10 | Python3.11
+    :alt: Python 3.7 | Python 3.8 | Python3.9 | Python3.10 | Python3.11 | 3.12
 
 .. pypi format
 .. image:: https://img.shields.io/pypi/format/named-enum.svg
@@ -69,6 +69,12 @@ To install Named Enum, run this command in your terminal:
 
     $ pip install named_enum
 
+or
+
+.. code-block:: console
+
+    $ poetry self add named_enum
+
 This is the preferred method to install Named Enum, as it will always install the most recent stable release.
 
 
@@ -87,13 +93,13 @@ Once you have a copy of the source, you can install it with:
 
 .. code-block:: console
 
-    $ python setup.py install
+    $ pip install .
 
 or
 
 .. code-block:: console
 
-    $ pip install .
+    $ poetry install
 
 Quick Start
 -----------

@@ -1,3 +1,0 @@
--r base.txt
-sphinx~=5.3
-sphinx_rtd_theme~=1.2
