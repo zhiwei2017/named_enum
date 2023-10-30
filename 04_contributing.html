@@ -4,19 +4,18 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing &mdash; Named Enum 1.2.0 documentation</title>
+  <title>Contributing &mdash; Named Enum 1.4.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b308ce55"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,7 +34,7 @@
             Named Enum
           </a>
               <div class="version">
-                1.2.0
+                1.4.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -146,11 +145,11 @@ $ cd named_enum/
 </pre></div>
 </div>
 <p>Now you can install <cite>named_enum</cite> in develop mode in your virtual environment:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python setup.py develop
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install -e .
 </pre></div>
 </div>
 <p>or:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install -e .
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ poetry install
 </pre></div>
 </div>
 </li>
@@ -162,14 +161,14 @@ $ cd named_enum/
 </li>
 <li><p>When you’re done making changes, check that your changes pass all linting checks and the
 tests, including testing other Python versions with tox:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ make flake8
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ make install
+$ make flake8
 $ make mypy
 $ make bandit
 $ make test
 $ tox
 </pre></div>
 </div>
-<p>To get <strong>flake8</strong>, <strong>mypy</strong>, <strong>bandit</strong> and <strong>tox</strong>, just pip install them into your virtualenv.</p>
 </li>
 <li><p>Commit your changes and push your branch to GitHub:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git add .
@@ -189,13 +188,14 @@ $ git push origin name-of-your-bugfix-or-feature
 <li><p>If the pull request adds functionality, the docs should be updated. Put
 your new functionality into a function with a docstring, and add the
 feature to the list in README.rst.</p></li>
-<li><p>The pull request should work for Python 3.6, 3.7, 3.8 and 3.9.</p></li>
+<li><p>The pull request should work for Python 3.7, 3.8, 3.9, 3.10, 3.11, 3.12.</p></li>
 </ol>
 </section>
 <section id="deploying">
 <h2>Deploying<a class="headerlink" href="#deploying" title="Permalink to this heading"></a></h2>
-<p>Assume that <a class="reference external" href="https://github.com/c4urself/bump2version">bump2version</a> is installed. To deploy the package, just run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ bump2version patch  # possible: major / minor / patch
+<p>To deploy the package, just run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ poetry version patch  # possible: major / minor / patch / premajor / preminor / prepatch
+$ git commit -m &quot;Bump version: {old_version} -&gt; {new_version}.&quot;
 $ git push
 $ git push --tags
 </pre></div>
