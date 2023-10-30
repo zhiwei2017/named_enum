@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "named-enum"
-version = "1.3.1"
+version = "1.4.0"
 description = "Python named enumeration, which extends the built-in Enum class with extra features."
 authors = ["Zhiwei Zhang <zhiwei2017@gmail.com>", "Jianlan Shao <jianlan.shao@gmail.com>"]
 license = "MIT"
